@@ -6,6 +6,7 @@ import { Food } from './Pages/Food'
 import { Stats } from './Pages/Stats'
 import { Login } from './Pages/login'
 import { Layout } from '../Layouts'
+import { Suggestions } from './Pages/Suggestions'
 
 function App() {
 
@@ -18,6 +19,7 @@ function App() {
           <Route path="/logs" element= {<FoodLogger/>}/>
           <Route path="/food" element= {<Food/>}/>
           <Route path="/stats" element= {<Stats/>}/>
+          <Route path="/Suggestions" element={<Suggestions/>}/>
         </Route>
       </Routes>
     </HashRouter>

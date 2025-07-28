@@ -7,6 +7,8 @@ export function Header() {
             <Link to="/logs"><button>Logs</button></Link>
             <Link to="/food"><button>Food</button></Link>
             <Link to="/stats"><button>Stats</button></Link>
+            <Link to="/Suggestions"><button>Suggestions</button></Link>
+
      </div>
 
 )}
