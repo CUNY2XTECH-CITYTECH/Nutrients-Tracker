@@ -14,8 +14,8 @@ const userSchema = new mongoose.Schema({
         type: String,
         required: true
     },
-    age:{
-        type: Number,
+    birthday:{
+        type: Date,
         required: true
     },
     gender:{
@@ -23,6 +23,10 @@ const userSchema = new mongoose.Schema({
         required: true
     },
     height:{
+        type: Number,
+        required: true
+    },
+    weight:{
         type: Number,
         required: true
     },

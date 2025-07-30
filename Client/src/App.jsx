@@ -4,7 +4,9 @@ import { Home } from './Pages/Home'
 import { FoodLogger } from  './Pages/FoodLogger'
 import { Food } from './Pages/Food'
 import { Stats } from './Pages/Stats'
-import { Login } from './Pages/login'
+import { Login } from './Pages/Login'
+import { SignUp } from './Pages/SignUp'
+import { Welcome } from './Pages/Welcome'
 import { Layout } from '../Layouts'
 
 function App() {
@@ -12,7 +14,10 @@ function App() {
   return (
     <HashRouter>
       <Routes>
-        <Route path="/" element={<Login/>} />
+        <Route path="/Welcome" element= {<Welcome/>}/>
+        <Route path="/Login" element={<Login/>} />
+        <Route path="/Signup" element={<SignUp/>} />
+
         <Route element={<Layout />}>
           <Route path="/Home" element= {<Home/>}/>
           <Route path="/logs" element= {<FoodLogger/>}/>
