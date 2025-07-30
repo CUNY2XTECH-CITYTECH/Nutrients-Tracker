@@ -1,0 +1,60 @@
+@import url("https://fonts.googleapis.com/css?family=Raleway:400,400i,700");
+html,
+body {
+  font-family: Raleway, sans-serif;
+  width: 100%;
+  height: 100%;
+  padding: 0;
+  margin: 0;
+}
+
+body {
+  display: flex;
+  justify-content: center;
+  align-items: flex-start;
+  flex-wrap: nowrap;
+  overflow: hidden;
+  height: 100%;
+  padding-top: 1em;
+}
+
+
+
+#food_items_container {
+  background-color: #007bff; /* Blue */
+  color: white;
+  padding: 1em 2em;
+  border-radius: 8px;
+  margin-top: 1.5em;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+  width: 50em;
+  height: 10em;
+}
+
+#food_img, #nutrient_facts {
+  display: flex;           
+  flex-direction: column;     
+  justify-content: space-between; 
+  align-items: center;     
+  gap: 1em;                
+  padding: 1em;
+}
+
+#tooltip{
+  height: 1in;
+}
+
+.food_items_container{
+  display: flex;
+  background-color: green;
+  
+ 
+
+
+}
+
+#food_item-container{
+  display: flex;
+  border: 0.2in solid black;
+  background-color: green;
+}
