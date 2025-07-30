@@ -1,13 +1,17 @@
 import { Outlet } from "react-router-dom";
 import { Header } from "./src/Componets/Header";
+import { SideBar } from "./src/Componets/Sidebar";
 
 export function Layout () {
     return (
         <>
             <Header/>
-            <main>
-                <Outlet/>
-            </main>
+            <div className="content-container">
+                <SideBar/>
+                <main>
+                    <Outlet/>
+                </main>
+            </div>
         </>
     )
 }

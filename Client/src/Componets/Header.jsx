@@ -1,14 +1,11 @@
-import { Link } from "react-router-dom";
+import { Link } from "react-router-dom"
 
 export function Header() {
     return(
-<div className="side-bar-container">
-            <Link to="/home"><button>Home</button></Link>
-            <Link to="/logs"><button>Logs</button></Link>
-            <Link to="/food"><button>Food</button></Link>
-            <Link to="/stats"><button>Stats</button></Link>
-            <Link to="/Suggestions"><button>Suggestions</button></Link>
-
+    <div className="header-container">
+            <Link to="/" className ="header-logo-link"><div className="logo">Nutrient Tracker</div></Link>
+            <Link to="/login" className ="header-btn-link"><button className="login-btn header-btn">Login</button></Link>
+            <Link to="/signUp" className ="header-btn-link"><button className="sign-up-btn header-btn">Sign Up</button></Link>
      </div>
 
 )}
