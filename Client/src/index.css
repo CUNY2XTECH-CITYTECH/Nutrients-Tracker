@@ -1,0 +1,90 @@
+html, body {
+    margin:0;
+    padding: 0;
+    width : 100vw;
+}
+
+body {
+    display: flex;
+    padding: 0;
+    margin:0
+}
+
+#root {
+    flex-grow: 1;
+    display: flex;
+    flex-direction: column;
+} 
+
+
+.header-container{
+    background-color: rgb(203, 203, 203);
+    height: 100px;
+    display:flex;
+    align-items: center;
+    justify-content: end;
+    gap:20px;
+}
+
+.header-container .header-logo-link {
+    margin-left: 20px;
+    margin-right: auto;
+    text-decoration: none;
+}
+
+.header-container .logo {
+    color:rgb(58, 58, 255);
+    font-size: 30px;
+    font-family: Arial;
+    font-weight: bold;
+    /* text-shadow: -1px -1px 0 #000, 1px -1px 0 #000, -1px 1px 0 #000, 1px 1px 0 #000; */
+
+}
+
+.header-container .sign-up-btn {
+    margin-right: 20px;
+}
+
+.header-container .header-btn {
+    height:30px;
+}
+
+.content-container {
+    display:flex;
+}
+
+.side-bar-container {
+    background-color:navy;
+    height: 100vh;
+    width: 250px;
+    position: sticky;
+    top:0;
+    display:flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 20px;
+}
+
+
+.side-bar-container .side-bar-link {
+    align-self:stretch;
+    display: flex;
+    margin: 0px 20px 0px 20px;
+    text-decoration: none;
+
+}
+
+.side-bar-container .first-link {
+    margin-top: 20px;
+}
+
+.side-bar-container .side-bar-link .side-bar-btn {
+    height: 40px;
+    flex-grow: 1;
+    font-size:20px;
+    font-family:'Franklin Gothic Medium', 'Arial Narrow', Arial, sans-serif;
+}
+
+
+
+

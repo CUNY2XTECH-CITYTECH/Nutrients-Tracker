@@ -10,13 +10,13 @@ import mongoose from "mongoose"
 import 'dotenv/config'; // loads .env file
 mongoose.connect(process.env.MONGODB_URI)
 
-// import apiRoutes from "./Routes/authRoutes.js"
+import authRoutes from "./Routes/authRoutes.js"
 
 const port = 3000
 app.use(express.json());
 
 
-
+app.use("/", authRoutes)
 
 
 

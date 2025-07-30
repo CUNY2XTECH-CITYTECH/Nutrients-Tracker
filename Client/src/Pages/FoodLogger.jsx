@@ -84,15 +84,15 @@ export function FoodLogger() {
   }, [totalNutrition]);
 
   return (
-    <div style={{ maxWidth: "900px", margin: "auto", fontFamily: "sans-serif" }}>
+    <div style={{ maxWidth: "900px", margin: "auto", fontFamily: "sans-serif" , marginLeft: "220px"}}>
       <div
-        style={{
+        style={{  
           display: "flex",
           justifyContent: "space-between",
           background: "#f9f9f9",
           padding: "1em",
           borderRadius: "8px",
-          marginBottom: "1em"
+          marginBottom: "1em",
         }}
       >
         <div>
