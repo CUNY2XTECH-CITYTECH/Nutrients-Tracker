@@ -145,6 +145,5 @@ export function Food() {
       )}
     </div>
   );
-  );
 }
 
