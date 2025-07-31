@@ -30,9 +30,10 @@ export function Login () {
     }
 
     return (
+        <div className = "page-parent">
         <section className="main-page-container">
             <h1>Login</h1>
-            <form onSubmit={signInHanndle}>
+            <form onSubmit={signInHanndle} className="login-form">
 
                 {/*The title and input box of all the data the user going to add*/}
                 <label htmlFor="user">Username:</label><br/>
@@ -57,5 +58,6 @@ export function Login () {
 
             </form>
         </section>
+        </div>
     )
 }
