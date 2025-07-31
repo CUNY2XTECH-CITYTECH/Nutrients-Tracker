@@ -1,22 +1,32 @@
 import "../searchBox.css";
+
+
+const foodData = [
+  { title: "Avocado", calories: 160, nutrients: { protein: "2g", carbs: "9g", fat: "15g" } },
+  { title: "Chicken Breast", calories: 165, nutrients: { protein: "31g", carbs: "0g", fat: "3.6g" } },
+];
+
 export function Food() {
   return (
-    <div>
-      <h1>This is the page that displays all of the Food options</h1>
+    
+    <div className="food-page">
+      
       <form class="search-box">
         <input type="text" placeholder=" " />
         <button type="reset"></button>
       </form>
-      <div id="food_items_container">
-        <div className="food_item-container">
-          <div className="title" > title</div>
-          <div className="cal-num">cal num</div>
-        </div>
-        <div className="food_item-container">
-          <div className="title" > title</div>
-          <div className="cal-num">cal num</div>
-        </div>
-        <div id="nutrient_facts">this the nutrition_facts</div>
+      <div className="food-items-container">
+        {foodData.map((food, index) => (
+          <div key={index} className="food-item">
+            <h3 className="food-title">{food.title}</h3>
+            <div className="cal-num">{food.calories} kcal</div>
+            <div className="nutrient-facts">
+              <p>Protein: {food.nutrients.protein}</p>
+              <p>Carbs: {food.nutrients.carbs}</p>
+              <p>Fat: {food.nutrients.fat}</p>
+            </div>
+          </div>
+        ))}
       </div>
     </div>
   );
