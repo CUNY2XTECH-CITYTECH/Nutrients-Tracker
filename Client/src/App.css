@@ -58,11 +58,18 @@ body {
   margin-bottom: 10px;
 }
 
-.nutrient-facts {
-  font-size: 0.9em;
-  color: #555;
+.food_items_container{
+  display: flex;
+  background: rgba(0,0,0,0.5);
+  border-style: ridge;
+
+ 
+
+
 }
 
-.nutrient-facts p {
-  margin: 5px 0;
+#food_item-container{
+  display: flex;
+  border: 0.2in solid black;
+  background-color: green;
 }
