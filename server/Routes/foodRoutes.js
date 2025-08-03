@@ -5,7 +5,6 @@ const router = express.Router();
 router.get('/test-env', (req, res) => {
     res.send(`Your USDA API key is: ${process.env.USDA_API_KEY}`);
 });
-// Add carbs, fats, proteins, foodID, mealType alongside name and calories
 
 router.get('/usda-search', async (req, res) => {
     const query = req.query.query;
