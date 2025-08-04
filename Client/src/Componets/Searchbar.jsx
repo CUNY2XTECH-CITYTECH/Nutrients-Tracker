@@ -1,3 +1,4 @@
+import { FaSearch } from "react-icons/fa";
 
 export function Searchbar() {
   return (
