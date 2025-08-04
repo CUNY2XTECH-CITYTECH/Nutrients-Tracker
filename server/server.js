@@ -10,6 +10,9 @@ import mongoose from "mongoose"
 import 'dotenv/config'; // loads .env file
 mongoose.connect(process.env.MONGODB_URI)
 
+import cookieParser from "cookie-parser"
+app.use(cookieParser()) //middleware for cookies
+
 import authRoutes from "./Routes/authRoutes.js"
 
 const port = 3000

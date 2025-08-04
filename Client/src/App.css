@@ -1,5 +1,5 @@
 @import url("https://fonts.googleapis.com/css?family=Raleway:400,400i,700");
-html,
+/* html,
 body {
   font-family: Raleway, sans-serif;
   width: 100%;
@@ -15,8 +15,7 @@ body {
   flex-wrap: nowrap;
   overflow: hidden;
   height: 100%;
-  padding-top: 1em;
-}
+} */
 
 
 
@@ -60,160 +59,3 @@ body {
   border: 0.2in solid black;
   background-color: green;
 }
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-.page-parent {
-    display: flex;
-    justify-content: center;
-}
-
-.main-page-container {
-    display: flex;
-    flex-direction: column;
-    background-color: rgb(66, 66, 255);
-    min-width: 500px;
-    gap: 20px;
-}
-
-.login-form {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-}
-

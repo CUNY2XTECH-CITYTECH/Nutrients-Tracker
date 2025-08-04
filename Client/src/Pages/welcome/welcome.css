@@ -1,0 +1,132 @@
+.welcome-page-parent {
+    display: flex;
+    flex-direction: column;
+    overflow-y: auto;
+}
+
+.welcome-page-body {
+    background-color: white;
+}
+
+.welcome-section-one {
+    background-image: url("welcome-section-one.jpg");
+    background-position: center;
+    background-size: cover;
+    padding: 20px
+}
+
+.welcome-section-one .title {
+    margin: 0px;
+    text-align: center;
+    font-size: 35px;
+}
+
+.welcome-section-one .sub-title {
+    margin-top: 60px;
+}
+
+.welcome-section-one .body{
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 20px;
+}
+
+.welcome-section-one .body .text{
+    width: 60vw;
+    min-width: 786px;
+}
+
+.welcome-section-one .body .img{
+    width: 30vw;
+    min-width: 384px;
+    border-radius: 10px;
+}
+
+
+
+
+
+.welcome-section-two {
+    padding: 20px
+}
+
+.welcome-section-two .body {
+    margin: 70px 0px 30px 0px;
+    display: flex;
+    justify-content: space-evenly;
+}
+
+.welcome-section-two .reason {
+    font-size: 20px;
+    text-align: center;
+    min-width: 220px;
+    width: 16vw;
+    background-color: rgb(130, 236, 255);
+    border-radius: 5px;
+    display: flex;
+    flex-direction: column;
+    justify-content:space-evenly;
+    transition: all 0.3s ease;
+}
+
+.welcome-section-two .reason:hover {
+    transform: scale(1.10);
+}
+
+.welcome-section-two .reason .reason-title {
+    margin: 25px 0px 0px 0px;
+}
+
+
+
+
+
+.welcome-section-three {
+    background-image: url("welcome-section-3.jpg");
+    background-position: center;
+    background-size:cover;
+    padding:20px;
+    display:flex;
+    flex-direction: column;
+}
+
+.welcome-section-three .body{
+    display:grid;
+    grid-template-columns: 30vw 30vw 30vw;
+    align-self: center;
+}
+
+
+.welcome-section-four {
+    background-image: url("welcome-test-2.jpg");
+    background-position: center;
+    background-size: cover;
+    padding: 20px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.welcome-section-four .content{
+    display: flex;
+    flex-direction: column;
+}
+
+.welcome-section-four .content h1, .welcome-section-four .content .sign-up{
+    text-align: center;
+}
+
+
+.welcome-section-four .img {
+    transform: scale(.8);
+    border-radius: 10px;
+}
+
+.welcome-page-body footer p {
+    background-color: rgb(200, 223, 255);
+    color:gray;
+    font-size: 12px;
+    text-align: center;
+    margin: 0px
+}
