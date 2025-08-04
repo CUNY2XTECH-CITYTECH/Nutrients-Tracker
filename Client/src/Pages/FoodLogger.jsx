@@ -80,7 +80,7 @@ export function FoodLogger() {
       ctx.fillStyle = colors[index];
       ctx.fill();
       startAngle += sliceAngle;
-    });
+    }); 
   }, [totalNutrition]);
 
   return (
