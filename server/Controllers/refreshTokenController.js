@@ -1,0 +1,34 @@
+import User from "../Models/user.js";
+import JWT from "jsonwebtoken";
+import dotenv from "dotenv";
+dotenv.config();
+
+export async function refreshToken (req, res) {
+    const cookies = req.cookies;
+
+    //Checks for JWT in cookies
+    if(!cookies?.jwt) return res.sendStatus(401);
+    console.log(cookies.jwt)
+    const refreshToken = cookies.jwt;
+
+    //Gets copy of refreshtoken saved in db
+    const userExist = await User.findOne({ refreshToken: refreshToken });
+    if(!userExist) return res.sendStatus(403); //Forbidden
+    
+    //evaluate JWT
+    JWT.verify(
+        refreshToken,
+        process.env.REFRESH_TOKEN_SECRET,
+        (err, decoded) => {
+            if(err || userExist.username !== decoded.username) return res.sendStatus(403);
+
+            //creates new access token
+            const accessToken = JWT.sign(
+                {"username": decoded.username},
+                process.env.ACCESS_TOKEN_SECRET,
+                {expiresIn: '30s'}
+            );
+            res.json({accessToken})
+        }
+    )    
+}
