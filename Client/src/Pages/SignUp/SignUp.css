@@ -1,0 +1,93 @@
+@import url('https://fonts.googleapis.com/css2?family=Nunito&display=swap');
+
+html {
+    font-family:'Nunito'
+}
+
+.logo-header {
+    height: 100px;
+    display: flex;
+    align-items: center;
+}
+
+.login-page-parent, .signup-page-parent {
+    display: flex;
+    flex-direction: column;
+    background-image: url("../../../public/loginBackground.jpg");    
+    min-height: 100vh;
+}
+
+.login-main-page-container, .signup-main-page-container {
+    display: flex;
+    flex-direction: column;
+    background-color: rgb(255, 255, 255);
+    width: 475px;
+    margin: 100px auto 100px auto;
+    gap: 20px;
+    border-radius: 5px;
+    border: black solid 1px;
+    box-shadow: 0px 0px 30px 20px #d5feff;
+}
+
+.login-title, .signup-title {
+    margin:20px 0px 0px 20px;
+    font-size: 30px;
+}
+
+.sign-form, .login-form {
+    display: flex;
+    flex-direction: column;
+    margin: 0px 20px 0px 20px
+}
+
+input, select {
+    border-radius: 5px;
+    height: 30px;
+    margin-bottom: 10px;
+}
+
+.offscreen {
+  position: absolute;
+  left: -10000px;
+
+}
+
+.signup-instructions {
+    font-size: 0.75rem;
+    border-radius: 0.5rem;
+    background: #000;
+    color: #fff;
+    padding: 0.25rem;
+    bottom: -10px;
+    margin:0px 0px 10px 0px;
+}
+
+.signup-error-mes, .login-error-mes{
+    color: red;
+    text-align: center;
+}
+
+.signup-regrister-btn, .login-login-btn {
+    font-size: 15px;
+    margin-bottom: 10px;
+    height: 40px;
+    font-weight: bold;
+    background-color: blue;
+    color:white;
+    border-radius: 4px;
+    cursor: pointer;
+}
+
+.signup-regrister-btn:disabled, .login-login-btn:disabled{
+    filter: brightness(50%); 
+    cursor: default;
+}
+
+.signup-login-text, .login-signup-text {
+    margin: 0px 0px 20px 20px;
+}
+
+.signup-acc-made {
+    padding: 0px 20px 10px 20px;
+
+}

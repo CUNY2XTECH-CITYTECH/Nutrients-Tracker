@@ -1,7 +1,11 @@
+@import url('https://fonts.googleapis.com/css2?family=Nunito&display=swap');
+
 html, body {
     margin:0;
     padding: 0;
-    width : 100vw;
+    width : 100%;
+    font-family:'Nunito';
+    min-height:100vh;
 }
 
 body {
@@ -18,12 +22,16 @@ body {
 
 
 .header-container{
-    background-color: rgb(203, 203, 203);
     height: 100px;
+    position: sticky;
+    top:0px;
+    background-color: #c2e7ff;
     display:flex;
     align-items: center;
     justify-content: end;
     gap:20px;
+    box-shadow: 0px 0px 30px 10px #dadada;
+    z-index: 1;
 }
 
 .header-container .header-logo-link {
@@ -32,22 +40,36 @@ body {
     text-decoration: none;
 }
 
-.header-container .logo {
+.logo-link, .logo {
     color:rgb(58, 58, 255);
     font-size: 30px;
-    font-family: Arial;
-    font-weight: bold;
+    font-weight:bold;
+    margin-left: 20px;
+    margin-right: auto;
+    text-decoration: none;
     /* text-shadow: -1px -1px 0 #000, 1px -1px 0 #000, -1px 1px 0 #000, 1px 1px 0 #000; */
 
 }
 
-.header-container .sign-up-btn {
+.header-container .header-signup-link {
     margin-right: 20px;
 }
 
-.header-container .header-btn {
-    height:30px;
+.header-container .btn {
+    text-decoration: none;
+    color: blue;
+    padding:20px;
+    font-weight: bold;
+    /* border: 1px solid black; */
+    box-shadow: 0px 0px 30px 2px rgb(216, 248, 255);
+    border-radius: 10px;
+    transition: background-color .5s ease-in-out;
 }
+
+.header-container .btn:hover {
+    background-color: rgb(216, 248, 255);
+}
+
 
 .content-container {
     display:flex;
@@ -83,6 +105,8 @@ body {
     flex-grow: 1;
     font-size:20px;
     font-family:'Franklin Gothic Medium', 'Arial Narrow', Arial, sans-serif;
+    border-radius: 10px;
+
 }
 
 
