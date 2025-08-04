@@ -3,7 +3,7 @@ import { Link } from "react-router-dom";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faInfoCircle } from "@fortawesome/free-solid-svg-icons";
 import axios from "axios"
-import {Logo} from "../../Componets/logo"
+import {Logo} from "../../Components/logo"
 import "./SignUp.css"
 
 export function SignUp () {

@@ -1,4 +1,4 @@
-import { Header } from "../../Componets/Header"
+import { Header } from "../../Components/Header"
 import { Link } from "react-router-dom"
 import "./welcome.css"
 
