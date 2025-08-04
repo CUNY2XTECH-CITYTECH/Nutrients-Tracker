@@ -27,6 +27,7 @@ export function Login () {
                                             }
                                         })
             console.log(response.data)
+            const accessToken = response?.data?.accessToken;
         } catch(e){
             console.error(e)
             if (e.response.data?.errorMes) return setErrorMes(e.response.data.errorMes)

@@ -1,5 +1,5 @@
 
 
 export function test (req,res) {
-    res.json({"Message":"success"})
+    return(res.json({"Message":"success"}))
 }
