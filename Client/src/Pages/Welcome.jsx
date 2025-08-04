@@ -1,4 +1,4 @@
-import { Header } from "../Components/Header"
+import { Header } from "../Componets/Header"
 
 export function Welcome () {
     return(

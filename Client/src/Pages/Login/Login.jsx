@@ -2,7 +2,7 @@ import {useState, useEffect} from "react"
 import { Link } from "react-router-dom";
 import axios from "axios"
 import "../SignUp/Signup.css"
-import { Logo } from "../../Components/logo";
+import { Logo } from "../../Componets/logo";
 
 export function Login () {
 
