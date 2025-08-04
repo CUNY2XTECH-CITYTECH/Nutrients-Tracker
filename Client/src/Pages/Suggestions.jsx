@@ -1,6 +1,6 @@
 import "../../src/App.css";
-import { Searchbar } from "../Componets/Searchbar";
-import { Result_card } from "../Componets/Result_card";
+import { Searchbar } from "../Components/Searchbar";
+import { Result_card } from "../Components/Result_card";
 
 export function Suggestions() {
   return (
