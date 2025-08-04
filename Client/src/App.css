@@ -1,5 +1,5 @@
 @import url("https://fonts.googleapis.com/css?family=Raleway:400,400i,700");
-html,
+/* html,
 body {
   font-family: Raleway, sans-serif;
   width: 100%;
@@ -15,8 +15,7 @@ body {
   flex-wrap: nowrap;
   overflow: hidden;
   height: 100%;
-  padding-top: 1em;
-}
+} */
 
 
 
@@ -72,4 +71,24 @@ body {
   display: flex;
   border: 0.2in solid black;
   background-color: green;
+}
+
+.modal-backdrop {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-color: rgba(0, 0, 0, 0.5);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.modal-content {
+  background: white;
+  padding: 2rem;
+  border-radius: 12px;
+  max-width: 400px;
+  width: 80%;
 }

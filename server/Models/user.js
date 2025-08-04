@@ -30,6 +30,7 @@ const userSchema = new mongoose.Schema({
         type: Number,
         required: true
     },
+    refreshToken: String
 })
 
 export default mongoose.model("User", userSchema)

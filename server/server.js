@@ -10,14 +10,19 @@ import mongoose from "mongoose"
 import 'dotenv/config'; // loads .env file
 mongoose.connect(process.env.MONGODB_URI)
 
+import cookieParser from "cookie-parser"
+app.use(cookieParser()) //middleware for cookies
+
 import authRoutes from "./Routes/authRoutes.js"
+import foodRoutes from "./Routes/foodRoutes.js"
 
 const port = 3000
 app.use(express.json());
 
 
-app.use("/", authRoutes)
 
+app.use("/", authRoutes)
+app.use("/api/food", foodRoutes)
 
 
 app.listen(port, () => {
