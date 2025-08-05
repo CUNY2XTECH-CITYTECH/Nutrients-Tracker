@@ -1,6 +1,7 @@
 import "../searchBox.css";
 
 
+
 const foodData = [
   { title: "Avocado", calories: 160, nutrients: { protein: "2g", carbs: "9g", fat: "15g" } },
   { title: "Chicken Breast", calories: 165, nutrients: { protein: "31g", carbs: "0g", fat: "3.6g" } },
@@ -15,12 +16,18 @@ export function Food() {
         <input type="text" placeholder=" " />
         <button type="reset"></button>
       </form>
-      <div className="food-items-container">
+      <button id="searchButton"> Search
+      </button>
+      <div id="search-results"></div>
+
+      <div>Suggested foods of the day </div>
+      <div className="suggested-food-items-container">
         {foodData.map((food, index) => (
           <div key={index} className="food-item">
             <h3 className="food-title">{food.title}</h3>
             <div className="cal-num">{food.calories} kcal</div>
             <div className="nutrient-facts">
+
               <p>Protein: {food.nutrients.protein}</p>
               <p>Carbs: {food.nutrients.carbs}</p>
               <p>Fat: {food.nutrients.fat}</p>
@@ -29,5 +36,6 @@ export function Food() {
         ))}
       </div>
     </div>
+    //add footer 
   );
 }

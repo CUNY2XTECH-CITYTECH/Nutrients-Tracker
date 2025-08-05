@@ -3,9 +3,11 @@
 .search-box {
   font-size: 20px;
   border: solid 0.3em #000000;
-  display: inline-block;
+  display:inline-flex;
   position: relative;
   border-radius: 2.5em;
+  box-shadow: 0px 0px 30px 10px #dadada;
+  
 }
 
 .search-box input[type="text"] {
@@ -44,6 +46,7 @@
 }
 
 .search-box button[type="reset"] {
+  top: 10px;
   background-color: transparent;
   width: 1.4em;
   height: 1.4em;
@@ -73,4 +76,20 @@
   transform: rotate(90deg);
   opacity: 0;
   transition: transform 150ms ease-out, opacity 150ms ease-out;
+}
+
+#searchButton{
+  text-align: justify;
+  font-family: inherit;
+  font-weight: bold;
+  border: solid 0.3em #000000;
+  border-radius: 2.5em;
+  font-size: 20px;
+  padding: 0.3em 2.1em 0.3em 0.4em;
+  position: relative;
+  top: 7px;
+  box-shadow: 0px 0px 30px 10px #dadada;
+  left: 20px;
+  
+
 }
