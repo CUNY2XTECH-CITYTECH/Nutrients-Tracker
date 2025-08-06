@@ -8,7 +8,7 @@ import { Login } from './Pages/Login/Login'
 import { SignUp } from './Pages/SignUp/SignUp'
 import { Welcome } from './Pages/welcome/Welcome'
 import { Layout } from '../Layouts'
-import { Suggestions } from './Pages/Suggestions'
+import { Suggestions } from './Pages/Suggestions/Suggestions'
 
 function App() {
 
