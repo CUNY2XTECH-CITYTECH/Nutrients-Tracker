@@ -67,7 +67,7 @@
 .search-box button[type="reset"]:after {
   content: "";
   background-color: #000000;
-  width: 0.3em;
+  width: 0.4em;
   height: 1.4em;
   position: absolute;
 }
@@ -90,6 +90,7 @@
   top: 7px;
   box-shadow: 0px 0px 30px 10px #dadada;
   left: 20px;
+  padding-right: 10px;
   
 
 }
