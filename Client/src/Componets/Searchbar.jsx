@@ -1,17 +1,27 @@
 import { FaSearch } from "react-icons/fa";
 
+export function Searchbar({ onSearch }) {
+  const [input, setInput] = useState("");
 
-export function Searchbar() {
+  const handleSubmit = (e) => {
+    e.preventDefault();
+
+    const ingredients = input.split(",").map((item) => item.trim());
+    onSearch(ingredients);
+  };
+   
+
   return (
-    <div className="search-bar-container">
+    <form onSubmit={handleSubmit} className="search-bar-container">
       <input
         type="text"
-        placeholder="Enter an ingredient"
+        placeholder="Enter ingredients (e.g., chicken, rice)"
+        value={input}
         className="search-input"
+        onChange={(e) => setInput(e.target.value)}
       />
-      <button className="search-button">
-        <FaSearch />
-      </button>
-    </div>
+      <button className="search-button" type="submit"><FaSearch/></button>
+    </form>
   );
-};
+}
+
