@@ -13,7 +13,7 @@ html {
 .login-page-parent, .signup-page-parent {
     display: flex;
     flex-direction: column;
-    background-image: url("../../../public/loginBackground.jpg");    
+    background-image: url("/loginBackground.jpg");    
     min-height: 100vh;
 }
 

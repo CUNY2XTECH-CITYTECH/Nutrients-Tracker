@@ -3,6 +3,7 @@ import bcrypt from "bcrypt"
 import JWT from "jsonwebtoken";
 import cookieParser from "cookie-parser";
 import dotenv from "dotenv";
+import user from "../Models/user.js";
 dotenv.config();
 
 export async function userLogin (req, res) {
@@ -23,7 +24,7 @@ export async function userLogin (req, res) {
     const accessToken = JWT.sign(
         {"username": userExist.username},
         process.env.ACCESS_TOKEN_SECRET,
-        {expiresIn: '30s'}
+        {expiresIn: '15m'}
     );
     const refreshToken = JWT.sign(
         {"username": userExist.username},
@@ -39,5 +40,5 @@ export async function userLogin (req, res) {
     res.cookie('jwt', refreshToken, {httpOnly: true, sameSite:"None", secure:true, maxAge: 24 * 60 * 60 * 1000}); //24 hours, recorded in milliseconds
     
     //Send accessToken to client
-    res.json({accessToken});
+    res.json({accessToken, hash: userExist.password, user:userExist.username});
 }

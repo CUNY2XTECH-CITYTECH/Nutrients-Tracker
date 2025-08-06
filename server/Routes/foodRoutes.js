@@ -1,5 +1,5 @@
 import express from 'express';
-import FoodLog from '../models/FoodLog.js';
+import FoodLog from '/models/FoodLog.js';
 
 const router = express.Router();
 

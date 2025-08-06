@@ -50,9 +50,9 @@ export default function FoodLogger({ username = "qqqqqqqq" }) {
         "energy (atwater specific factors)",
         "energy",
       ],
-      carbs: ["carbohydrate, by summation", "carbohydrate"],
+      carbs: ["carbohydrate, by difference","carbohydrate, by summation", "carbohydrate"],
       fat: ["total lipid (fat)", "fat", "total fat"],
-      protein: ["protein"],
+      protein: ["Protein",],
     };
 
     const fetchDetails = async () => {
