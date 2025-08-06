@@ -62,10 +62,6 @@ body {
   display: flex;
   background: rgba(0,0,0,0.5);
   border-style: ridge;
-
- 
-
-
 }
 
 #food_item-container{
@@ -73,3 +69,8 @@ body {
   border: 0.2in solid black;
   background-color: green;
 }
+
+main {
+  flex-grow: 1;
+}
+
