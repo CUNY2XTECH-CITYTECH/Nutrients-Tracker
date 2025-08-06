@@ -1,10 +1,17 @@
-import {useState, useEffect} from "react"
-import { Link } from "react-router-dom";
+import {useState, useEffect, useContext} from "react"
+import AuthContext from "../../context/authProvider";
+import { Link, useNavigate, useLocation } from "react-router-dom";
 import axios from "axios"
 import "../SignUp/Signup.css"
 import { Logo } from "../../Componets/logo";
 
 export function Login () {
+
+    const {auth, setAuth} = useContext(AuthContext); //state of global AuthConext to save user's info
+
+    const navigate = useNavigate();
+    const location = useLocation();
+    const from = location.state?.from?.pathname || "/home";  //If user was redirected to login trying to access private routes, This saves that route to redirect user to that endpoint after login otherwise redirect to home
 
     const [user, setUser] = useState('');
     const [pass, setPass] = useState('');
@@ -25,12 +32,18 @@ export function Login () {
                                             headers: {'Content-Type': 'application/json',
                                             withCredentials: true
                                             }
-                                        })
-            console.log(response.data)
-            const accessToken = response?.data?.accessToken;
+                                        });
+            // console.log(response.data)
+            const accessToken = response?.data?.accessToken;  //Checks to see if we were sent access token          
+                
+            setAuth({user, pass, accessToken})  //saves access token in our global context
+            setUser('')     //clear our state
+            setPass('')     //clear our state
+            navigate(from, {replace: true}); //redirects user to 
         } catch(e){
             console.error(e)
             if (e.response.data?.errorMes) return setErrorMes(e.response.data.errorMes)
+            if (!e?.response) return setErrorMes("No server response")
         }
         
     }
