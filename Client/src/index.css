@@ -20,11 +20,15 @@ body {
     flex-direction: column;
 } 
 
+main {
+    flex-grow: 1;
+}
+
 
 .header-container{
     height: 100px;
-    position: sticky;
-    top:0px;
+    /* position: sticky;
+    top:0px; */
     background-color: #c2e7ff;
     display:flex;
     align-items: center;
@@ -40,6 +44,8 @@ body {
     text-decoration: none;
 }
 
+
+
 .logo-link, .logo {
     color:rgb(58, 58, 255);
     font-size: 30px;
@@ -47,8 +53,8 @@ body {
     margin-left: 20px;
     margin-right: auto;
     text-decoration: none;
-    /* text-shadow: -1px -1px 0 #000, 1px -1px 0 #000, -1px 1px 0 #000, 1px 1px 0 #000; */
-
+    margin-top: 10px;
+    margin-bottom: 10px;
 }
 
 .header-container .header-signup-link {
@@ -107,6 +113,62 @@ body {
     font-family:'Franklin Gothic Medium', 'Arial Narrow', Arial, sans-serif;
 }
 
+.home-header-container {
+    display: flex;
+    flex-direction: column;
+}
 
 
+.home-header-top {
+    background-color: rgb(230, 230, 230);
+    display:flex;
+    align-items: center;
+    justify-content: end;
+    gap:20px;
+    border-bottom: 5px solid white;
+}
+
+.logged-in-logo {
+    color: rgb(0, 0, 166)
+}
+
+.header-logout-btn {
+    margin-right: 20px;
+    background-color: rgb(230, 230, 230);
+    border: 5px solid rgb(0, 0, 166);
+    color: rgb(0, 0, 166);
+    border-radius: 10px;
+    font-family: 'Nunito';
+    padding: 10px;
+    font-weight:bold;
+    font-size: 15px;
+    cursor:pointer;
+}
+
+.header-logout-btn:hover {
+    background-color: rgb(205, 205, 205)
+}
+
+.home-header-bottom{
+    background-color: rgb(0, 0, 166);
+    display:flex;
+    align-items: center;
+    justify-content: center;
+    gap:20px;
+}
+
+.home-header-btn {
+    background-color: rgb(0, 0, 166);
+    font-family: 'Nunito';
+    font-size: 20px;
+    color:white;
+    font-weight: bold;
+    padding:10px 20px 10px 20px;
+    border: none;
+    cursor: pointer;
+}
+
+.home-header-btn:hover{
+    color:rgb(230, 230, 230)
+}
 
