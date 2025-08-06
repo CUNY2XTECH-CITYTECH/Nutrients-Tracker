@@ -5,6 +5,12 @@ export default defineConfig({
   plugins: [react()],
   server: {
     proxy: {
+      '/register': {
+        target: 'http://localhost:3000',
+        changeOrigin: true,
+        secure: false,
+      },
+      '/check': 'http://localhost:3000',
       '/api': {
         target: 'http://localhost:3000',
         changeOrigin: true,
