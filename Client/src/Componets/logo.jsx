@@ -1,6 +1,6 @@
 import { Link } from "react-router-dom"
 
-export function Logo () {
+export function Logo ({className = "", endpoint="/"}) {
     return(
-    <Link to="/" className ="logo-link"><div className="logo">Nutrient Tracker</div></Link>
+    <Link to={endpoint} className ="logo-link"><div className={`logo ${className}`}>Nutrient Tracker</div></Link>
 )}
