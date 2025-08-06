@@ -1,30 +1,38 @@
-import express from "express"
-import bodyParser from "body-parser"
-const app = express()
+// server.js
+import express from 'express';
+import cors from 'cors';
 
-import cors from "cors"
-const corsOptions = {origin: "http://localhost:5173"}
-app.use(cors(corsOptions))
+const app = express();
+const PORT = 3000;
 
-import mongoose from "mongoose" 
-import 'dotenv/config'; // loads .env file
-mongoose.connect(process.env.MONGODB_URI)
+// 允许所有来源跨域请求
+app.use(cors());
 
-import cookieParser from "cookie-parser"
-app.use(cookieParser()) //middleware for cookies
-
-import authRoutes from "./Routes/authRoutes.js"
-import foodRoutes from "./Routes/foodRoutes.js"
-
-const port = 3000
+// 支持 JSON 请求体
 app.use(express.json());
 
+// 示例路由：获取某个用户名的日志（示例数据）
+app.get('/api/food/logs/:username', (req, res) => {
+  const { username } = req.params;
+  
+  // 假数据示范，实际请接数据库查询
+  if (username === 'qqqqqqqq') {
+    res.json([
+      {
+        username: 'qqqqqqqq',
+        foodId: 1750340,
+        mealType: 'lunch',
+        serving: 2,
+        unit: 'oz',
+        date: '2025-08-05T00:00:00.000Z'
+      }
+    ]);
+  } else {
+    res.json({ message: 'No logs found for user.' });
+  }
+});
 
-
-app.use("/", authRoutes)
-app.use("/api/food", foodRoutes)
-
-
-app.listen(port, () => {
-    console.log(`Server is lietening on ${port}`)
-})
+// 启动服务器
+app.listen(PORT, () => {
+  console.log(`Server running on http://localhost:${PORT}`);
+});
