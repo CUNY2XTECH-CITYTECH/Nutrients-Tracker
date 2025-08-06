@@ -1,7 +1,7 @@
 const mongoose = require('mongoose');
 
 const foodLogSchema = new mongoose.Schema({
-  username: String,   // 这里是 username，不是 userId
+  username: String,   
   foodId: Number,
   mealType: String,
   serving: Number,

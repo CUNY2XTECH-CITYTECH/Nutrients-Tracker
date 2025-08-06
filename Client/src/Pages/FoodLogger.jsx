@@ -10,8 +10,8 @@ export default function FoodLogger({ username = "qqqqqqqq" }) {
   const [loadingDetails, setLoadingDetails] = useState(false);
   const [error, setError] = useState(null);
 
-  // 获取日志
-  useEffect(() => {
+  // ⏱️ 稳定刷新：封装成函数
+  const loadLogs = () => {
     setLoadingLogs(true);
     setError(null);
     fetch(`/api/food/logs/${username}`)
@@ -20,16 +20,21 @@ export default function FoodLogger({ username = "qqqqqqqq" }) {
         return res.json();
       })
       .then((data) => {
-        setLogs(data);
+        setLogs(data); // ⏎ 会触发 useEffect 去拿 foodDetails
         setLoadingLogs(false);
       })
       .catch((err) => {
         setError(err.message);
         setLoadingLogs(false);
       });
+  };
+
+  // 初始加载 logs
+  useEffect(() => {
+    loadLogs();
   }, [username]);
 
-  // 根据日志调用 USDA API 获取营养信息
+  // logs 更新后获取 foodDetails
   useEffect(() => {
     if (logs.length === 0) {
       setFoodDetails([]);
@@ -86,6 +91,9 @@ export default function FoodLogger({ username = "qqqqqqqq" }) {
               fat: fat ? (fat * log.serving).toFixed(2) : "N/A",
               protein: protein ? (protein * log.serving).toFixed(2) : "N/A",
               date: new Date(log.date).toLocaleDateString(),
+              mealType: log.mealType,
+              unit: log.unit,
+              serving: log.serving,
             };
           } catch (err) {
             console.error(err);
@@ -101,11 +109,29 @@ export default function FoodLogger({ username = "qqqqqqqq" }) {
     fetchDetails();
   }, [logs]);
 
+  // 按餐别分组
+  const groupByMealType = (foods) => {
+    return foods.reduce((groups, food) => {
+      const meal = food.mealType || "unknown";
+      if (!groups[meal]) groups[meal] = [];
+      groups[meal].push(food);
+      return groups;
+    }, {});
+  };
+
   return (
     <div>
       <h2>Food Logs for {username}</h2>
 
-      {error && <p style={{ color: "red" }}>Error: {error}</p>}
+      <button onClick={loadLogs} disabled={loadingLogs} style={{ marginBottom: "1rem" }}>
+        🔄 Refresh
+      </button>
+
+      {error && (
+        <p style={{ color: "red" }}>
+          <strong>Error:</strong> {error}
+        </p>
+      )}
 
       {loadingLogs && <p>Loading logs...</p>}
       {!loadingLogs && logs.length === 0 && <p>No food logs found.</p>}
@@ -113,17 +139,27 @@ export default function FoodLogger({ username = "qqqqqqqq" }) {
       {loadingDetails && <p>Loading food details...</p>}
 
       {!loadingDetails && foodDetails.length > 0 && (
-        <ul>
-          {foodDetails.map((food, idx) => (
-            <li key={idx}>
-              <strong>{food.name}</strong> ({food.date})<br />
-              Calories: {food.calories} kcal<br />
-              Carbs: {food.carbs} g<br />
-              Fat: {food.fat} g<br />
-              Protein: {food.protein} g
-            </li>
-          ))}
-        </ul>
+        <div>
+          {Object.entries(groupByMealType(foodDetails)).map(
+            ([mealType, items]) => (
+              <div key={mealType} style={{ marginBottom: "1.5rem" }}>
+                <h3>{mealType[0].toUpperCase() + mealType.slice(1)}</h3>
+                <ul>
+                  {items.map((food, idx) => (
+                    <li key={idx}>
+                      <strong>{food.name}</strong> ({food.date})<br />
+                      Serving: {food.serving} {food.unit}<br />
+                      Calories: {food.calories} kcal<br />
+                      Carbs: {food.carbs} g<br />
+                      Fat: {food.fat} g<br />
+                      Protein: {food.protein} g
+                    </li>
+                  ))}
+                </ul>
+              </div>
+            )
+          )}
+        </div>
       )}
 
       {!loadingDetails && foodDetails.length === 0 && logs.length > 0 && (
