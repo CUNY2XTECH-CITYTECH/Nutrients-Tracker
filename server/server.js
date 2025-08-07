@@ -28,6 +28,8 @@ app.use(express.json());
 
 
 app.use("/", authRoutes)
+
+
 app.use("/api/food", foodRoutes)
 
 
