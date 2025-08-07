@@ -6,8 +6,10 @@ import { test } from "../Controllers/test.js";
 import { refreshToken } from "../Controllers/refreshTokenController.js";
 import { logout } from "../Controllers/logoutController.js";
 
+
 const router = express.Router();
 
+router.get("/api/test", test);
 
 
 router.post("/register", createUser);
