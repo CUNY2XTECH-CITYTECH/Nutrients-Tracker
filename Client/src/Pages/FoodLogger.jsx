@@ -3,14 +3,24 @@ import { useEffect, useState, useRef } from "react";
 const API_KEY = "VsNxcVGrt9triez7CjKKNwKdjRidilAez1CFdvLk";
 
 export default function FoodLogger({ username = "qqqqqqqq" }) {
+  // State to store the fetched logs for the user
   const [logs, setLogs] = useState([]);
+  // State to store detailed food info fetched from USDA API for each log item
   const [foodDetails, setFoodDetails] = useState([]);
+  // Loading state for fetching user logs
   const [loadingLogs, setLoadingLogs] = useState(false);
+  // Loading state for fetching food details
   const [loadingDetails, setLoadingDetails] = useState(false);
+  // Error state to capture and display errors from API calls
   const [error, setError] = useState(null);
+  // Ref for the canvas element used to draw the macronutrients pie chart
   const canvasRef = useRef(null);
 
-  // Fetch user logs
+  /**
+   * Fetch user food logs from internal API endpoint.
+   * Uses the 'username' prop to get logs for specific user.
+   * Handles loading and error states accordingly.
+   */
   const loadLogs = () => {
     setLoadingLogs(true);
     setError(null);
@@ -29,11 +39,19 @@ export default function FoodLogger({ username = "qqqqqqqq" }) {
       });
   };
 
+  // Automatically load logs when the component mounts or username changes
   useEffect(() => {
     loadLogs();
   }, [username]);
 
-  // Fetch food details for logs
+  /**
+   * Effect to fetch detailed nutrition info from USDA API for each food log.
+   * Triggers whenever 'logs' state changes.
+   * Uses async/await within Promise.all to fetch data for all logs concurrently.
+   * Extracts calories, carbs, fat, protein based on prioritized nutrient names.
+   * Multiplies nutrient amounts by the serving size from the log.
+   * Handles error per item by returning null and filtering those out.
+   */
   useEffect(() => {
     if (logs.length === 0) {
       setFoodDetails([]);
@@ -43,17 +61,19 @@ export default function FoodLogger({ username = "qqqqqqqq" }) {
     setLoadingDetails(true);
     setError(null);
 
+    // Priority lists for nutrient name matching to improve data accuracy
     const nutrientPriorityMap = {
       calories: ["energy (atwater general factors)", "energy (atwater specific factors)", "energy"],
       carbs: ["carbohydrate, by difference", "carbohydrate, by summation", "carbohydrate"],
       fat: ["total lipid (fat)", "fat", "total fat"],
-      protein: ["protein"],
+      protein: ["protein"], 
     };
 
     const fetchDetails = async () => {
       const details = await Promise.all(
         logs.map(async (log) => {
           try {
+            // Fetch detailed info from USDA API by foodId
             const res = await fetch(
               `https://api.nal.usda.gov/fdc/v1/food/${log.foodId}?api_key=${API_KEY}`
             );
@@ -62,6 +82,11 @@ export default function FoodLogger({ username = "qqqqqqqq" }) {
             const data = await res.json();
             const nutrients = data.foodNutrients || [];
 
+            /**
+             * Helper function to find nutrient amount by priority list of nutrient names.
+             * Tries exact or partial case-insensitive matching.
+             * Returns 0 if no match found.
+             */
             const getNutrientByPriority = (names) => {
               for (const name of names) {
                 const lowerName = name.toLowerCase();
@@ -75,8 +100,10 @@ export default function FoodLogger({ username = "qqqqqqqq" }) {
               return 0;
             };
 
+            // Get serving size from log or default to 1
             const serving = Number(log.serving) || 1;
 
+            // Extract nutrient amounts and multiply by serving
             const calories = getNutrientByPriority(nutrientPriorityMap.calories);
             const carbs = getNutrientByPriority(nutrientPriorityMap.carbs);
             const fat = getNutrientByPriority(nutrientPriorityMap.fat);
@@ -94,12 +121,14 @@ export default function FoodLogger({ username = "qqqqqqqq" }) {
               serving: serving,
             };
           } catch (err) {
+            // Log and skip failed fetches for individual food items
             console.error(err);
             return null;
           }
         })
       );
 
+      // Filter out any failed fetch results and update state
       setFoodDetails(details.filter(Boolean));
       setLoadingDetails(false);
     };
@@ -107,7 +136,11 @@ export default function FoodLogger({ username = "qqqqqqqq" }) {
     fetchDetails();
   }, [logs]);
 
-  // Group foods by mealType ignoring case
+  /**
+   * Group fetched food details by mealType.
+   * Ignores case when matching mealType strings.
+   * Initializes empty arrays for Breakfast, Lunch, and Dinner.
+   */
   const grouped = {
     Breakfast: [],
     Lunch: [],
@@ -121,7 +154,10 @@ export default function FoodLogger({ username = "qqqqqqqq" }) {
     else if (meal === "dinner") grouped.Dinner.push(food);
   });
 
-  // Calculate total nutrition
+  /**
+   * Calculate total nutrition values by summing over all food details.
+   * Used to display total calories, carbs, fat, and protein.
+   */
   const totalNutrition = foodDetails.reduce(
     (acc, food) => {
       acc.calories += food.calories || 0;
@@ -133,7 +169,12 @@ export default function FoodLogger({ username = "qqqqqqqq" }) {
     { calories: 0, carbs: 0, fat: 0, protein: 0 }
   );
 
-  // Draw pie chart of macros
+  /**
+   * useEffect hook to draw a pie chart of macronutrient distribution (carbs, fat, protein)
+   * Uses the canvas 2D API to draw colored slices.
+   * Clears previous drawing on each update.
+   * Does nothing if total macros sum to zero.
+   */
   useEffect(() => {
     const canvas = canvasRef.current;
     if (!canvas) return;
@@ -142,13 +183,16 @@ export default function FoodLogger({ username = "qqqqqqqq" }) {
     const values = [carbs, fat, protein];
     const colors = ["#36A2EB", "#FFCE56", "#4BC0C0"];
     const total = values.reduce((sum, v) => sum + v, 0);
+
+    // Clear previous drawing
     ctx.clearRect(0, 0, canvas.width, canvas.height);
     if (total === 0) return;
+
     let startAngle = 0;
     values.forEach((value, i) => {
       const sliceAngle = (value / total) * 2 * Math.PI;
       ctx.beginPath();
-      ctx.moveTo(100, 100);
+      ctx.moveTo(100, 100); // center of pie chart
       ctx.arc(100, 100, 80, startAngle, startAngle + sliceAngle);
       ctx.closePath();
       ctx.fillStyle = colors[i];
@@ -159,8 +203,10 @@ export default function FoodLogger({ username = "qqqqqqqq" }) {
 
   return (
     <div style={{ maxWidth: "900px", margin: "auto", fontFamily: "sans-serif" }}>
+      {/* Header showing the current username */}
       <h2 style={{ marginBottom: "0.5em" }}>Food Logs for {username}</h2>
 
+      {/* Section displaying total nutrition summary and pie chart */}
       <div
         style={{
           display: "flex",
@@ -172,6 +218,7 @@ export default function FoodLogger({ username = "qqqqqqqq" }) {
           marginBottom: "1em",
         }}
       >
+        {/* Total nutrition values text */}
         <div>
           <h3>Total Calories: {totalNutrition.calories.toFixed(1)}</h3>
           <h3>Total Carbs: {totalNutrition.carbs.toFixed(1)}g</h3>
@@ -179,6 +226,7 @@ export default function FoodLogger({ username = "qqqqqqqq" }) {
           <h3>Total Protein: {totalNutrition.protein.toFixed(1)}g</h3>
         </div>
 
+        {/* Pie chart canvas and legend */}
         <div style={{ display: "flex", gap: "1em" }}>
           <canvas ref={canvasRef} width={200} height={200} />
           <div>
@@ -198,6 +246,7 @@ export default function FoodLogger({ username = "qqqqqqqq" }) {
         </div>
       </div>
 
+      {/* Refresh button to reload logs */}
       <button onClick={loadLogs} disabled={loadingLogs} style={{ marginBottom: "1em" }}>
         🔄 Refresh
       </button>
@@ -207,10 +256,10 @@ export default function FoodLogger({ username = "qqqqqqqq" }) {
           <strong>Error:</strong> {error}
         </p>
       )}
-
       {loadingLogs && <p>Loading logs...</p>}
       {loadingDetails && <p>Loading food details...</p>}
 
+      {/* Render grouped food items by meal */}
       {foodDetails.length > 0 &&
         ["Breakfast", "Lunch", "Dinner"].map((mealType) => (
           <div key={mealType} style={{ marginBottom: "2em" }}>
@@ -233,7 +282,6 @@ export default function FoodLogger({ username = "qqqqqqqq" }) {
             </ul>
           </div>
         ))}
-
       {!loadingDetails && foodDetails.length === 0 && logs.length > 0 && <p>No food details available.</p>}
     </div>
   );
