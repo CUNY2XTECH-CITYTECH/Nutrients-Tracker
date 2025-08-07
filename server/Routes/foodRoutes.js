@@ -1,5 +1,6 @@
-import express from 'express'
+import express, { Router } from 'express'
 import axios  from 'axios';
+import Food from "../Models/food.js";
 const router = express.Router();
 
 router.get('/test-env', (req, res) => {
@@ -10,6 +11,7 @@ router.get('/usda-search', async (req, res) => {
     const query = req.query.query;
     const food = req.body;
     const rawMealType = req.query.mealType;
+    const limit = parseInt(req.query.limit) || 10;
     const apikey = process.env.USDA_API_KEY;
 
     const allowedMealTypes = ['Breakfast', 'Lunch', 'Dinner'];
@@ -19,7 +21,7 @@ router.get('/usda-search', async (req, res) => {
 
     try {
         const response = await axios.get(url);
-        const results = response.data.foods.map(food => {
+        const results = response.data.foods.slice(0, limit).map(food => {
             const nutrients = food.foodNutrients;
             return {
                 foodID: food.fdcId,
@@ -39,6 +41,26 @@ router.get('/usda-search', async (req, res) => {
         res.status(500).send('Error fetching data from USDA');
     }
 });
+
+router.get("/all", async (req, res) => {
+  try {
+    const foods = await Food.find();
+    res.json(foods);
+  } catch (error) {
+    res.status(500).json({ message: "Error fetching foods", error: error.message });
+  }
+});
+
+router.post("/save", async (req, res) => {
+    try {
+        const newFood = new Food(req.body);
+        await newFood.save();
+        res.status(201).json({ message: "Food saved", data: newFood });
+    }
+    catch (error) {
+        res.status(500).json({ message: "Error saving food", error: error.message });
+    }
+})
 
 function getNutrientValue(nutrients, nutrientName, unitName) {
     const nutrient = nutrients.find(n => n.nutrientName === nutrientName && n.unitName === unitName);
