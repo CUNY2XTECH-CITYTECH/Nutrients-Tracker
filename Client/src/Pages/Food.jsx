@@ -1,5 +1,7 @@
 import { useState, useEffect } from "react";
 import "../searchBox.css";
+import { Searchbar } from "../Componets/Searchbar";
+import axios from "axios"
 
 const foodData = [
   { title: "Avocado", calories: 160, nutrients: { protein: "2g", carbs: "9g", fat: "15g" } },
@@ -32,10 +34,17 @@ export function Food() {
 
     setIsSearching(true);
     try {
-      const response = await fetch(
-        `https://api.nal.usda.gov/fdc/v1/foods/search?api_key=${API_KEY}&query=${encodeURIComponent(term)}`
-      );
-      const data = await response.json();
+      // const response = await fetch(
+      //   `https://api.nal.usda.gov/fdc/v1/foods/search?api_key=${API_KEY}&query=${encodeURIComponent(term)}`
+      // );
+      const response = await axios.post("http://localhost:3000/api/food/search", {
+    food: searchTerm
+}, {
+    headers: { 
+        'Content-Type': 'application/json' 
+    }
+});
+const data = response.data;
       setSearchResults(data.foods || []);
     } catch (error) {
       console.error("Error fetching from USDA API:", error);
@@ -63,6 +72,7 @@ export function Food() {
 
   return (
     <div className="food-page">
+      <p>🔍</p>
       <form className="search-box">
         <input 
           type="text" 
@@ -74,6 +84,7 @@ export function Food() {
       </form>
       
       {/* Search results container */}
+      
       <div id="search-results">
         {isSearching && <div>Searching...</div>}
         {!isSearching && searchResults.length > 0 && (

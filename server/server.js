@@ -31,6 +31,13 @@ app.use("/", authRoutes)
 app.use("/api/food", foodRoutes)
 
 
+
+
+
+
+
+
+
 app.listen(port, () => {
     console.log(`Server is lietening on ${port}`)
 })
