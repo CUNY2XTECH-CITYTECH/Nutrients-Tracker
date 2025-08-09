@@ -22,9 +22,21 @@ export async function refreshToken (req, res) {
         (err, decoded) => {
             if(err || userExist.username !== decoded.username) return res.sendStatus(403);
 
+
+    //Object that gets enrypted by access and refresh token
+    const userInfo = 
+        {
+            "username":userExist.username,
+            "birthday":userExist.birthday,
+            "height":userExist.height,
+            "gender":userExist.gender,
+            "weight":userExist.weight,
+            "name":userExist.name
+        }
+
             //creates new access token
             const accessToken = JWT.sign(
-                {"username": decoded.username},
+                userInfo,
                 process.env.ACCESS_TOKEN_SECRET,
                 {expiresIn: '15m'}
             );

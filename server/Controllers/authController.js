@@ -20,14 +20,25 @@ export async function userLogin (req, res) {
     const match = await bcrypt.compare(data.password, userExist.password)
     if(!match) return res.status(401).json({'errorMes': "**Username or password are incorrect**"})
     
+    //Object that gets enrypted by access and refresh token
+    const userInfo = 
+        {
+            "username":userExist.username,
+            "birthday":userExist.birthday,
+            "height":userExist.height,
+            "gender":userExist.gender,
+            "weight":userExist.weight,
+            "name":userExist.name
+        }
+
     //create JWT
     const accessToken = JWT.sign(
-        {"username": userExist.username},
+        userInfo,
         process.env.ACCESS_TOKEN_SECRET,
         {expiresIn: '15m'}
     );
     const refreshToken = JWT.sign(
-        {"username": userExist.username},
+        userInfo,
         process.env.REFRESH_TOKEN_SECRET,
         {expiresIn: '1d'}
     );
