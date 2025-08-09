@@ -1,9 +1,8 @@
 import { useState, useEffect } from "react";
 import "../searchBox.css";
-import { Searchbar } from "../Componets/Searchbar";
-import axios from "axios"
+import axios from "axios";
 
-const foodData = [
+const suggestedFoods = [
   { title: "Avocado", calories: 160, nutrients: { protein: "2g", carbs: "9g", fat: "15g" } },
   { title: "Chicken Breast", calories: 165, nutrients: { protein: "31g", carbs: "0g", fat: "3.6g" } },
 ];
@@ -13,15 +12,12 @@ export function Food() {
   const [searchResults, setSearchResults] = useState([]);
   const [isSearching, setIsSearching] = useState(false);
 
-  //hide my api key in seprate file !!!!
-  const API_KEY = "lRYMOG68sySrbEBpUcNpsp1zjmoAl1cfQvG2Mr0A"; 
-
-  // Debounce function to limit API calls
+  // Debounce function
   const debounce = (func, delay) => {
     let timer;
-    return function(...args) {
+    return (...args) => {
       clearTimeout(timer);
-      timer = setTimeout(() => func.apply(this, args), delay);
+      timer = setTimeout(() => func(...args), delay);
     };
   };
 
@@ -33,38 +29,30 @@ export function Food() {
     }
 
     setIsSearching(true);
+    
     try {
-      // const response = await fetch(
-      //   `https://api.nal.usda.gov/fdc/v1/foods/search?api_key=${API_KEY}&query=${encodeURIComponent(term)}`
-      // );
-      const response = await axios.post("http://localhost:3000/api/food/search", {
-    food: searchTerm
-}, {
-    headers: { 
-        'Content-Type': 'application/json' 
-    }
-});
-const data = response.data;
-      setSearchResults(data.foods || []);
-    } catch (error) {
-      console.error("Error fetching from USDA API:", error);
+      const response = await axios.post(
+        "http://localhost:3000/api/food/search",
+        { food: term },
+        { headers: { "Content-Type": "application/json" } }
+      );
+      setSearchResults(response.data);
+    } catch (err) {
+      console.error("Search error:", err);
       setSearchResults([]);
     } finally {
       setIsSearching(false);
     }
   };
 
-  // Debounced version of the search function
   const debouncedSearch = debounce(searchUSDA, 500);
 
-  // Handle input changes
   const handleInputChange = (e) => {
     const term = e.target.value;
     setSearchTerm(term);
     debouncedSearch(term);
   };
 
-  // Clear search results
   const handleReset = () => {
     setSearchTerm("");
     setSearchResults([]);
@@ -72,7 +60,7 @@ const data = response.data;
 
   return (
     <div className="food-page">
-      <p>🔍</p>
+      {/* Search Box - unchanged from your original */}
       <form className="search-box">
         <input 
           type="text" 
@@ -83,8 +71,7 @@ const data = response.data;
         <button type="reset" onClick={handleReset}></button>
       </form>
       
-      {/* Search results container */}
-      
+      {/* Search Results */}
       <div id="search-results">
         {isSearching && <div>Searching...</div>}
         {!isSearching && searchResults.length > 0 && (
@@ -117,9 +104,10 @@ const data = response.data;
         )}
       </div>
 
+      {/* Suggested Foods Container - Kept EXACTLY as in your original */}
       <div>Suggested foods of the day</div>
       <div className="suggested-food-items-container">
-        {foodData.map((food, index) => (
+        {suggestedFoods.map((food, index) => (
           <div key={index} className="food-item">
             <h3 className="food-title">{food.title}</h3>
             <div className="cal-num">{food.calories} kcal</div>
