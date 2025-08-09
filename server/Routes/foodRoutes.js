@@ -7,7 +7,8 @@ router.get('/test-env', (req, res) => {
     res.send(`Your USDA API key is: ${process.env.USDA_API_KEY}`);
 });
 
-router.get('/usda-search', async (req, res) => {
+router.post('/usda-search', async (req, res) => {
+    console.log("server food value: ", req.body)
     const query = req.query.query;
     const food = req.body;
     const rawMealType = req.query.mealType;
@@ -17,7 +18,7 @@ router.get('/usda-search', async (req, res) => {
     const allowedMealTypes = ['Breakfast', 'Lunch', 'Dinner'];
     const mealType = allowedMealTypes.includes(rawMealType) ? rawMealType: 'Not Specified';
 
-    const url = `https://api.nal.usda.gov/fdc/v1/foods/search?query=${food.foodName}&api_key=${apikey}`;
+    const url = `https://api.nal.usda.gov/fdc/v1/foods/search?query=${food.foodValue}&api_key=${apikey}`;
 
     try {
         const response = await axios.get(url);
@@ -53,14 +54,16 @@ router.get("/all", async (req, res) => {
 
 router.post("/save", async (req, res) => {
     try {
-        const newFood = new Food(req.body);
+        const { foodName, mealType } = req.body;
+        console.log("Received: ", foodName, mealType);
+        const newFood = new Food({ foodName, mealType });
         await newFood.save();
-        res.status(201).json({ message: "Food saved", data: newFood });
-    }
-    catch (error) {
+
+        res.json({ food: foodName, meal: mealType });
+    } catch (error) {
         res.status(500).json({ message: "Error saving food", error: error.message });
     }
-})
+});
 
 function getNutrientValue(nutrients, nutrientName, unitName) {
     const nutrient = nutrients.find(n => n.nutrientName === nutrientName && n.unitName === unitName);

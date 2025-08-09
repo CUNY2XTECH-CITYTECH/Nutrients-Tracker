@@ -15,7 +15,7 @@ export function verifyJWT (req, res, next) {
         //callback function receives error and decoded token
         (err, decoded) => {
             if (err) return res.sendStatus(403); //Invalid 403 forbidden
-            req.username = decoded.username
+            req.userInfo = decoded
             next()
         }
     )
