@@ -72,10 +72,12 @@ export function Home() {
 
           <div>
             <h2>Food Logger</h2>
-            <p>Keep track of your calories and carbs intake with our food tracker. There is 
+            <p>
+              Keep track of your calories and carbs intake with our food tracker. There is 
               no need to count calories manually, our system does it for you! It can help
               you plan out your meals efficiently and hold you accountable of your daily eating
-              habits.</p>
+              habits.
+            </p>
 
             <img src="diagram.png" alt="Food Logger" className="home-diagram" />
 
@@ -102,7 +104,9 @@ export function Home() {
 
           <div>
             <h2>Community</h2>
-            <p>Join our community of health enthusiasts on our discussions panel! Share your experiences, ask questions, and get support from others on similar journeys.</p>
+            <p>
+              Join our community of health enthusiasts on our discussions panel! Share your experiences, ask questions, and get support from others on similar journeys.
+            </p>
             <ul>
               <li>Participate in discussions.</li>
               <li>Share your success stories.</li>
@@ -113,9 +117,11 @@ export function Home() {
 
           <div>
             <h2>Get Started</h2>
-            <p>Ready to take control of your nutrition? Start by creating an account or logging in to your existing profile. 
+            <p>
+              Ready to take control of your nutrition? Start by creating an account or logging in to your existing profile. 
               Explore our features, set your goals, and begin your journey towards a healthier you! Be sure to contact your
-              physician</p>
+              physician
+            </p>
             <p>Remember, every small step counts. Let’s make your nutrition journey enjoyable and rewarding!</p>
           </div>
         </div>
