@@ -2,10 +2,17 @@ import "../../src/App.css";
 import React from "react";
 
 export default function RecipeTile({recipe}) {
-    return (
 
-       recipe["recipe"]["image"].match(/\.(jpeg|jpg|gif|png)$/)  // Only show the recipe if the image link ends with jpeg, jpg, gif, or png
-       != null && ( <div className="recipeTile">
+
+    return (
+        
+    //     recipe["recipe"]["image"].match(/\.(jpeg|jpg|gif|png)$/)  // Only show the recipe if the image link ends with jpeg, jpg, gif, or png
+    //    != null && 
+    ( <div className="recipeTile" 
+        onClick={() => {
+            window.open(recipe["recipe"]["url"]);
+
+       }} >
 
           {/* Recipe image */}
             <img className="recipe_img" 
@@ -15,6 +22,7 @@ export default function RecipeTile({recipe}) {
 
         </div>
     )
+
 
     );
 }
