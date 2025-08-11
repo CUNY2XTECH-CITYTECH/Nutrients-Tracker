@@ -1,4 +1,4 @@
-import {useState, useEffect, useContext} from "react"
+import {useState, useContext} from "react"
 import AuthContext from "../../context/authProvider";
 import { Link, useNavigate, useLocation } from "react-router-dom";
 import axios from "axios"
@@ -7,7 +7,7 @@ import { Logo } from "../../Componets/logo";
 
 export function Login () {
 
-    const {auth, setAuth} = useContext(AuthContext); //state of global AuthConext to save user's info
+    const {setAuth} = useContext(AuthContext); //state of global AuthConext to save user's info
 
     const navigate = useNavigate();
     const location = useLocation();

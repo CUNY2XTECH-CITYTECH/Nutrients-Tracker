@@ -4,6 +4,10 @@ import cors from "cors"
 import mongoose from "mongoose" 
 import 'dotenv/config'; // loads .env file
 import cookieParser from "cookie-parser"
+// import suggestionsRoutes from "./Routes/suggestionsRoutes.js"
+import dotenv from "dotenv";
+dotenv.config();
+import recipeRoutes from "./Routes/recipeRoutes.js";
 
 import authRoutes from "./Routes/authRoutes.js"
 import foodRoutes from "./Routes/foodRoutes.js"
@@ -28,7 +32,18 @@ app.use(express.json());
 
 
 app.use("/", authRoutes)
+
+
 app.use("/api/food", foodRoutes)
+
+// app.use("/suggestions", suggestionsRoutes)
+app.use("/recipes", recipeRoutes);
+
+
+
+
+
+
 
 
 app.listen(port, () => {
