@@ -95,10 +95,10 @@ router.post('/save', async (req, res) => {
         } = req.body;
         console.log("Received: ", req.body);
 
-        if(!foodName || !mealType) {
+        if(!foodName || !mealType || !foodID || !serving || !units) {
             return res.status(400).json({
                 message: "Missing required fields", 
-                require: ["foodName", "mealType"]
+                require: ["foodName", "mealType", "foodID", "serving", "units"]
             });
         }
         
