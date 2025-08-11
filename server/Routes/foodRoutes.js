@@ -1,6 +1,7 @@
 import express, { Router } from 'express'
 import axios  from 'axios';
 import Food from "../Models/food.js";
+import { verifyJWT } from '../Middleware/verifyJWT.js';
 const router = express.Router();
 
 router.get('/test-env', (req, res) => {
