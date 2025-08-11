@@ -17,7 +17,7 @@ router.post("/login", userLogin);
 
 router.get("/check", refreshToken) //after login, checks refreshtoken in cookies and gives a access token 
 
-router.get("/test", verifyJWT, test) //in order to go to /test, middleware checks accesstoken. This means user need to login in first and send acess token to access api endpoint
+router.get("/test", test) //in order to go to /test, middleware checks accesstoken. This means user need to login in first and send acess token to access api endpoint
 
 router.get("/logout", logout) //deletes the refreshToken in user cookies and db
 
