@@ -97,7 +97,7 @@ export function Food() {
                         </p>
                       ))}
                   </div>
-                )}
+                )} 
               </div>
             ))}
           </div>
