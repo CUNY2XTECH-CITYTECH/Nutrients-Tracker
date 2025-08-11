@@ -49,18 +49,45 @@ router.post('/search', async (req, res) => {
 });
 
 // Save food to database
+// SAVE FOOD TO DATABASE: When user wants to save a food to their personal list
+// Frontend sends: { foodName: "Chicken Breast", mealType: "Dinner" }
 router.post('/save', async (req, res) => {
     try {
-        const { foodName, mealType } = req.body;
+        // Get the food name and meal type from request body
+        const { foodName, mealType, foodID, serving, units, calories, carbs, fats, proteins } = req.body;
+        console.log("Received: ", req.body);
+
+        if(!foodName || !mealType || !foodID || !serving || !units) {
+            return res.status(400).json({
+                message: "Missing required fields", 
+                require: ["foodName", "mealType", "foodId", "serving", "units"]
+            });
+        }
         
+        // Create a new food record using our MongoDB model
         const newFood = new Food({ 
             foodName, 
-            mealType 
+            mealType, 
+            foodID: Number(foodID), 
+            serving: Number(serving), 
+            units,
+            calories: calories || 0,
+            carbs: carbs || 0,
+            fats: fats || 0,
+            proteins: proteins || 0
         });
         
+        // Save it to the database
         await newFood.save();
-        res.status(201).json(newFood);
+
+        // Confirm to frontend that it was saved
+        res.json({ 
+            message: "Food saved successfully",
+            food: newFood
+        });
     } catch (error) {
+        // If saving fails, tell frontend what went wrong
+        console.error("Save error: ", error);
         res.status(500).json({ 
             error: 'Failed to save food',
             details: error.message 
@@ -81,4 +108,5 @@ router.get('/all', async (req, res) => {
     }
 });
 
+// Export this router so it can be used in our main server file
 export default router;
