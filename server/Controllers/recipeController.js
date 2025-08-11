@@ -1,5 +1,5 @@
-// import dotenv from "dotenv";
-// dotenv.config();
+import dotenv from "dotenv";
+dotenv.config();
 // import axios from "axios";
 
 // const API_KEY = process.env.API_KEY

@@ -1,8 +1,8 @@
 import { useEffect, useState, useRef } from "react";
 
-const USDA_API_KEY = "VsNxcVGrt9triez7CjKKNwKdjRidilAez1CFdvLk";
+const USDA_API_KEY = "H2BUUev7qZI2ub6tkijgWg64191Aq4frWld8hSIv";
 
-export default function FoodLogger() {
+export function FoodLogger() {
   const [userInfo, setUserInfo] = useState(null);
   const [userId, setUserId] = useState(null);
   const [logs, setLogs] = useState([]);
