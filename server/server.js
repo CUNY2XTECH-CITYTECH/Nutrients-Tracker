@@ -32,10 +32,19 @@ app.use(express.json());
 
 
 app.use("/", authRoutes)
+
+
 app.use("/api/food", foodRoutes)
 
 // app.use("/suggestions", suggestionsRoutes)
 app.use("/recipes", recipeRoutes);
+
+
+
+
+
+
+
 
 app.listen(port, () => {
     console.log(`Server is lietening on ${port}`)
