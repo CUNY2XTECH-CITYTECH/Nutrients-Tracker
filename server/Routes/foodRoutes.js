@@ -2,6 +2,8 @@ import express from 'express';
 import axios from 'axios';
 import Food from "../Models/food.js";
 const router = express.Router();
+import dotenv from "dotenv";
+dotenv.config()
 
 // USDA API Search Endpoint
 router.post('/search', async (req, res) => {

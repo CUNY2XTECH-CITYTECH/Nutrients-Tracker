@@ -2,6 +2,43 @@ import { useState } from "react";
 import "../searchBox.css";
 import axios from "axios";
 
+/* 
+import { Description, Dialog, DialogPanel, DialogTitle } from '@headlessui/react'
+import { useState } from 'react'
+
+function Example() {
+  // The open/closed state lives outside of the `Dialog` and is managed by you
+  let [isOpen, setIsOpen] = useState(true)
+
+  function async handleDeactivate() {
+    await fetch('/deactivate-account', { method: 'POST' })
+    setIsOpen(false)
+  }
+
+  return (
+    /*
+      Pass `isOpen` to the `open` prop, and use `onClose` to set
+      the state back to `false` when the user clicks outside of
+      the dialog or presses the escape key.
+    
+    <Dialog open={isOpen} onClose={() => setIsOpen(false)}>
+      <DialogPanel>
+        <DialogTitle>Deactivate account</DialogTitle>
+        <Description>This will permanently deactivate your account</Description>
+        <p>Are you sure you want to deactivate your account? All of your data will be permanently removed.</p>
+
+        {/*
+          You can render additional buttons to dismiss your
+          dialog by setting `isOpen` to `false`.
+        }
+        <button onClick={() => setIsOpen(false)}>Cancel</button>
+        <button onClick={handleDeactivate}>Deactivate</button>
+      </DialogPanel>
+    </Dialog>
+  )
+}
+*/
+
 const suggestedFoods = [
   { title: "Avocado", calories: 160, nutrients: { protein: "2g", carbs: "9g", fat: "15g" } },
   { title: "Chicken Breast", calories: 165, nutrients: { protein: "31g", carbs: "0g", fat: "3.6g" } },
@@ -13,7 +50,7 @@ export function Food() {
   const [isSearching, setIsSearching] = useState(false);
 
   // Debounce function
-  const debounce = (func, delay) => {
+  const debounce = (func, delay=100) => {
     let timer;
     return (...args) => {
       clearTimeout(timer);
@@ -60,7 +97,7 @@ export function Food() {
 
   return (
     <div className="food-page">
-      {/* Search Box - unchanged from your original */}
+      
       <form className="search-box">
         <input 
           type="text" 
@@ -79,6 +116,7 @@ export function Food() {
             {searchResults.slice(0, 5).map((food, index) => (
               <div key={index} className="food-item">
                 <h3 className="food-title">{food.description}</h3>
+                <div id= "popUp"></div>
                 {food.foodNutrients && (
                   <div className="nutrient-facts">
                     {food.foodNutrients
