@@ -104,7 +104,7 @@ export function Food() {
         )}
       </div>
 
-      
+    
       <div>Suggested foods of the day</div>
       <div className="suggested-food-items-container">
         {suggestedFoods.map((food, index) => (
