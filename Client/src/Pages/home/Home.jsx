@@ -14,7 +14,7 @@ export function Home() {
           {photos.concat(photos).map((num, index) => (
             <img
               key={index}
-              src={`/assets/healthy${num}.jpg`}
+              src={`/healthy${num}.jpg`}
               alt={`healthy${num}`}
               className="marquee-img"
             />
