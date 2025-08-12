@@ -36,8 +36,6 @@ app.use("/", authRoutes)
 
 app.use("/api/food", foodRoutes)
 
-// app.use("/suggestions", suggestionsRoutes)
-app.use("/recipes", recipeRoutes);
 
 app.use("/api/food/logs", logRoutes); 
 

@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 import { useEffect, useState, useContext, useRef } from "react";
 import AuthContext from "../context/authProvider"; // Auth context provides user info and tokens
 const USDA_API_KEY = "VsNxcVGrt9triez7CjKKNwKdjRidilAez1CFdvLk";
@@ -179,38 +180,104 @@ export default function FoodLogger() {
       acc.carbs += food.carbs || 0;
       acc.fat += food.fat || 0;
       acc.protein += food.protein || 0;
+=======
+import React, { useEffect, useRef } from "react";
+
+export function FoodLogger() {
+  const canvasRef = useRef(null);
+
+  const data = { //Example Data
+    foods: {
+      1: { name: "Egg", calories: 78, carbs: 0.6, fat: 5, protein: 6 },
+      2: { name: "Rice", calories: 206, carbs: 45, fat: 0.4, protein: 4 },
+      3: { name: "Chicken Breast", calories: 165, carbs: 0, fat: 3.6, protein: 31 },
+      4: { name: "Apple", calories: 95, carbs: 25, fat: 0.3, protein: 0.5 }
+    },
+    logs: [
+      { foodId: 1, mealType: "Breakfast" },
+      { foodId: 1, mealType: "Breakfast" },
+      { foodId: 2, mealType: "Lunch" },
+      { foodId: 3, mealType: "Lunch" },
+      { foodId: 3, mealType: "Lunch" },
+      { foodId: 4, mealType: "Dinner" },
+      { foodId: 4, mealType: "Breakfast" },
+      { foodId: 4, mealType: "Lunch" },
+      { foodId: 3, mealType: "Dinner" },
+      { foodId: 2, mealType: "Dinner" },
+      { foodId: 1, mealType: "Dinner" },
+    ]
+  };
+
+  const { foods, logs } = data;
+
+  const meals = {
+    Breakfast: [],
+    Lunch: [],
+    Dinner: []
+  };
+
+  logs.forEach(({ foodId, mealType }) => {
+    const food = foods[foodId];
+    if (food && meals[mealType]) {
+      meals[mealType].push(food);
+    }
+  });
+
+  const totalNutrition = logs.reduce(
+    (acc, { foodId }) => {
+      const food = foods[foodId];
+      if (food) {
+        acc.calories += food.calories || 0;
+        acc.carbs += food.carbs || 0;
+        acc.fat += food.fat || 0;
+        acc.protein += food.protein || 0;
+      }
+>>>>>>> 51e5d5145050ea51f20939b8e1878443896861d0
       return acc;
     },
     { calories: 0, carbs: 0, fat: 0, protein: 0 }
   );
 
+<<<<<<< HEAD
   // Draw pie chart on canvas to visualize carbs/fat/protein distribution
+=======
+  const format = (num) => parseFloat(num.toFixed(1));
+  //Graph
+>>>>>>> 51e5d5145050ea51f20939b8e1878443896861d0
   useEffect(() => {
     const canvas = canvasRef.current;
     if (!canvas) return;
     const ctx = canvas.getContext("2d");
+
     const { carbs, fat, protein } = totalNutrition;
+    const labels = ["Carbs", "Fat", "Protein"];
     const values = [carbs, fat, protein];
     const colors = ["#36A2EB", "#FFCE56", "#4BC0C0"];
+
     const total = values.reduce((sum, v) => sum + v, 0);
 
     ctx.clearRect(0, 0, canvas.width, canvas.height);
+<<<<<<< HEAD
     if (total === 0) return; // Nothing to draw
 
+=======
+>>>>>>> 51e5d5145050ea51f20939b8e1878443896861d0
     let startAngle = 0;
-    values.forEach((value, i) => {
+
+    values.forEach((value, index) => {
       const sliceAngle = (value / total) * 2 * Math.PI;
       ctx.beginPath();
       ctx.moveTo(100, 100); // center point of circle
       ctx.arc(100, 100, 80, startAngle, startAngle + sliceAngle);
       ctx.closePath();
-      ctx.fillStyle = colors[i];
+      ctx.fillStyle = colors[index];
       ctx.fill();
       startAngle += sliceAngle;
     });
   }, [totalNutrition]);
 
   return (
+<<<<<<< HEAD
     <div style={{ maxWidth: 900, margin: "auto", fontFamily: "sans-serif" }}>
       {/* Title showing logged in username or loading text */}
       <h2 style={{ marginBottom: "0.5em" }}>
@@ -245,11 +312,13 @@ export default function FoodLogger() {
       )}
 
       {/* Summary box showing total nutrition and pie chart */}
+=======
+    <div style={{ maxWidth: "900px", margin: "auto", fontFamily: "sans-serif" , marginLeft: "220px"}}>
+>>>>>>> 51e5d5145050ea51f20939b8e1878443896861d0
       <div
-        style={{
+        style={{  
           display: "flex",
           justifyContent: "space-between",
-          alignItems: "center",
           background: "#f9f9f9",
           padding: "1em",
           borderRadius: "8px",
@@ -257,12 +326,11 @@ export default function FoodLogger() {
         }}
       >
         <div>
-          <h3>Total Calories: {totalNutrition.calories.toFixed(1)}</h3>
-          <h3>Total Carbs: {totalNutrition.carbs.toFixed(1)}g</h3>
-          <h3>Total Fat: {totalNutrition.fat.toFixed(1)}g</h3>
-          <h3>Total Protein: {totalNutrition.protein.toFixed(1)}g</h3>
+          <h3>Total Calories: {format(totalNutrition.calories)}</h3>
+          <h3>Total Carbs: {format(totalNutrition.carbs)}g</h3>
+          <h3>Total Fat: {format(totalNutrition.fat)}g</h3>
+          <h3>Total Protein: {format(totalNutrition.protein)}g</h3>
         </div>
-
         <div style={{ display: "flex", gap: "1em" }}>
           {/* Nutrition pie chart */}
           <canvas ref={canvasRef} width={200} height={200} />
@@ -270,20 +338,15 @@ export default function FoodLogger() {
           <div>
             <h4 style={{ margin: 0 }}>Nutritions:</h4>
             <ul style={{ listStyle: "none", padding: 0, marginTop: "0.5em" }}>
-              <li>
-                <span style={{ color: "#36A2EB" }}>⬤</span> Carbs
-              </li>
-              <li>
-                <span style={{ color: "#FFCE56" }}>⬤</span> Fat
-              </li>
-              <li>
-                <span style={{ color: "#4BC0C0" }}>⬤</span> Protein
-              </li>
+              <li><span style={{ color: "#36A2EB" }}>⬤</span> Carbs</li>
+              <li><span style={{ color: "#FFCE56" }}>⬤</span> Fat</li>
+              <li><span style={{ color: "#4BC0C0" }}>⬤</span> Protein</li>
             </ul>
           </div>
         </div>
       </div>
 
+<<<<<<< HEAD
       {/* Manual refresh button to re-fetch logs */}
       <button
         onClick={() => {
@@ -317,17 +380,13 @@ export default function FoodLogger() {
       {loadingDetails && <p>Loading food details...</p>}
 
       {/* Render grouped foods by meal type */}
+=======
+>>>>>>> 51e5d5145050ea51f20939b8e1878443896861d0
       {["Breakfast", "Lunch", "Dinner"].map((mealType) => (
         <div key={mealType} style={{ marginBottom: "2em" }}>
-          <h2
-            style={{
-              borderBottom: "1px solid #ccc",
-              paddingBottom: "4px",
-            }}
-          >
-            {mealType}
-          </h2>
+          <h2 style={{ borderBottom: "1px solid #ccc", paddingBottom: "4px" }}>{mealType}</h2>
           <ul style={{ listStyle: "none", padding: 0 }}>
+<<<<<<< HEAD
             {grouped[mealType].length === 0 ? (
               <li style={{ color: "#888", fontStyle: "italic" }}>No foods logged.</li>
             ) : (
@@ -354,6 +413,25 @@ export default function FoodLogger() {
       {!loadingDetails && foodDetails.length === 0 && logs.length > 0 && (
         <p>No food details available.</p>
       )}
+=======
+            {meals[mealType].map((food, idx) => (
+              <li
+                key={idx}
+                style={{
+                  display: "flex",
+                  justifyContent: "space-between",
+                  padding: "6px 0",
+                  borderBottom: "1px dashed #ddd"
+                }}
+              >
+                <span>{food.name}</span>
+                <span>{food.calories} kcal</span>
+              </li>
+            ))}
+          </ul>
+        </div>
+      ))}
+>>>>>>> 51e5d5145050ea51f20939b8e1878443896861d0
     </div>
   );
 }
