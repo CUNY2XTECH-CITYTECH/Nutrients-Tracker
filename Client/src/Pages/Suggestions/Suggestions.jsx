@@ -57,14 +57,14 @@ export function Suggestions() {
                             sethealthLabels(e.target.value)}
                           }
         >
-          <option value="" >Diet Filters</option>
-          <option value="vegan">Vegan</option>
-          <option value="vegetarian">Vegetarian</option>
-          <option value="kosher">Kosher</option> 
-          <option value="pork-free">Pork Free</option>
-          <option value="alcohol-free">Alcohol Free</option>
-          <option value="dairy-free">Dairy-Free</option>
-          <option value="low-sugar">low-sugar</option>
+          <option className= "dietoptions" value="" >Diet Filters</option>
+          <option className= "dietoptions" value="vegan">Vegan</option>
+          <option className= "dietoptions" value="vegetarian">Vegetarian</option>
+          <option className= "dietoptions" value="kosher">Kosher</option> 
+          <option className= "dietoptions" value="pork-free">Pork Free</option>
+          <option className= "dietoptions" value="alcohol-free">Alcohol Free</option>
+          <option className= "dietoptions" value="dairy-free">Dairy-Free</option>
+          <option className= "dietoptions" value="low-sugar">low-sugar</option>
         </select>
 
         <button

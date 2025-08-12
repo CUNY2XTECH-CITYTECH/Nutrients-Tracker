@@ -52,6 +52,7 @@
   gap: 20px;
   justify-content: center; /* centers the whole grid horizontally */
   margin-bottom: 30px;
+  resize: none;
   
 }
 
@@ -73,6 +74,12 @@
   
 }
 
+.recipeTile img {
+  width: 200px;         /* match the tile's width */
+  height: 200px;       /* same height for all images */
+  object-fit: cover;   /* crops without stretching */
+  border-radius: 8px;  /* matches tile rounding */
+}
 .recipeTile:hover {
   box-shadow: 0 16px 32px rgba(125, 38, 38, 0.25);
   scale: 1.05;
@@ -83,7 +90,14 @@
   padding: 6px 30px;
   margin-left: 6px;
   border-radius: 4px;
+  border: none;
   font-size: 16px;
   height: 46px;
+  color: #f1f3f4;
+  background-color: #314d63;
 }
 
+.dietoptions {
+  background-color: #5090c1;
+  color: rgb(247, 247, 247);
+}
