@@ -1,14 +1,31 @@
-const mongoose = require('mongoose');
+import mongoose from "mongoose";
 
 const foodLogSchema = new mongoose.Schema({
-  username: String,   
-  foodId: Number,
-  mealType: String,
-  serving: Number,
-  unit: String,
-  date: Date,
+  username: {
+    type: String,
+    required: true
+  },
+  foodId: {
+    type: Number,
+    required: true
+  },
+  mealType: {
+    type: String,
+    enum: ["breakfast", "lunch", "dinner", "snack"],
+    required: true
+  },
+  serving: {
+    type: Number,
+    required: true
+  },
+  unit: {
+    type: String,
+    required: true
+  },
+  date: {
+    type: Date,
+    default: Date.now
+  }
 });
 
-const FoodLogs = mongoose.model('foodlogs', foodLogSchema);
-
-module.exports = FoodLogs;
+export default mongoose.model("FoodLog", foodLogSchema, "Food");
