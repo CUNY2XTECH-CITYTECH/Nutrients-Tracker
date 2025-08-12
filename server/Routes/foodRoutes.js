@@ -3,6 +3,8 @@ import axios from 'axios';
 import Food from "../Models/food.js";
 import { verifyJWT } from '../Middleware/verifyJWT.js';
 const router = express.Router();
+import dotenv from "dotenv";
+dotenv.config();
 
 // USDA API Search Endpoint
 router.post('/search', async (req, res) => {
