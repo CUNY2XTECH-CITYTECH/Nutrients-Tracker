@@ -8,7 +8,7 @@ import cookieParser from "cookie-parser"
 import dotenv from "dotenv";
 dotenv.config();
 import recipeRoutes from "./Routes/recipeRoutes.js";
-
+import logRoutes from "./Routes/logRoutes.js";
 import authRoutes from "./Routes/authRoutes.js"
 import foodRoutes from "./Routes/foodRoutes.js"
 const app = express()
@@ -39,7 +39,7 @@ app.use("/api/food", foodRoutes)
 // app.use("/suggestions", suggestionsRoutes)
 app.use("/recipes", recipeRoutes);
 
-
+app.use("/api/food/logs", logRoutes); 
 
 
 
