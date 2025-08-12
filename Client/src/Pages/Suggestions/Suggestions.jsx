@@ -5,38 +5,6 @@ import { useState } from "react";
 import { getMealSuggestions } from "../../API/recipes";
 
 export function Suggestions() {
-<<<<<<< HEAD
-  const [query, setquery] = useState(""); // State to store the searched text typed by the user
-  const [recipes, setrecipes] = useState([]); // State to store the list of recipes we get from the API
-  const [healthLabels, sethealthLabels] = useState(""); // State to store the selected health filter (default is "vegan")
-  const [dietFilters, setDietFilters] = useState("Diet Filters")
-
-  async function getRecipe() {
-    try {
-      const response = await axios.post(`http://localhost:3000/recipes`,
-        {query:query,
-          healthLabels:healthLabels
-        }
-      );
-
-      setrecipes(response.data.hits)
-    } catch (err) {
-      console.error("Error fetching recipes:", err);
-    }
-  }
-
-  // Function that runs when the search form is submitted
-  const onSubmit = (e) => {
-    e.preventDefault(); // Prevent page from refreshing
-    getRecipe(); // Call the function to get recipes
-  };
-
-  useEffect(() => {
-    if (query.trim() !== "") {
-      getRecipe();
-    }
-  }, [query, healthLabels, dietFilters]);
-=======
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [selectedResult, setSelectedResult] = useState(null);
   const [results, setResults] = useState([]);
@@ -66,33 +34,12 @@ export function Suggestions() {
       console.error("API call failed:", err);
     }
   };
->>>>>>> 51e5d5145050ea51f20939b8e1878443896861d0
 
   return (
     <div className="suggestions-container">
       <h1>Find Meals For Your Ingredients</h1>
 
-<<<<<<< HEAD
-        {/* Dropdown for health/diet filters */}
-        <select
-          className="healthyLabels"
-          value={dietFilters}
-          onChange={(e) => {setDietFilters(e.target.value)
-                            sethealthLabels(e.target.value)}
-                          }
-        >
-          <option value="" >Diet Filters</option>
-          <option value="vegan">Vegan</option>
-          <option value="vegetarian">Vegetarian</option>
-          <option value="kosher">Kosher</option> 
-          <option value="pork-free">Pork Free</option>
-          <option value="alcohol-free">Alcohol Free</option>
-          <option value="dairy-free">Dairy-Free</option>
-          <option value="low-sugar">low-sugar</option>
-        </select>
-=======
       <Searchbar onSearch={handleSearch} />
->>>>>>> 51e5d5145050ea51f20939b8e1878443896861d0
 
       <div className="results-container">
         {results.map((result, index) => (
