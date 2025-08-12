@@ -27,44 +27,44 @@ router.post('/search', async (req, res) => {
             }
         );
 
-    const nutrientMap = {
-        calories: "Energy",
-        carbs: "Carbohydrate, by difference",
-        fats: "Total lipid (fat)",
-        proteins: "Protein",
-        fiber: "Fiber, total dietary",
-        sugar: "Sugars, total including NLEA",
-        vit_a: "Vitamin A, RAE",
-        b1: "Thiamin",
-        b2: "Riboflavin",
-        b3: "Niacin",
-        b5: "Pantothenic acid",
-        b6: "Vitamin B-6",
-        b7: "Biotin",
-        b9: "Folate, total",
-        b12: "Vitamin B-12",
-        vit_c: "Vitamin C, total ascorbic acid",
-        vit_d: "Vitamin D (D2 + D3)",
-        vit_e: "Vitamin E (alpha-tocopherol)",
-        vit_k: "Vitamin K (phylloquinone)",
-        calcium: "Calcium, Ca",
-        copper: "Copper, Cu",
-        iodine: "Iodine, I",
-        iron: "Iron, Fe",
-        manganese: "Manganese, Mn",
-        phosphorus: "Phosphorus, P",
-        potassium: "Potassium, K",
-        selenium: "Selenium, Se",
-        sodium: "Sodium, Na",
-        zinc: "Zinc, Zn"
-    };
+const nutrientMap = {
+  "Energy": "Calories",
+  "Protein": "Protein",
+  "Carbohydrate, by difference": "Carbs",
+  "Total lipid (fat)": "Fats",
+  "Fiber, total dietary": "Fiber",
+  "Sugars, total including NLEA": "Sugar",
+  "Vitamin A, RAE": "Vitamin A",
+  "Thiamin": "Vitamin B1",
+  "Riboflavin": "Vitamin B2",
+  "Niacin": "Vitamin B3",
+  "Pantothenic acid": "Vitamin B5",
+  "Vitamin B-6": "Vitamin B6",
+  "Biotin": "Vitamin B7",
+  "Folate, total": "Vitamin B9",
+  "Vitamin B-12": "Vitamin B12",
+  "Vitamin C, total ascorbic acid": "Vitamin C",
+  "Vitamin D (D2 + D3)": "Vitamin D",
+  "Vitamin E (alpha-tocopherol)": "Vitamin E",
+  "Vitamin K (phylloquinone)": "Vitamin K",
+  "Calcium, Ca": "Calcium",
+  "Copper, Cu": "Copper",
+  "Iodine, I": "Iodine",
+  "Iron, Fe": "Iron",
+  "Manganese, Mn": "Manganese",
+  "Phosphorus, P": "Phosphorus",
+  "Potassium, K": "Potassium",
+  "Selenium, Se": "Selenium",
+  "Sodium, Na": "Sodium",
+  "Zinc, Zn": "Zinc",
+};
 
     // Process and format the response data
     const formattedFoods = response.data.foods.map(item => ({
         fdcId: item.fdcId,
         description: item.description,
         foodNutrients: item.foodNutrients
-            .filter(n => ['Protein', 'Carbohydrate, by difference', 'Total lipid (fat)', 'Energy'].includes(n.nutrientName))
+            .filter(n => Object.keys(nutrientMap).includes(n.nutrientName))
             .map(nutrient => ({
                 nutrientName: nutrient.nutrientName,
                 value: nutrient.value,
@@ -142,6 +142,8 @@ router.post('/save', async (req, res) => {
             sodium: sodium || 0,
             zinc: zinc || 0
         });
+
+        await newFood.save();
 
         // Confirm to frontend that it was saved
         res.json({ 

@@ -3,6 +3,39 @@ import "../searchBox.css";
 import axios from "axios";
 import { Dialog, DialogPanel, DialogTitle, DialogDescription } from '@headlessui/react';
 
+// Nutrient mapping for display names
+const nutrientMap = {
+  "Energy": "Calories",
+  "Protein": "Protein",
+  "Carbohydrate, by difference": "Carbs",
+  "Total lipid (fat)": "Fats",
+  "Fiber, total dietary": "Fiber",
+  "Sugars, total including NLEA": "Sugar",
+  "Vitamin A, RAE": "Vitamin A",
+  "Thiamin": "Vitamin B1",
+  "Riboflavin": "Vitamin B2",
+  "Niacin": "Vitamin B3",
+  "Pantothenic acid": "Vitamin B5",
+  "Vitamin B-6": "Vitamin B6",
+  "Biotin": "Vitamin B7",
+  "Folate, total": "Vitamin B9",
+  "Vitamin B-12": "Vitamin B12",
+  "Vitamin C, total ascorbic acid": "Vitamin C",
+  "Vitamin D (D2 + D3)": "Vitamin D",
+  "Vitamin E (alpha-tocopherol)": "Vitamin E",
+  "Vitamin K (phylloquinone)": "Vitamin K",
+  "Calcium, Ca": "Calcium",
+  "Copper, Cu": "Copper",
+  "Iodine, I": "Iodine",
+  "Iron, Fe": "Iron",
+  "Manganese, Mn": "Manganese",
+  "Phosphorus, P": "Phosphorus",
+  "Potassium, K": "Potassium",
+  "Selenium, Se": "Selenium",
+  "Sodium, Na": "Sodium",
+  "Zinc, Zn": "Zinc",
+};
+
 const suggestedFoods = [
   { title: "Avocado", calories: 160, nutrients: { protein: "2g", carbs: "9g", fat: "15g" } },
   { title: "Chicken Breast", calories: 165, nutrients: { protein: "31g", carbs: "0g", fat: "3.6g" } },
@@ -32,6 +65,8 @@ export function Food() {
         `http://localhost:3000/api/food/details`,
         { params: { fdcId } }
       );
+
+      console.log("Extended food data:", response.data);
 
       setExtendedFoodData(response.data);
       setIsOpen(true);
@@ -115,30 +150,7 @@ export function Food() {
                     View Details
                   </button>
                 </div>
-                {food.foodNutrients && (
-                  <div className="nutrient-facts">
-                    {food.foodNutrients
-                      .filter(
-                        (nutrient) =>
-                          nutrient.nutrientName === "Protein" ||
-                          nutrient.nutrientName === "Carbohydrate, by difference" ||
-                          nutrient.nutrientName === "Total lipid (fat)" ||
-                          nutrient.nutrientName === "Energy"
-                      )
-                      .map((nutrient, i) => {
-                        let displayName = nutrient.nutrientName;
-                        if (displayName === "Carbohydrate, by difference") displayName = "Carbs";
-                        if (displayName === "Total lipid (fat)") displayName = "Fat";
-                        if (displayName === "Energy") displayName = "Calories";
-
-                        return (
-                          <p key={i}>
-                            {displayName}: {nutrient.value} {nutrient.unitName.toLowerCase()}
-                          </p>
-                        );
-                      })}
-                  </div>
-                )} 
+                {/* No nutrients here to keep clean */}
               </div>
             ))}
           </div>
@@ -159,21 +171,19 @@ export function Food() {
 
             {extendedFoodData && extendedFoodData.nutrients && (
               <div className="nutrient-details">
-                {extendedFoodData.nutrients.map((nutrient, i) => {
-                  let displayName = nutrient.nutrientName;
-                  if (displayName === "Carbohydrate, by difference") displayName = "Carbs";
-                  if (displayName === "Total lipid (fat)") displayName = "Fat";
-                  if (displayName === "Energy") displayName = "Calories";
-
-                  return (
-                    <div key={i} className="nutrient-row">
-                      <span className="nutrient-name">{displayName}</span>
-                      <span className="nutrient-value">
-                        {nutrient.value} {nutrient.unitName.toLowerCase()}
-                      </span>
-                    </div>
-                  );
-                })}
+                {extendedFoodData.nutrients
+                  .filter(nutrient => nutrientMap[nutrient.nutrientName])
+                  .map((nutrient, i) => {
+                    const displayName = nutrientMap[nutrient.nutrientName];
+                    return (
+                      <div key={i} className="nutrient-row">
+                        <span className="nutrient-name">{displayName}</span>
+                        <span className="nutrient-value">
+                          {nutrient.value} {nutrient.unitName.toLowerCase()}
+                        </span>
+                      </div>
+                    );
+                  })}
               </div>
             )}
 
@@ -207,3 +217,4 @@ export function Food() {
     </div>
   );
 }
+
