@@ -41,14 +41,6 @@
 .results-container {
   display: flex;
   flex-direction: column;
-<<<<<<< HEAD
-  align-items: center; /* center image horizontally */
-  justify-content: space-between; 
-  height: 250px; /* adjust as needed */
-  padding: 10px;
-  box-sizing: border-box;
-   border-radius: 12px;
-=======
   gap: 20px;
   width: auto;
   align-items: center;
@@ -60,7 +52,6 @@
   background: linear-gradient(to right, #5784a8, #606063);
   padding: 20px;
   border-radius: 12px;
->>>>>>> 51e5d5145050ea51f20939b8e1878443896861d0
   box-shadow: 0 0 8px rgba(0,0,0,0.05);
   width: 800px;
   align-items: center;
@@ -81,16 +72,6 @@
 
 }
 
-<<<<<<< HEAD
-.healthyLabels {
-  padding: 6px 30px;
-  margin-left: 6px;
-  border-radius: 4px;
-  font-size: 16px;
-  height: 46px;
-}
-
-=======
 .modal-backdrop {
   position: fixed;
   top: 0;
@@ -140,4 +121,3 @@
   background-color: black;
   border-radius: 100px;
 }
->>>>>>> 51e5d5145050ea51f20939b8e1878443896861d0
