@@ -1,8 +1,8 @@
 import { useEffect, useState, useContext, useRef } from "react";
-import AuthContext from "../context/authProvider";
+import AuthContext from "../context/authProvider"; // 你的认证上下文路径
 const USDA_API_KEY = "VsNxcVGrt9triez7CjKKNwKdjRidilAez1CFdvLk";
 
-export default function FoodLogger() {
+export function FoodLogger() {
   const { auth } = useContext(AuthContext);
   const accessToken = auth?.accessToken || null;
   const username = auth?.user || null;
@@ -17,6 +17,7 @@ export default function FoodLogger() {
   const canvasRef = useRef(null);
 
   // 获取用户信息
+
 
   async function getUserData () {
       try{
@@ -34,10 +35,14 @@ export default function FoodLogger() {
     }
 
 
+
   // 根据 username 获取食物日志
   useEffect(() => {
     getUserData();
   }, []);
+
+
+
 
     async function fetchDetails() {
       try {
@@ -97,6 +102,8 @@ export default function FoodLogger() {
     }
 
 
+
+  
 
   // 根据日志调用 USDA API 获取详细营养信息
   useEffect(() => {
