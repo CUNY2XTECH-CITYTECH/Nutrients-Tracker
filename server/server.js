@@ -35,11 +35,6 @@ app.use("/api/food", foodRoutes)
 app.use("/api/food/logs", logRoutes); 
 
 
-
-
-
-
-
 app.listen(port, () => {
     console.log(`Server is lietening on ${port}`)
 })
