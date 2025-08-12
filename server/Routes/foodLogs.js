@@ -1,6 +1,6 @@
 import express, { Router } from 'express'
 import axios  from 'axios';
-import Food from "../Models/food.js";
+import Food from "../Models/FoodLog.js";
 const router = express.Router();
 
 router.get('/test-env', (req, res) => {
