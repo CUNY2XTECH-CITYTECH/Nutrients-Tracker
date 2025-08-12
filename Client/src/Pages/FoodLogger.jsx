@@ -1,10 +1,13 @@
-import { useEffect, useState, useRef } from "react";
-
+import { useEffect, useState, useContext, useRef } from "react";
+import AuthContext from "../context/authProvider"; // 你的认证上下文路径
 const USDA_API_KEY = "VsNxcVGrt9triez7CjKKNwKdjRidilAez1CFdvLk";
 
 export default function FoodLogger() {
+  const { auth } = useContext(AuthContext);
+  const accessToken = auth?.accessToken || null;
+  const username = auth?.user || null;
+
   const [userInfo, setUserInfo] = useState(null);
-  const [userId, setUserId] = useState(null);
   const [logs, setLogs] = useState([]);
   const [foodDetails, setFoodDetails] = useState([]);
   const [loadingUser, setLoadingUser] = useState(false);
@@ -13,15 +16,18 @@ export default function FoodLogger() {
   const [error, setError] = useState(null);
   const canvasRef = useRef(null);
 
-  // 1. 获取用户信息和 userId
+  // 获取用户信息
   useEffect(() => {
+    if (!accessToken) {
+      setError("No access token found, please login.");
+      return;
+    }
+
     setLoadingUser(true);
     setError(null);
 
     fetch("/test", {
-      headers: {
-        Authorization: `Bearer ${localStorage.getItem("accessToken")}`,
-      },
+      headers: { Authorization: `Bearer ${accessToken}` },
     })
       .then((res) => {
         if (!res.ok) throw new Error("Failed to fetch user info");
@@ -29,26 +35,23 @@ export default function FoodLogger() {
       })
       .then((data) => {
         setUserInfo(data);
-        setUserId(data.userId);
         setLoadingUser(false);
       })
       .catch((err) => {
         setError(err.message);
         setLoadingUser(false);
       });
-  }, []);
+  }, [accessToken]);
 
-  // 2. 根据 userId 获取食物日志
+  // 根据 username 获取食物日志
   useEffect(() => {
-    if (!userId) return;
+    if (!accessToken || !username) return;
+
     setLoadingLogs(true);
     setError(null);
-
-    fetch(`/api/food/logs/${userId}`, {
-      headers: {
-        Authorization: `Bearer ${localStorage.getItem("accessToken")}`,
-      },
-    })
+    fetch(`http://localhost:3000/api/food/logs/${username}`, {
+    headers: { Authorization: `Bearer ${accessToken}` }
+})
       .then((res) => {
         if (!res.ok) throw new Error("Failed to fetch logs");
         return res.json();
@@ -61,14 +64,15 @@ export default function FoodLogger() {
         setError(err.message);
         setLoadingLogs(false);
       });
-  }, [userId]);
+  }, [accessToken, username]);
 
-  // 3. 根据 logs 调用 USDA API 获取详细营养信息
+  // 根据日志调用 USDA API 获取详细营养信息
   useEffect(() => {
     if (logs.length === 0) {
       setFoodDetails([]);
       return;
     }
+
     setLoadingDetails(true);
     setError(null);
 
@@ -83,69 +87,69 @@ export default function FoodLogger() {
       protein: ["protein"],
     };
 
-    const fetchDetails = async () => {
-      const details = await Promise.all(
-        logs.map(async (log) => {
-          try {
-            const res = await fetch(
-              `https://api.nal.usda.gov/fdc/v1/food/${log.foodId}?api_key=${USDA_API_KEY}`
-            );
-            if (!res.ok)
-              throw new Error(`USDA fetch failed for foodId=${log.foodId}`);
+    async function fetchDetails() {
+      try {
+        const details = await Promise.all(
+          logs.map(async (log) => {
+            try {
+              const res = await fetch(
+                `https://api.nal.usda.gov/fdc/v1/food/${log.foodId}?api_key=${USDA_API_KEY}`
+              );
+              if (!res.ok)
+                throw new Error(`USDA fetch failed for foodId=${log.foodId}`);
 
-            const data = await res.json();
-            const nutrients = data.foodNutrients || [];
+              const data = await res.json();
+              const nutrients = data.foodNutrients || [];
 
-            const getNutrientByPriority = (names) => {
-              for (const name of names) {
-                const lowerName = name.toLowerCase();
-                const match = nutrients.find(
-                  (n) =>
-                    n.nutrient?.name?.toLowerCase() === lowerName ||
-                    n.nutrient?.name?.toLowerCase().includes(lowerName)
-                );
-                if (match) return match.amount;
-              }
-              return 0;
-            };
+              const getNutrientByPriority = (names) => {
+                for (const name of names) {
+                  const lowerName = name.toLowerCase();
+                  const match = nutrients.find(
+                    (n) =>
+                      n.nutrient?.name?.toLowerCase() === lowerName ||
+                      n.nutrient?.name?.toLowerCase().includes(lowerName)
+                  );
+                  if (match) return match.amount;
+                }
+                return 0;
+              };
 
-            const serving = Number(log.serving) || 1;
+              const serving = Number(log.serving) || 1;
 
-            const calories = getNutrientByPriority(nutrientPriorityMap.calories);
-            const carbs = getNutrientByPriority(nutrientPriorityMap.carbs);
-            const fat = getNutrientByPriority(nutrientPriorityMap.fat);
-            const protein = getNutrientByPriority(nutrientPriorityMap.protein);
+              const calories = getNutrientByPriority(nutrientPriorityMap.calories);
+              const carbs = getNutrientByPriority(nutrientPriorityMap.carbs);
+              const fat = getNutrientByPriority(nutrientPriorityMap.fat);
+              const protein = getNutrientByPriority(nutrientPriorityMap.protein);
 
-            return {
-              name: data.description || "Unknown Food",
-              calories: +(calories * serving).toFixed(1),
-              carbs: +(carbs * serving).toFixed(1),
-              fat: +(fat * serving).toFixed(1),
-              protein: +(protein * serving).toFixed(1),
-              mealType: log.mealType,
-              unit: log.unit,
-              serving: serving,
-            };
-          } catch (err) {
-            console.error(err);
-            return null;
-          }
-        })
-      );
-      setFoodDetails(details.filter(Boolean));
-      setLoadingDetails(false);
-    };
+              return {
+                name: data.description || "Unknown Food",
+                calories: +(calories * serving).toFixed(1),
+                carbs: +(carbs * serving).toFixed(1),
+                fat: +(fat * serving).toFixed(1),
+                protein: +(protein * serving).toFixed(1),
+                mealType: log.mealType,
+                unit: log.units,
+                serving,
+              };
+            } catch (err) {
+              console.error(err);
+              return null;
+            }
+          })
+        );
+        setFoodDetails(details.filter(Boolean));
+      } catch (err) {
+        setError("Error fetching food details");
+      } finally {
+        setLoadingDetails(false);
+      }
+    }
 
     fetchDetails();
   }, [logs]);
 
-  // 4. 按餐别分组
-  const grouped = {
-    Breakfast: [],
-    Lunch: [],
-    Dinner: [],
-  };
-
+  // 按餐别分组
+  const grouped = { Breakfast: [], Lunch: [], Dinner: [] };
   foodDetails.forEach((food) => {
     const meal = food.mealType?.toLowerCase();
     if (meal === "breakfast") grouped.Breakfast.push(food);
@@ -153,7 +157,7 @@ export default function FoodLogger() {
     else if (meal === "dinner") grouped.Dinner.push(food);
   });
 
-  // 5. 总营养计算
+  // 总营养计算
   const totalNutrition = foodDetails.reduce(
     (acc, food) => {
       acc.calories += food.calories || 0;
@@ -165,11 +169,10 @@ export default function FoodLogger() {
     { calories: 0, carbs: 0, fat: 0, protein: 0 }
   );
 
-  // 6. 画饼图
+  // 画饼图
   useEffect(() => {
     const canvas = canvasRef.current;
     if (!canvas) return;
-
     const ctx = canvas.getContext("2d");
     const { carbs, fat, protein } = totalNutrition;
     const values = [carbs, fat, protein];
@@ -216,7 +219,7 @@ export default function FoodLogger() {
         >
           <h3>👤 {userInfo.name}</h3>
           <p>Username: {userInfo.username}</p>
-          <p>Birthday: {userInfo.birthday}</p>
+          <p>Birthday: {new Date(userInfo.birthday).toLocaleDateString()}</p>
           <p>Height: {userInfo.height} cm</p>
           <p>Weight: {userInfo.weight} kg</p>
           <p>Gender: {userInfo.gender}</p>
@@ -262,12 +265,10 @@ export default function FoodLogger() {
 
       <button
         onClick={() => {
-          if (userId) {
+          if (username) {
             setLoadingLogs(true);
-            fetch(`/api/food/logs/${userId}`, {
-              headers: {
-                Authorization: `Bearer ${localStorage.getItem("accessToken")}`,
-              },
+            fetch(`/api/food/logs/${username}`, {
+              headers: { Authorization: `Bearer ${accessToken}` },
             })
               .then((res) => {
                 if (!res.ok) throw new Error("Failed to fetch logs");
@@ -303,20 +304,24 @@ export default function FoodLogger() {
             {mealType}
           </h2>
           <ul style={{ listStyle: "none", padding: 0 }}>
-            {grouped[mealType].map((food, idx) => (
-              <li
-                key={idx}
-                style={{
-                  display: "flex",
-                  justifyContent: "space-between",
-                  padding: "6px 0",
-                  borderBottom: "1px dashed #ddd",
-                }}
-              >
-                <span>{food.name}</span>
-                <span>{food.calories.toFixed(1)} kcal</span>
-              </li>
-            ))}
+            {grouped[mealType].length === 0 ? (
+              <li style={{ color: "#888", fontStyle: "italic" }}>No foods logged.</li>
+            ) : (
+              grouped[mealType].map((food, idx) => (
+                <li
+                  key={idx}
+                  style={{
+                    display: "flex",
+                    justifyContent: "space-between",
+                    padding: "6px 0",
+                    borderBottom: "1px dashed #ddd",
+                  }}
+                >
+                  <span>{food.name}</span>
+                  <span>{food.calories.toFixed(1)} kcal</span>
+                </li>
+              ))
+            )}
           </ul>
         </div>
       ))}
