@@ -8,18 +8,17 @@ import RecipeTile from "../../Componets/RecipeTile";
 export function Suggestions() {
   const [query, setquery] = useState(""); // State to store the searched text typed by the user
   const [recipes, setrecipes] = useState([]); // State to store the list of recipes we get from the API
-  const [healthLabels, sethealthLabels] = useState("vegan"); // State to store the selected health filter (default is "vegan")
+  const [healthLabels, sethealthLabels] = useState(""); // State to store the selected health filter (default is "vegan")
+  const [dietFilters, setDietFilters] = useState("Diet Filters")
 
   async function getRecipe() {
-    console.log("its working");
     try {
       const response = await axios.post(`http://localhost:3000/recipes`,
         {query:query,
-          health:healthLabels
+          healthLabels:healthLabels
         }
       );
 
-      console.log(response.data.hits);
       setrecipes(response.data.hits)
     } catch (err) {
       console.error("Error fetching recipes:", err);
@@ -34,10 +33,9 @@ export function Suggestions() {
 
   useEffect(() => {
     if (query.trim() !== "") {
-      console.log("useEffect triggered. Fetching recipes...");
       getRecipe();
     }
-  }, [query, healthLabels]);
+  }, [query, healthLabels, dietFilters]);
 
   return (
     <div className="heading">
@@ -54,14 +52,19 @@ export function Suggestions() {
         {/* Dropdown for health/diet filters */}
         <select
           className="healthyLabels"
-          value={healthLabels}
-          onChange={(e) => sethealthLabels(e.target.value)}
+          value={dietFilters}
+          onChange={(e) => {setDietFilters(e.target.value)
+                            sethealthLabels(e.target.value)}
+                          }
         >
-          <option onClick={() => sethealthLabels("vegan")}>Vegan</option>
-          <option onClick={() => sethealthLabels("vegetarian")}>Vegetarian</option>
-          <option onClick={() => sethealthLabels("dairy-free")}>Dairy-Free</option>
-          <option onClick={() => sethealthLabels("low-sugar")}>low-sugar</option>
-          <option onClick={() => sethealthLabels("egg-free")}>Egg-Free</option>
+          <option value="" >Diet Filters</option>
+          <option value="vegan">Vegan</option>
+          <option value="vegetarian">Vegetarian</option>
+          <option value="kosher">Kosher</option> 
+          <option value="pork-free">Pork Free</option>
+          <option value="alcohol-free">Alcohol Free</option>
+          <option value="dairy-free">Dairy-Free</option>
+          <option value="low-sugar">low-sugar</option>
         </select>
 
         <button
