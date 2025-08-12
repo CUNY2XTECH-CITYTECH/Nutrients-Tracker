@@ -2,7 +2,7 @@ import { useEffect, useState, useContext, useRef } from "react";
 import AuthContext from "../context/authProvider"; // 你的认证上下文路径
 const USDA_API_KEY = "VsNxcVGrt9triez7CjKKNwKdjRidilAez1CFdvLk";
 
-export function FoodLogger() {
+export default function FoodLogger() {
   const { auth } = useContext(AuthContext);
   const accessToken = auth?.accessToken || null;
   const username = auth?.user || null;
@@ -31,12 +31,10 @@ export function FoodLogger() {
 
       } catch(error) {
         console.error("Failed to fetch logs: ", error);
+        
       }
     }
 
-
-
-  // 根据 username 获取食物日志
   useEffect(() => {
     getUserData();
   }, []);
@@ -52,7 +50,8 @@ export function FoodLogger() {
               const res = await fetch(
                 `https://api.nal.usda.gov/fdc/v1/food/${log.foodId}?api_key=${USDA_API_KEY}`
               );
-              if (!res.ok) throw new Error(`USDA fetch failed for foodId=${log.foodId}`);
+              if (!res.ok)
+            throw new Error(`USDA fetch failed for foodId=${log.foodId}`);
 
               const data = await res.json();
               const nutrients = data.foodNutrients || [];
