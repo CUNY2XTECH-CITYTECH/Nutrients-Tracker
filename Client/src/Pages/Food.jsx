@@ -77,7 +77,7 @@ export function Food() {
         {!isSearching && searchResults.length > 0 && (
           <div className="suggested-food-items-container">
             {searchResults.slice(0, 5).map((food, index) => (
-              <div key={index} className="food-item">
+              <button onClick={open}><div key={index} className="food-item">
                 <h3 className="food-title">{food.description}</h3>
                 {food.foodNutrients && (
                   <div className="nutrient-facts">
@@ -98,7 +98,7 @@ export function Food() {
                       ))}
                   </div>
                 )} 
-              </div>
+              </div></button>
             ))}
           </div>
         )}

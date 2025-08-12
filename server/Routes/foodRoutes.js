@@ -85,6 +85,7 @@ router.post('/search', async (req, res) => {
 // Frontend sends: { foodName: "Chicken Breast", mealType: "Dinner" }
 router.post('/save', async (req, res) => {
     try {
+        console.log("Received: ", req.body);
         // Get the food name and meal type from request body
         const { foodName, mealType, foodID, serving, units,
             calories, carbs, fats, proteins, fiber, sugar,
