@@ -1,5 +1,5 @@
 import { useEffect, useState, useContext, useRef } from "react";
-import AuthContext from "../context/authProvider"; // 你的认证上下文路径
+import AuthContext from "../context/authProvider";
 const USDA_API_KEY = "VsNxcVGrt9triez7CjKKNwKdjRidilAez1CFdvLk";
 
 export default function FoodLogger() {
@@ -17,75 +17,27 @@ export default function FoodLogger() {
   const canvasRef = useRef(null);
 
   // 获取用户信息
-  useEffect(() => {
-    if (!accessToken) {
-      setError("No access token found, please login.");
-      return;
+
+  async function getUserData () {
+      try{
+        setLoadingLogs(true);
+        setError(null);
+        const response = await fetch(`http://localhost:3000/api/food/logs/`)
+
+        console.log(response)
+        setLogs(response);
+        setLoadingLogs(false);
+
+      } catch(error) {
+        console.error("Failed to fetch logs: ", error);
+      }
     }
 
-    setLoadingUser(true);
-    setError(null);
-
-    fetch("/test", {
-      headers: { Authorization: `Bearer ${accessToken}` },
-    })
-      .then((res) => {
-        if (!res.ok) throw new Error("Failed to fetch user info");
-        return res.json();
-      })
-      .then((data) => {
-        setUserInfo(data);
-        setLoadingUser(false);
-      })
-      .catch((err) => {
-        setError(err.message);
-        setLoadingUser(false);
-      });
-  }, [accessToken]);
 
   // 根据 username 获取食物日志
   useEffect(() => {
-    if (!accessToken || !username) return;
-
-    setLoadingLogs(true);
-    setError(null);
-    fetch(`http://localhost:3000/api/food/logs/${username}`, {
-    headers: { Authorization: `Bearer ${accessToken}` }
-})
-      .then((res) => {
-        if (!res.ok) throw new Error("Failed to fetch logs");
-        return res.json();
-      })
-      .then((data) => {
-        setLogs(data);
-        setLoadingLogs(false);
-      })
-      .catch((err) => {
-        setError(err.message);
-        setLoadingLogs(false);
-      });
-  }, [accessToken, username]);
-
-  // 根据日志调用 USDA API 获取详细营养信息
-  useEffect(() => {
-    if (logs.length === 0) {
-      setFoodDetails([]);
-      return;
-    }
-
-    setLoadingDetails(true);
-    setError(null);
-
-    const nutrientPriorityMap = {
-      calories: [
-        "energy (atwater general factors)",
-        "energy (atwater specific factors)",
-        "energy",
-      ],
-      carbs: ["carbohydrate, by difference", "carbohydrate, by summation", "carbohydrate"],
-      fat: ["total lipid (fat)", "fat", "total fat"],
-      protein: ["protein"],
-    };
+    getUserData();
+  }, []);
 
     async function fetchDetails() {
       try {
@@ -95,8 +47,7 @@ export default function FoodLogger() {
               const res = await fetch(
                 `https://api.nal.usda.gov/fdc/v1/food/${log.foodId}?api_key=${USDA_API_KEY}`
               );
-              if (!res.ok)
-                throw new Error(`USDA fetch failed for foodId=${log.foodId}`);
+              if (!res.ok) throw new Error(`USDA fetch failed for foodId=${log.foodId}`);
 
               const data = await res.json();
               const nutrients = data.foodNutrients || [];
@@ -145,6 +96,23 @@ export default function FoodLogger() {
       }
     }
 
+
+
+  // 根据日志调用 USDA API 获取详细营养信息
+  useEffect(() => {
+
+    setLoadingDetails(true);
+    setError(null);
+    const nutrientPriorityMap = {
+      calories: [
+        "energy (atwater general factors)",
+        "energy (atwater specific factors)",
+        "energy",
+      ],
+      carbs: ["carbohydrate, by difference", "carbohydrate, by summation", "carbohydrate"],
+      fat: ["total lipid (fat)", "fat", "total fat"],
+      protein: ["protein"],
+    };
     fetchDetails();
   }, [logs]);
 
