@@ -48,6 +48,7 @@ export function Food() {
   const [selectedFood, setSelectedFood] = useState(null);
   const [isOpen, setIsOpen] = useState(false);
   const [extendedFoodData, setExtendedFoodData] = useState(null);
+  const [isSaving, setIsSaving] = useState(false);
 
   // Debounce function
   const debounce = (func, delay = 100) => {
@@ -60,21 +61,26 @@ export function Food() {
 
   // Fetch extended food data (popup data)
   const fetchExtendedFoodData = async (fdcId) => {
+    console.log("Attempting to fetch details for fdcId:", fdcId);
     try {
       const response = await axios.get(
         `http://localhost:3000/api/food/details`,
         { params: { fdcId } }
       );
 
-      console.log("Extended food data:", response.data);
+      console.log("Extended food data response:", response.data);
 
       setExtendedFoodData(response.data);
       setIsOpen(true);
     } catch (err) {
       console.error("Error fetching extended food data:", err);
+      console.error("Error details:", err.response?.data);
+      console.error("Error status:", err.response?.status);
+      console.error("Error message:", err.message);
+      
       setExtendedFoodData({
         food_id: fdcId,
-        food_name: "Nutrition Data",
+        food_name: selectedFood?.description || "Unknown Food",
         nutrients: []
       });
       setIsOpen(true);
@@ -122,6 +128,100 @@ export function Food() {
     fetchExtendedFoodData(food.fdcId);
   };
 
+  // Function to organize nutrients into categories for better display
+  const organizeNutrients = (nutrients) => {
+    const categories = {
+      macronutrients: [],
+      vitamins: [],
+      minerals: []
+    };
+
+    // Create a map of available nutrients from API
+    const nutrientData = {};
+    nutrients?.forEach(nutrient => {
+      nutrientData[nutrient.nutrientName] = nutrient;
+    });
+
+    // Process ALL nutrients from our nutrientMap (show missing ones as 0)
+    Object.keys(nutrientMap).forEach(originalName => {
+      const displayName = nutrientMap[originalName];
+      const nutrient = nutrientData[originalName];
+      
+      const nutrientInfo = {
+        displayName,
+        originalName,
+        value: nutrient?.value || 0,
+        unit: nutrient?.unitName?.toLowerCase() || (originalName === 'Energy' ? 'kcal' : 'mg')
+      };
+
+      if (['Calories', 'Protein', 'Carbs', 'Fats', 'Fiber', 'Sugar'].includes(displayName)) {
+        categories.macronutrients.push(nutrientInfo);
+      } else if (displayName.includes('Vitamin') || displayName.includes('B')) {
+        categories.vitamins.push(nutrientInfo);
+      } else {
+        categories.minerals.push(nutrientInfo);
+      }
+    });
+
+    return categories;
+  };
+
+  // Save food to database (Updated for simplified FoodLog model)
+  const handleSaveFood = async () => {
+    if (!extendedFoodData || !selectedFood) {
+      alert('No food data to save');
+      return;
+    }
+
+    // Get user inputs for the simplified model
+    const mealType = prompt("Select meal type:\n- breakfast\n- lunch\n- dinner\n- snack") || "snack";
+    const servingSize = prompt("Enter serving size (e.g., 1, 0.5, 2)") || "1";
+    const servingUnit = prompt("Enter serving unit (e.g., cup, piece, oz)") || "serving";
+    const username = prompt("Enter username (optional)") || "defaultUser";
+
+    // Validate meal type
+    const validMealTypes = ["breakfast", "lunch", "dinner", "snack"];
+    if (!validMealTypes.includes(mealType.toLowerCase())) {
+      alert('Invalid meal type. Please choose: breakfast, lunch, dinner, or snack');
+      return;
+    }
+
+    setIsSaving(true);
+    
+    try {
+      // Simplified data structure for the new FoodLog model
+      const saveData = {
+        foodName: extendedFoodData.food_name, // Not required by model but sent for reference
+        foodID: extendedFoodData.food_id,
+        mealType: mealType.toLowerCase(),
+        serving: parseFloat(servingSize),
+        units: servingUnit,
+        username: username
+      };
+
+      console.log('Saving food data:', saveData);
+
+      await axios.post(
+        'http://localhost:3000/api/food/save',
+        saveData,
+        { headers: { 'Content-Type': 'application/json' } }
+      );
+
+      alert(`${extendedFoodData.food_name} saved successfully to ${mealType}!`);
+      setIsOpen(false);
+      
+    } catch (error) {
+      console.error('Error saving food:', error);
+      if (error.response?.data?.message) {
+        alert(`${error.response.data.message}`);
+      } else {
+        alert('Failed to save food. Please try again.');
+      }
+    } finally {
+      setIsSaving(false);
+    }
+  };
+
   return (
     <div className="food-page">
       <form className="search-box">
@@ -142,7 +242,17 @@ export function Food() {
             {searchResults.slice(0, 5).map((food, index) => (
               <div key={index} className="food-item">
                 <div className="food-item-header">
-                  <h3 className="food-title">{food.description}</h3>
+                  <h3 className="food-title">
+                    {food.description}
+                    <span style={{
+                      fontSize: '0.8em', 
+                      color: '#666', 
+                      fontWeight: 'normal',
+                      marginLeft: '8px'
+                    }}>
+                      (ID: {food.fdcId})
+                    </span>
+                  </h3>
                   <button
                     className="details-button"
                     onClick={() => handleDetailsClick(food)}
@@ -150,7 +260,6 @@ export function Food() {
                     View Details
                   </button>
                 </div>
-                {/* No nutrients here to keep clean */}
               </div>
             ))}
           </div>
@@ -163,7 +272,7 @@ export function Food() {
         <div className="dialog-content">
           <DialogPanel className="dialog-panel">
             <DialogTitle className="dialog-title">
-              {extendedFoodData?.food_name || "Nutrition Details"}
+              {extendedFoodData?.food_name || selectedFood?.description || "Nutrition Details"}
             </DialogTitle>
             <DialogDescription className="dialog-description">
               Food ID: {extendedFoodData?.food_id}
@@ -171,23 +280,76 @@ export function Food() {
 
             {extendedFoodData && extendedFoodData.nutrients && (
               <div className="nutrient-details">
-                {extendedFoodData.nutrients
-                  .filter(nutrient => nutrientMap[nutrient.nutrientName])
-                  .map((nutrient, i) => {
-                    const displayName = nutrientMap[nutrient.nutrientName];
-                    return (
-                      <div key={i} className="nutrient-row">
-                        <span className="nutrient-name">{displayName}</span>
-                        <span className="nutrient-value">
-                          {nutrient.value} {nutrient.unitName.toLowerCase()}
-                        </span>
+                {(() => {
+                  const organizedNutrients = organizeNutrients(extendedFoodData.nutrients);
+                  
+                  return (
+                    <div className="nutrient-categories">
+                      {/* Macronutrients Section */}
+                      <div className="nutrient-category">
+                        <h4 className="category-title" style={{fontSize: '16px', fontWeight: 'bold', color: '#2c3e50', marginBottom: '12px', borderBottom: '2px solid #3498db', paddingBottom: '6px'}}>Macronutrients</h4>
+                        <div className="nutrient-grid">
+                          {organizedNutrients.macronutrients.map((nutrient, i) => (
+                            <div key={i} className="nutrient-row">
+                              <span className="nutrient-name">{nutrient.displayName}</span>
+                              <span className="nutrient-value">
+                                {nutrient.value} {nutrient.unit}
+                              </span>
+                            </div>
+                          ))}
+                        </div>
                       </div>
-                    );
-                  })}
+
+                      {/* Vitamins Section */}
+                      <div className="nutrient-category">
+                        <h4 className="category-title" style={{fontSize: '16px', fontWeight: 'bold', color: '#2c3e50', marginBottom: '12px', borderBottom: '2px solid #e74c3c', paddingBottom: '6px'}}>Vitamins</h4>
+                        <div className="nutrient-grid">
+                          {organizedNutrients.vitamins.map((nutrient, i) => (
+                            <div key={i} className="nutrient-row">
+                              <span className="nutrient-name">{nutrient.displayName}</span>
+                              <span className="nutrient-value">
+                                {nutrient.value} {nutrient.unit}
+                              </span>
+                            </div>
+                          ))}
+                        </div>
+                      </div>
+
+                      {/* Minerals Section */}
+                      <div className="nutrient-category">
+                        <h4 className="category-title" style={{fontSize: '16px', fontWeight: 'bold', color: '#2c3e50', marginBottom: '12px', borderBottom: '2px solid #27ae60', paddingBottom: '6px'}}>Minerals</h4>
+                        <div className="nutrient-grid">
+                          {organizedNutrients.minerals.map((nutrient, i) => (
+                            <div key={i} className="nutrient-row">
+                              <span className="nutrient-name">{nutrient.displayName}</span>
+                              <span className="nutrient-value">
+                                {nutrient.value} {nutrient.unit}
+                              </span>
+                            </div>
+                          ))}
+                        </div>
+                      </div>
+                    </div>
+                  );
+                })()}
               </div>
             )}
 
             <div className="dialog-buttons">
+              <button
+                onClick={handleSaveFood}
+                disabled={isSaving}
+                className="dialog-button save-button"
+                style={{
+                  backgroundColor: '#27ae60',
+                  color: 'white',
+                  marginRight: '10px',
+                  opacity: isSaving ? 0.6 : 1,
+                  cursor: isSaving ? 'not-allowed' : 'pointer'
+                }}
+              >
+                {isSaving ? 'Saving...' : '💾 Save Food'}
+              </button>
               <button
                 onClick={() => setIsOpen(false)}
                 className="dialog-button close-button"
@@ -217,4 +379,3 @@ export function Food() {
     </div>
   );
 }
-
