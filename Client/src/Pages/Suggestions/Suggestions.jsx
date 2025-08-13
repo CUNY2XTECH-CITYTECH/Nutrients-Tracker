@@ -3,7 +3,7 @@ import "../Suggestions/suggestions.css";
 import { useState, useEffect } from "react";
 import axios from "axios";
 import { FaSearch } from "react-icons/fa";
-import RecipeTile from "../../Componets/RecipeTile";
+import RecipeTile from "../../Componets/RecipeTitle";
 
 export function Suggestions() {
   const [query, setquery] = useState(""); // State to store the searched text typed by the user
