@@ -1,5 +1,4 @@
 import "../Suggestions/suggestions.css";
-// import { Searchbar } from "../../Componets/Searchbar";
 import { useState, useEffect } from "react";
 import axios from "axios";
 import { FaSearch } from "react-icons/fa";
