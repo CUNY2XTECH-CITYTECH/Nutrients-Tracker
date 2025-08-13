@@ -14,7 +14,8 @@ import foodRoutes from "./Routes/foodRoutes.js"
 const app = express()
 
 
-import credentials from "./Middleware/Credentials.js"
+import { getUserInfo } from "./Middleware/Credentials.js"
+const credentials = getUserInfo
 app.use(credentials)
 
 
