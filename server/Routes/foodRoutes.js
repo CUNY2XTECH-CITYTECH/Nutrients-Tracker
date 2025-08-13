@@ -1,9 +1,42 @@
 import express from 'express';
 import axios from 'axios';
-import Food from "../Models/food.js";
+import Food from "../Models/FoodLog.js"; // This now refers to the updated Food model
 const router = express.Router();
 import dotenv from "dotenv";
 dotenv.config();
+
+// Nutrient mapping for consistent naming
+const nutrientMap = {
+  "Energy": "Calories",
+  "Protein": "Protein",
+  "Carbohydrate, by difference": "Carbs",
+  "Total lipid (fat)": "Fats",
+  "Fiber, total dietary": "Fiber",
+  "Sugars, total including NLEA": "Sugar",
+  "Vitamin A, RAE": "Vitamin A",
+  "Thiamin": "Vitamin B1",
+  "Riboflavin": "Vitamin B2",
+  "Niacin": "Vitamin B3",
+  "Pantothenic acid": "Vitamin B5",
+  "Vitamin B-6": "Vitamin B6",
+  "Biotin": "Vitamin B7",
+  "Folate, total": "Vitamin B9",
+  "Vitamin B-12": "Vitamin B12",
+  "Vitamin C, total ascorbic acid": "Vitamin C",
+  "Vitamin D (D2 + D3)": "Vitamin D",
+  "Vitamin E (alpha-tocopherol)": "Vitamin E",
+  "Vitamin K (phylloquinone)": "Vitamin K",
+  "Calcium, Ca": "Calcium",
+  "Copper, Cu": "Copper",
+  "Iodine, I": "Iodine",
+  "Iron, Fe": "Iron",
+  "Manganese, Mn": "Manganese",
+  "Phosphorus, P": "Phosphorus",
+  "Potassium, K": "Potassium",
+  "Selenium, Se": "Selenium",
+  "Sodium, Na": "Sodium",
+  "Zinc, Zn": "Zinc",
+};
 
 // USDA API Search Endpoint
 router.post('/search', async (req, res) => {
@@ -32,7 +65,7 @@ router.post('/search', async (req, res) => {
             fdcId: item.fdcId,
             description: item.description,
             foodNutrients: item.foodNutrients
-                .filter(n => ['Protein', 'Carbohydrate, by difference', 'Total lipid (fat)', 'Energy'].includes(n.nutrientName))
+                .filter(n => Object.keys(nutrientMap).includes(n.nutrientName))
                 .map(nutrient => ({
                     nutrientName: nutrient.nutrientName,
                     value: nutrient.value,
@@ -50,49 +83,130 @@ router.post('/search', async (req, res) => {
     }
 });
 
-// Save food to database
-// SAVE FOOD TO DATABASE: When user wants to save a food to their personal list
-// Frontend sends: { foodName: "Chicken Breast", mealType: "Dinner" }
+// NEW: Get detailed food information by FDC ID (for popup)
+router.get('/details', async (req, res) => {
+    try {
+        const { fdcId } = req.query;
+        const apiKey = process.env.USDA_API_KEY;
+
+        if (!fdcId) {
+            return res.status(400).json({ error: 'FDC ID is required' });
+        }
+
+        // Make request to USDA API for specific food details
+        const response = await axios.get(
+            `https://api.nal.usda.gov/fdc/v1/food/${fdcId}`,
+            {
+                params: {
+                    api_key: apiKey
+                }
+            }
+        );
+
+        const foodData = response.data;
+        
+        // Format the detailed response for frontend
+        const formattedFood = {
+            food_id: foodData.fdcId,
+            food_name: foodData.description,
+            nutrients: foodData.foodNutrients
+                .filter(n => Object.keys(nutrientMap).includes(n.nutrient.name))
+                .map(nutrient => ({
+                    nutrientName: nutrient.nutrient.name,
+                    value: nutrient.amount || 0,
+                    unitName: nutrient.nutrient.unitName
+                }))
+        };
+
+        res.json(formattedFood);
+    } catch (error) {
+        console.error('USDA API Details Error:', error);
+        res.status(500).json({ 
+            error: 'Failed to fetch food details',
+            details: error.message 
+        });
+    }
+});
+
+// Save food to database (Updated for new Food model structure)
 router.post('/save', async (req, res) => {
     try {
-        // Get the food name and meal type from request body
-        const { foodName, mealType, foodID, serving, units, calories, carbs, fats, proteins } = req.body;
         console.log("Received: ", req.body);
+        
+        // Get the required fields from request body
+        const { foodID, foodName , username, date, mealType, serving, unit, calories } = req.body;
+        
+        const requireFields = ['foodID', 'foodName', 'mealType', 'serving', 'unit', 'calories'];
+        const missingFields = requireFields.filter(field => !req.body[field]);
 
-        if(!foodName || !mealType || !foodID || !serving || !units) {
+        if (missingFields.length > 0) {
             return res.status(400).json({
-                message: "Missing required fields", 
-                require: ["foodName", "mealType", "foodId", "serving", "units"]
+                message: "Missing required fields",
+                missing: missingFields,
+                received: Object.keys(req.body)
             });
         }
-        
-        // Create a new food record using our MongoDB model
-        const newFood = new Food({ 
-            foodName, 
-            mealType, 
-            foodID: Number(foodID), 
-            serving: Number(serving), 
-            units,
-            calories: calories || 0,
-            carbs: carbs || 0,
-            fats: fats || 0,
-            proteins: proteins || 0
+
+        const validMealTypes = ["breakfast", "lunch", "dinner", "snack"];
+        const normalizedMealType = mealType.toLowerCase();
+
+        if (!validMealTypes.includes(normalizedMealType)) {
+            return res.status(400).json({
+                message: "Invalid meal type",
+                validOptions: validMealTypes,
+                received: mealType
+            });
+        }
+
+        const newFood = new Food({
+            foodId: Number(foodID),
+            foodName: foodName.trim(),
+            username: username || "anonymous",
+            Date: date ? new Date(date) : new Date(),
+            mealType: normalizedMealType,
+            serving: Number(serving),
+            unit: unit,
+            calories: Number(calories),
+            createdAt: new Date() 
         });
-        
-        // Save it to the database
+
         await newFood.save();
 
-        // Confirm to frontend that it was saved
-        res.json({ 
-            message: "Food saved successfully",
-            food: newFood
+        res.status(201).json({
+            succes: true,
+            savedEntry: {
+                foodID: newFood.foodId,
+                foodName: newFood.foodName,
+                username: newFood.username,
+                Date: newFood.Date,
+                mealType: newFood.mealType,
+                serving: newFood.serving,
+                unit: newFood.unit,
+                calories: newFood.calories,
+                createdAt: newFood.createdAt
+            }
         });
-    } catch (error) {
-        // If saving fails, tell frontend what went wrong
+    }
+    catch(error) {
         console.error("Save error: ", error);
-        res.status(500).json({ 
-            error: 'Failed to save food',
-            details: error.message 
+
+        if (error.name === 'ValidationError') {
+            return res.status(400).json({
+                error: 'Validation failed',
+                details:error.error
+            });
+        }
+        if (error.code === 11000) {
+            return res.status(409).json({
+                error: 'Duplicate entry',
+                details: 'This log entry already exits'
+            });
+        }
+        res.status(500).json({
+            error: 'Server error',
+            details: process.env.NODE_ENV === 'development'
+                ? error.message
+                : 'Internal server error'
         });
     }
 });
