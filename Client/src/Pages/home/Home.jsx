@@ -6,7 +6,7 @@ export function Home() {
 
   return (
     <div className="home-container">
-      <h1>Welcome to the Home Page</h1>
+      <h1>Greetings, from your friends at Nutrients Tracker!</h1>
 
       {/* Marquee section */}
       <div className="marquee">
