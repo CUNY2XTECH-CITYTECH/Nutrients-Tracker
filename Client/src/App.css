@@ -260,3 +260,97 @@ body{
     padding: 15px;
   }
 }
+.dialog-container {
+  position: fixed;
+  inset: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 50;
+}
+
+.dialog-overlay {
+  position: fixed;
+  inset: 0;
+  background-color: rgba(0, 0, 0, 0.5);
+}
+
+.dialog-content {
+  position: relative;
+  width: 90%;
+  max-width: 32rem;
+  max-height: 90vh;
+  overflow-y: auto;
+  background-color: white;
+  border-radius: 0.5rem;
+  box-shadow: 0 10px 25px rgba(0, 0, 0, 0.1);
+}
+
+.dialog-panel {
+  padding: 1.5rem;
+}
+
+.dialog-title {
+  font-size: 1.25rem;
+  font-weight: 600;
+  color: #1a202c;
+  margin-bottom: 0.5rem;
+}
+
+.dialog-description {
+  color: #4a5568;
+  margin-bottom: 1rem;
+}
+
+.nutrient-details {
+  margin-top: 1rem;
+}
+
+.nutrient-category {
+  margin-bottom: 1.5rem;
+}
+
+.nutrient-category h4 {
+  margin-bottom: 0.5rem;
+  color: #4a5568;
+  font-weight: 600;
+  border-bottom: 1px solid #e2e8f0;
+  padding-bottom: 0.25rem;
+}
+
+.nutrient-row {
+  display: flex;
+  justify-content: space-between;
+  padding: 0.25rem 0;
+}
+
+.nutrient-name {
+  font-weight: 500;
+  color: #2d3748;
+}
+
+.nutrient-value {
+  color: #4a5568;
+}
+
+.dialog-buttons {
+  display: flex;
+  justify-content: flex-end;
+  margin-top: 1.5rem;
+}
+
+.dialog-button {
+  padding: 0.5rem 1rem;
+  border-radius: 0.375rem;
+  font-weight: 500;
+  transition: background-color 0.2s;
+}
+
+.close-button {
+  background-color: #4299e1;
+  color: white;
+}
+
+.close-button:hover {
+  background-color: #3182ce;
+}

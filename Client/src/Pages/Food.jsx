@@ -1,7 +1,7 @@
-import { useState } from "react";
-import "../searchBox.css";
+import { useState, useEffect } from "react";
 import axios from "axios";
-import { Dialog, DialogPanel, DialogTitle, DialogDescription } from '@headlessui/react';
+import { Dialog, DialogPanel, DialogTitle } from '@headlessui/react';
+import "../App.css";
 
 const suggestedFoods = [
   { title: "Avocado", calories: 160, nutrients: { protein: "2g", carbs: "9g", fat: "15g" } },
@@ -15,9 +15,9 @@ export function Food() {
   const [selectedFood, setSelectedFood] = useState(null);
   const [isOpen, setIsOpen] = useState(false);
   const [extendedFoodData, setExtendedFoodData] = useState(null);
+  const [error, setError] = useState(null);
 
-  // Debounce function
-  const debounce = (func, delay = 100) => {
+  const debounce = (func, delay = 300) => {
     let timer;
     return (...args) => {
       clearTimeout(timer);
@@ -25,28 +25,35 @@ export function Food() {
     };
   };
 
-  // Fetch extended food data (popup data)
   const fetchExtendedFoodData = async (fdcId) => {
     try {
+      setError(null);
       const response = await axios.get(
         `http://localhost:3000/api/food/details`,
         { params: { fdcId } }
       );
-
-      setExtendedFoodData(response.data);
+      
+      const data = response.data;
+      console.log("API Response:", data); // Debug log
+      
+      if (!data.nutrients || data.nutrients.length === 0) {
+        throw new Error("No nutrient data available");
+      }
+      
+      setExtendedFoodData(data);
       setIsOpen(true);
     } catch (err) {
       console.error("Error fetching extended food data:", err);
+      setError(err.message);
       setExtendedFoodData({
         food_id: fdcId,
-        food_name: "Nutrition Data",
+        food_name: selectedFood?.description || "Nutrition Data",
         nutrients: []
       });
       setIsOpen(true);
     }
   };
 
-  // Search USDA API
   const searchUSDA = async (term) => {
     if (!term.trim()) {
       setSearchResults([]);
@@ -69,7 +76,7 @@ export function Food() {
     }
   };
 
-  const debouncedSearch = debounce(searchUSDA, 500);
+  const debouncedSearch = debounce(searchUSDA);
 
   const handleInputChange = (e) => {
     const term = e.target.value;
@@ -87,21 +94,34 @@ export function Food() {
     fetchExtendedFoodData(food.fdcId);
   };
 
+  const formatNutrientName = (name) => {
+    return name
+      .replace("Carbohydrate, by difference", "Carbs")
+      .replace("Total lipid (fat)", "Fat")
+      .replace("Energy", "Calories")
+      .replace(/, total$/, '')
+      .replace("total ", '')
+      .replace("Vitamin ", "Vit. ");
+  };
+
   return (
     <div className="food-page">
       <form className="search-box">
         <input
           type="text"
-          placeholder="Enter the food"
+          placeholder="Search for foods..."
           value={searchTerm}
           onChange={handleInputChange}
         />
-        <button type="reset" onClick={handleReset}></button>
+        {searchTerm && (
+          <button type="reset" onClick={handleReset} className="clear-button">
+            ×
+          </button>
+        )}
       </form>
 
-      {/* Search Results */}
       <div id="search-results">
-        {isSearching && <div>Searching...</div>}
+        {isSearching && <div className="search-loading">Searching...</div>}
         {!isSearching && searchResults.length > 0 && (
           <div className="suggested-food-items-container">
             {searchResults.slice(0, 5).map((food, index) => (
@@ -125,18 +145,11 @@ export function Food() {
                           nutrient.nutrientName === "Total lipid (fat)" ||
                           nutrient.nutrientName === "Energy"
                       )
-                      .map((nutrient, i) => {
-                        let displayName = nutrient.nutrientName;
-                        if (displayName === "Carbohydrate, by difference") displayName = "Carbs";
-                        if (displayName === "Total lipid (fat)") displayName = "Fat";
-                        if (displayName === "Energy") displayName = "Calories";
-
-                        return (
-                          <p key={i}>
-                            {displayName}: {nutrient.value} {nutrient.unitName.toLowerCase()}
-                          </p>
-                        );
-                      })}
+                      .map((nutrient, i) => (
+                        <p key={i}>
+                          {formatNutrientName(nutrient.nutrientName)}: {nutrient.value} {nutrient.unitName.toLowerCase()}
+                        </p>
+                      ))}
                   </div>
                 )}
               </div>
@@ -145,39 +158,135 @@ export function Food() {
         )}
       </div>
 
-      {/* Food Details Dialog */}
       <Dialog open={isOpen} onClose={() => setIsOpen(false)} className="dialog-container">
         <div className="dialog-overlay" aria-hidden="true" />
         <div className="dialog-content">
           <DialogPanel className="dialog-panel">
             <DialogTitle className="dialog-title">
-              {extendedFoodData?.food_name || "Nutrition Details"}
+              Nutrition Facts - {extendedFoodData?.food_name || selectedFood?.description || "Nutrition Details"}
             </DialogTitle>
-            <DialogDescription className="dialog-description">
-              Food ID: {extendedFoodData?.food_id}
-            </DialogDescription>
+            
+            {error && <div className="error-message">{error}</div>}
+            
+            <div className="nutrient-details">
+              {extendedFoodData?.nutrients?.length > 0 ? (
+                <div className="nutrition-facts-panel">
+                  <div className="serving-info">
+                    <p><strong>Nutrition Facts</strong></p>
+                    <p>Per 100g serving</p>
+                  </div>
+                  
+                  <div className="calories-section">
+                    {extendedFoodData.nutrients
+                      .filter(nutrient => nutrient.nutrientName === 'Energy')
+                      .map((nutrient, i) => (
+                        <div key={i} className="calories-display">
+                          <strong>Calories: {nutrient.value}</strong>
+                        </div>
+                      ))}
+                  </div>
 
-            {extendedFoodData && extendedFoodData.nutrients && (
-              <div className="nutrient-details">
-                {extendedFoodData.nutrients.map((nutrient, i) => {
-                  let displayName = nutrient.nutrientName;
-                  if (displayName === "Carbohydrate, by difference") displayName = "Carbs";
-                  if (displayName === "Total lipid (fat)") displayName = "Fat";
-                  if (displayName === "Energy") displayName = "Calories";
-
-                  return (
-                    <div key={i} className="nutrient-row">
-                      <span className="nutrient-name">{displayName}</span>
-                      <span className="nutrient-value">
-                        {nutrient.value} {nutrient.unitName.toLowerCase()}
-                      </span>
+                  <div className="macros-section">
+                    <h4>Macronutrients</h4>
+                    <div className="nutrient-list">
+                      {extendedFoodData.nutrients
+                        .filter(nutrient => 
+                          ['Protein', 'Carbohydrate, by difference', 'Total lipid (fat)'].includes(nutrient.nutrientName))
+                        .map((nutrient, i) => (
+                          <div key={i} className="nutrient-row">
+                            <span className="nutrient-name">
+                              {formatNutrientName(nutrient.nutrientName)}
+                            </span>
+                            <span className="nutrient-value">
+                              {nutrient.value}g
+                            </span>
+                          </div>
+                        ))}
                     </div>
-                  );
-                })}
-              </div>
-            )}
+                  </div>
+
+                  {extendedFoodData.nutrients.some(nutrient => 
+                    ['Sugars, total', 'Fiber, total dietary', 'Cholesterol'].includes(nutrient.nutrientName)) && (
+                    <div className="additional-macros">
+                      <h4>Additional Information</h4>
+                      <div className="nutrient-list">
+                        {extendedFoodData.nutrients
+                          .filter(nutrient => 
+                            ['Sugars, total', 'Fiber, total dietary', 'Cholesterol'].includes(nutrient.nutrientName))
+                          .map((nutrient, i) => (
+                            <div key={i} className="nutrient-row">
+                              <span className="nutrient-name">
+                                {formatNutrientName(nutrient.nutrientName)}
+                              </span>
+                              <span className="nutrient-value">
+                                {nutrient.value} {nutrient.unitName.toLowerCase()}
+                              </span>
+                            </div>
+                          ))}
+                      </div>
+                    </div>
+                  )}
+
+                  {extendedFoodData.nutrients.some(nutrient => 
+                    ['Calcium, Ca', 'Iron, Fe', 'Potassium, K', 'Sodium, Na'].includes(nutrient.nutrientName)) && (
+                    <div className="minerals-section">
+                      <h4>Minerals</h4>
+                      <div className="nutrient-list">
+                        {extendedFoodData.nutrients
+                          .filter(nutrient => 
+                            ['Calcium, Ca', 'Iron, Fe', 'Potassium, K', 'Sodium, Na'].includes(nutrient.nutrientName))
+                          .map((nutrient, i) => (
+                            <div key={i} className="nutrient-row">
+                              <span className="nutrient-name">
+                                {formatNutrientName(nutrient.nutrientName)}
+                              </span>
+                              <span className="nutrient-value">
+                                {nutrient.value} {nutrient.unitName.toLowerCase()}
+                              </span>
+                            </div>
+                          ))}
+                      </div>
+                    </div>
+                  )}
+
+                  {extendedFoodData.nutrients.some(nutrient => 
+                    ['Vitamin C, total ascorbic acid', 'Vitamin A, RAE', 'Vitamin D (D2 + D3)'].includes(nutrient.nutrientName)) && (
+                    <div className="vitamins-section">
+                      <h4>Vitamins</h4>
+                      <div className="nutrient-list">
+                        {extendedFoodData.nutrients
+                          .filter(nutrient => 
+                            ['Vitamin C, total ascorbic acid', 'Vitamin A, RAE', 'Vitamin D (D2 + D3)'].includes(nutrient.nutrientName))
+                          .map((nutrient, i) => (
+                            <div key={i} className="nutrient-row">
+                              <span className="nutrient-name">
+                                {formatNutrientName(nutrient.nutrientName)}
+                              </span>
+                              <span className="nutrient-value">
+                                {nutrient.value} {nutrient.unitName.toLowerCase()}
+                              </span>
+                            </div>
+                          ))}
+                      </div>
+                    </div>
+                  )}
+                </div>
+              ) : (
+                <div className="no-nutrients">No detailed nutrition information available</div>
+              )}
+            </div>
 
             <div className="dialog-buttons">
+              <button
+                onClick={() => {
+                  // Handle save functionality here
+                  console.log("Save food:", extendedFoodData);
+                  // You can add your save logic here
+                }}
+                className="dialog-button save-button"
+              >
+                Save
+              </button>
               <button
                 onClick={() => setIsOpen(false)}
                 className="dialog-button close-button"
@@ -189,8 +298,7 @@ export function Food() {
         </div>
       </Dialog>
 
-      {/* Suggested foods section */}
-      <div>Suggested foods of the day</div>
+      <h2 className="section-title">Suggested foods of the day</h2>
       <div className="suggested-food-items-container">
         {suggestedFoods.map((food, index) => (
           <div key={index} className="food-item">
