@@ -4,7 +4,6 @@ import cors from "cors"
 import mongoose from "mongoose" 
 import 'dotenv/config'; // loads .env file
 import cookieParser from "cookie-parser"
-// import suggestionsRoutes from "./Routes/suggestionsRoutes.js"
 import dotenv from "dotenv";
 dotenv.config();
 import recipeRoutes from "./Routes/recipeRoutes.js";
@@ -36,7 +35,6 @@ app.use("/", authRoutes)
 
 app.use("/api/food", foodRoutes)
 
-// app.use("/suggestions", suggestionsRoutes)
 app.use("/recipes", recipeRoutes);
 
 app.use("/api/food/logs", logRoutes); 
