@@ -64,7 +64,7 @@ export function Suggestions() {
           <option value="pork-free">Pork Free</option>
           <option value="alcohol-free">Alcohol Free</option>
           <option value="dairy-free">Dairy-Free</option>
-          <option value="low-sugar">low-sugar</option>
+          <option value="low-sugar">Low-sugar</option>
         </select>
 
         <button className="search-button" type="submit">
