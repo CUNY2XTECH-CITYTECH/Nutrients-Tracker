@@ -1,13 +1,21 @@
 import mongoose from "mongoose";
 
 const foodSavedSchema = new mongoose.Schema({
+  foodId: {
+    type: Number,
+    required: true
+  },
+  foodName: {
+    type: String,
+    require: true
+  },
   username: {
     type: String,
     required: true
   },
-  foodId: {
-    type: Number,
-    required: true
+  date: {
+    type: Date,
+    default: Date.now
   },
   mealType: {
     type: String,
@@ -22,7 +30,11 @@ const foodSavedSchema = new mongoose.Schema({
     type: String,
     required: true
   },
-  date: {
+  calories: {
+    type: Number,
+    require: true
+  },
+  createdAt: {
     type: Date,
     default: Date.now
   }

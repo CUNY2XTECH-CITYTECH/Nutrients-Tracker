@@ -1,6 +1,6 @@
 import express from 'express';
 import axios from 'axios';
-import Food from "../Models/food.js"; // This now refers to the updated Food model
+import Food from "../Models/FoodLog.js"; // This now refers to the updated Food model
 const router = express.Router();
 import dotenv from "dotenv";
 dotenv.config();
@@ -134,47 +134,79 @@ router.post('/save', async (req, res) => {
         console.log("Received: ", req.body);
         
         // Get the required fields from request body
-        const { foodName, mealType, foodID, serving, units, username } = req.body;
+        const { foodID, foodName , username, date, mealType, serving, unit, calories } = req.body;
         
-        if(!foodID || !mealType || !serving || !units) {
+        const requireFields = ['foodID', 'foodName', 'mealType', 'serving', 'unit', 'calories'];
+        const missingFields = requireFields.filter(field => !req.body[field]);
+
+        if (missingFields.length > 0) {
             return res.status(400).json({
-                message: "Missing required fields", 
-                require: ["foodID", "mealType", "serving", "units"]
+                message: "Missing required fields",
+                missing: missingFields,
+                received: Object.keys(req.body)
             });
         }
 
-        // Validate and normalize mealType to match enum
         const validMealTypes = ["breakfast", "lunch", "dinner", "snack"];
         const normalizedMealType = mealType.toLowerCase();
-        
+
         if (!validMealTypes.includes(normalizedMealType)) {
             return res.status(400).json({
-                message: "Invalid mealType. Must be one of: breakfast, lunch, dinner, snack"
+                message: "Invalid meal type",
+                validOptions: validMealTypes,
+                received: mealType
             });
         }
-        
-        // Create a new food record using the updated Food model
-        const newFood = new Food({ 
-            username: username || "defaultUser", // You can modify this to get from auth
+
+        const newFood = new Food({
             foodId: Number(foodID),
+            foodName: foodName.trim(),
+            username: username || "anonymous",
+            Date: date ? new Date(date) : new Date(),
             mealType: normalizedMealType,
             serving: Number(serving),
-            unit: units
+            unit: unit,
+            calories: Number(calories),
+            createdAt: new Date() 
         });
 
         await newFood.save();
 
-        // Confirm to frontend that it was saved
-        res.json({ 
-            message: "Food saved successfully",
-            food: newFood
+        res.status(201).json({
+            succes: true,
+            savedEntry: {
+                foodID: newFood.foodId,
+                foodName: newFood.foodName,
+                username: newFood.username,
+                Date: newFood.Date,
+                mealType: newFood.mealType,
+                serving: newFood.serving,
+                unit: newFood.unit,
+                calories: newFood.calories,
+                createdAt: newFood.createdAt
+            }
         });
-    } catch (error) {
-        // If saving fails, tell frontend what went wrong
+    }
+    catch(error) {
         console.error("Save error: ", error);
-        res.status(500).json({ 
-            error: 'Failed to save food',
-            details: error.message 
+
+        if (error.name === 'ValidationError') {
+            return res.status(400).json({
+                error: 'Validation failed',
+                details:error.error
+            });
+        }
+        if (error.code === 11000) {
+            return res.status(409).json({
+                error: 'Duplicate entry',
+                details: 'This log entry already exits'
+            });
+        }
+        res.status(500).json({
+            error: 'Server error',
+            details: process.env.NODE_ENV === 'development'
+                ? error.message
+                : 'Internal server error'
         });
     }
 });
