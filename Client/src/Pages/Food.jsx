@@ -5,6 +5,7 @@ import axios from "axios";
 const suggestedFoods = [
   { title: "Avocado", calories: 160, nutrients: { protein: "2g", carbs: "9g", fat: "15g" } },
   { title: "Chicken Breast", calories: 165, nutrients: { protein: "31g", carbs: "0g", fat: "3.6g" } },
+  { title: "Apple", calories: 95, nutrients: { protein: "0.5g", carbs: "25g", fat: "0.3g" } },
 ];
 
 export function Food() {

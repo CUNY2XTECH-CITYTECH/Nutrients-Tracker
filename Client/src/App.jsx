@@ -1,13 +1,13 @@
 import './App.css'
 import { Routes, Route } from 'react-router-dom'
-import { Home } from './Pages/Home'
-import FoodLogger from './Pages/FoodLogger'
+import { Home } from './Pages/home/Home'
+import  FoodLogger  from  './Pages/FoodLogger'
 import { Food } from './Pages/Food'
 import { Stats } from './Pages/Stats'
 import { Login } from './Pages/Login/Login'
 import { SignUp } from './Pages/SignUp/SignUp'
 import { Welcome } from './Pages/welcome/Welcome'
-import { Layout } from '../Layouts'
+import { Layout } from '../Layouts';
 
 import { Suggestions } from './Pages/Suggestions/Suggestions'
 import RequireAuth from './Componets/RequireAuth'
