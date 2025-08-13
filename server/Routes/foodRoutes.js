@@ -1,6 +1,7 @@
 import express from 'express';
 import axios from 'axios';
 import Food from "../Models/FoodLog.js"; // This now refers to the updated Food model
+import {verifyJWT} from "../Middleware/verifyJWT.js"
 const router = express.Router();
 import dotenv from "dotenv";
 dotenv.config();
@@ -129,15 +130,15 @@ router.get('/details', async (req, res) => {
 });
 
 // Save food to database (Updated for new Food model structure)
-router.post('/save', async (req, res) => {
+router.post('/save',verifyJWT, async (req, res) => {
+    const username = req.userInfo.username
     try {
         console.log("Received: ", req.body);
         
-        // Get the required fields from request body
-        const { foodID, foodName , username, date, mealType, serving, unit, calories } = req.body;
+        const { foodID, foodName, date, mealType, serving, unit, calories } = req.body;
         
-        const requireFields = ['foodID', 'foodName', 'mealType', 'serving', 'unit', 'calories'];
-        const missingFields = requireFields.filter(field => !req.body[field]);
+        const requiredFields = ['foodID', 'foodName', 'mealType', 'serving', 'unit', 'calories'];
+        const missingFields = requiredFields.filter(field => !req.body[field]);
 
         if (missingFields.length > 0) {
             return res.status(400).json({
@@ -161,19 +162,19 @@ router.post('/save', async (req, res) => {
         const newFood = new Food({
             foodId: Number(foodID),
             foodName: foodName.trim(),
-            username: username || "anonymous",
+            username: username,
             Date: date ? new Date(date) : new Date(),
             mealType: normalizedMealType,
             serving: Number(serving),
             unit: unit,
-            calories: Number(calories),
+            calories: Number(calories) || 0,
             createdAt: new Date() 
         });
 
         await newFood.save();
 
         res.status(201).json({
-            succes: true,
+            success: true,
             savedEntry: {
                 foodID: newFood.foodId,
                 foodName: newFood.foodName,
@@ -193,13 +194,13 @@ router.post('/save', async (req, res) => {
         if (error.name === 'ValidationError') {
             return res.status(400).json({
                 error: 'Validation failed',
-                details:error.error
+                details: error.errors
             });
         }
         if (error.code === 11000) {
             return res.status(409).json({
                 error: 'Duplicate entry',
-                details: 'This log entry already exits'
+                details: 'This log entry already exists'
             });
         }
         res.status(500).json({
