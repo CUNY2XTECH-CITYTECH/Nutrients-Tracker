@@ -237,7 +237,7 @@ export function Food() {
       // Prepare data for API
       const saveData = {
         foodID: extendedFoodData.food_id || selectedFood.fdcId,
-        foodName: extendedFoodData.food_name || selectedFood.description,
+        name: extendedFoodData.food_name || selectedFood.description,
         username,
         date: new Date().toISOString(),
         mealType,
@@ -254,14 +254,13 @@ export function Food() {
           headers: {
             "Content-Type": "application/json",
             // Add authorization header if using authentication
-            header:{'Authorization': `Bearer ${auth}`}
-
+            Authorization: `Bearer ${auth?.accessToken || auth}` 
           },
         }
       );
 
       if (response.data.success) {
-        alert(`${saveData.foodName} saved successfully to ${mealType}!`);
+        alert(`${saveData.name} saved successfully to ${mealType}!`);
         setIsOpen(false);
       } else {
         throw new Error(response.data.message || "Failed to save food");

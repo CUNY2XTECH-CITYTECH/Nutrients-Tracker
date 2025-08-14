@@ -1,6 +1,12 @@
-import express, { Router } from 'express'
+import express from 'express'
 import axios  from 'axios';
-import Food from "../Models/FoodLog.js";
+import Food from "../Models/food.js";
+
+
+import { verifyJWT } from '../Middleware/verifyJWT.js';
+import { userDetails } from '../Controllers/userDetails.js';
+import { FoodDetails}  from '../Controllers/allDetailsController.js';
+
 const router = express.Router();
 
 router.get('/test-env', (req, res) => {
@@ -54,12 +60,12 @@ router.get("/all", async (req, res) => {
 
 router.post("/save", async (req, res) => {
     try {
-        const { foodName, mealType } = req.body;
-        console.log("Received: ", foodName, mealType);
-        const newFood = new Food({ foodName, mealType });
+        const { name, mealType } = req.body;
+        console.log("Received: ", name, mealType);
+        const newFood = new Food({ name, mealType });
         await newFood.save();
 
-        res.json({ food: foodName, meal: mealType });
+        res.json({ food: name, meal: mealType });
     } catch (error) {
         res.status(500).json({ message: "Error saving food", error: error.message });
     }
@@ -69,5 +75,9 @@ function getNutrientValue(nutrients, nutrientName, unitName) {
     const nutrient = nutrients.find(n => n.nutrientName === nutrientName && n.unitName === unitName);
     return nutrient ? nutrient.value : 'N/A';
 }
+
+router.get("/user-details", verifyJWT, userDetails)
+
+router.get("/food-all-details", verifyJWT, FoodDetails)
 
 export default router;

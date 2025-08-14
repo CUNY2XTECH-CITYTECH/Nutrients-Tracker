@@ -5,120 +5,131 @@ import { Chart as ChartJS, ArcElement, Tooltip, Legend } from "chart.js";
 ChartJS.register(ArcElement, Tooltip, Legend);
 
 export function Stats() {
-  const [inputs, setInputs] = useState({ height: "", weight: "" }); // height in inches, weight in pounds
+  const [inputs, setInputs] = useState({ feet: "", inches: "", weight: "", goal: "lose" });
   const [data, setData] = useState(null);
   const [error, setError] = useState(null);
 
   const validateInputs = () => {
-    const h = Number(inputs.height);
-    const w = Number(inputs.weight);
-    if (!h || !w || isNaN(h) || isNaN(w) || h <= 0 || w <= 0) {
-      return false;
-    }
-    return true;
+    const ft = Number(inputs.feet || 0);
+    const inch = Number(inputs.inches || 0);
+    const w = Number(inputs.weight || 0);
+    return ft >= 0 && inch >= 0 && w > 0;
   };
 
   const calculateNutrition = () => {
     if (!validateInputs()) {
-      setError(
-        "Please enter valid positive numbers for height (inches) and weight (lb)."
-      );
+      setError("Please enter valid positive numbers for height (feet & inches) and weight (lb).");
       setData(null);
       return;
     }
     setError(null);
 
-    // Convert height inches to meters: 1 inch = 0.0254 meters
-    const heightMeters = Number(inputs.height) * 0.0254;
-
-    // Convert weight pounds to kg: 1 lb = 0.453592 kg
+    const totalInches = Number(inputs.feet || 0) * 12 + Number(inputs.inches || 0);
+    const heightMeters = totalInches * 0.0254;
     const weightKg = Number(inputs.weight) * 0.453592;
 
-    // BMI calculation
     const bmi = (weightKg / (heightMeters * heightMeters)).toFixed(1);
 
-    // Daily calories calculation (30 kcal per kg body weight)
-    const dailyCalories = Math.round(weightKg * 30);
+    // Current calories (based on baseline multiplier)
+    let calorieMultiplier = inputs.goal === "gain" ? 35 : 28;
+    const dailyCalories = Math.round(weightKg * calorieMultiplier);
 
-    // Macronutrient ratios
-    const macroRatio = {
-      protein: 0.25,
-      carbs: 0.5,
-      fat: 0.25,
-    };
+    // Recommended calories based on goal
+    let recommendedBMI = inputs.goal === "gain" ? 23 : 21;
+    let recommendedCalories =
+      inputs.goal === "gain"
+        ? Math.round(dailyCalories * 1.1) // increase for muscle gain
+        : Math.round(dailyCalories * 0.9); // decrease for weight loss
 
-    // Macronutrient grams
+    // Macronutrients (protein 25%, carbs 50%, fat 25%)
+    const macroRatio = { protein: 0.25, carbs: 0.5, fat: 0.25 };
+
     const proteinGrams = (dailyCalories * macroRatio.protein) / 4;
     const carbGrams = (dailyCalories * macroRatio.carbs) / 4;
     const fatGrams = (dailyCalories * macroRatio.fat) / 9;
 
-    // Food groups based on total food grams (~weightKg * 30)
+    const recommendedProteinGrams = (recommendedCalories * macroRatio.protein) / 4;
+    const recommendedCarbGrams = (recommendedCalories * macroRatio.carbs) / 4;
+    const recommendedFatGrams = (recommendedCalories * macroRatio.fat) / 9;
+
+    // Food group grams
     const totalFoodGrams = weightKg * 30;
+    const foodGroupsRatio = { fruits: 0.2, vegetables: 0.2, grains: 0.3, protein: 0.2, dairy: 0.1 };
 
-    const foodGroupsRatio = {
-      fruitsVegetables: 0.4,
-      grains: 0.3,
-      protein: 0.2,
-      dairy: 0.1,
-    };
-
-    const fruitsVegetablesGrams = +(
-      totalFoodGrams * foodGroupsRatio.fruitsVegetables
-    ).toFixed(1);
+    const fruitsGrams = +(totalFoodGrams * foodGroupsRatio.fruits).toFixed(1);
+    const vegetablesGrams = +(totalFoodGrams * foodGroupsRatio.vegetables).toFixed(1);
     const grainsGrams = +(totalFoodGrams * foodGroupsRatio.grains).toFixed(1);
-    const proteinFoodGrams = +(totalFoodGrams * foodGroupsRatio.protein).toFixed(
-      1
-    );
+    const proteinFoodGrams = +(totalFoodGrams * foodGroupsRatio.protein).toFixed(1);
     const dairyGrams = +(totalFoodGrams * foodGroupsRatio.dairy).toFixed(1);
 
-    const pieData = {
-      labels: ["Protein (g)", "Carbs (g)", "Fat (g)"],
-      datasets: [
-        {
-          data: [proteinGrams, carbGrams, fatGrams],
-          backgroundColor: ["#FF6384", "#36A2EB", "#FFCE56"],
-        },
-      ],
-    };
-
-    const doughnutData = {
-      labels: [
-        "Fruits & Vegetables (g)",
-        "Grains (g)",
-        "Protein (g)",
-        "Dairy (g)",
-      ],
-      datasets: [
-        {
-          data: [
-            fruitsVegetablesGrams,
-            grainsGrams,
-            proteinFoodGrams,
-            dairyGrams,
-          ],
-          backgroundColor: ["#4caf50", "#ff9800", "#f44336", "#2196f3"],
-        },
-      ],
-    };
+    const recommendedTotalFoodGrams = totalFoodGrams * 1.1;
+    const recommendedFruitsGrams = +(recommendedTotalFoodGrams * foodGroupsRatio.fruits).toFixed(1);
+    const recommendedVegetablesGrams = +(recommendedTotalFoodGrams * foodGroupsRatio.vegetables).toFixed(1);
+    const recommendedGrainsGrams = +(recommendedTotalFoodGrams * foodGroupsRatio.grains).toFixed(1);
+    const recommendedProteinFoodGrams = +(recommendedTotalFoodGrams * foodGroupsRatio.protein).toFixed(1);
+    const recommendedDairyGrams = +(recommendedTotalFoodGrams * foodGroupsRatio.dairy).toFixed(1);
 
     setData({
       bmi,
+      recommendedBMI,
       dailyCalories,
-      pieData,
-      doughnutData,
+      recommendedCalories,
+      pieCurrent: [proteinGrams, carbGrams, fatGrams],
+      pieRecommended: [recommendedProteinGrams, recommendedCarbGrams, recommendedFatGrams],
+      doughnutCurrent: [fruitsGrams, vegetablesGrams, grainsGrams, proteinFoodGrams, dairyGrams],
+      doughnutRecommended: [recommendedFruitsGrams, recommendedVegetablesGrams, recommendedGrainsGrams, recommendedProteinFoodGrams, recommendedDairyGrams],
+      goal: inputs.goal
     });
   };
 
-  return (
-    <div className="dashboard" style={{ maxWidth: 700, margin: "auto" }}>
-      <h1>Welcome to your interactive stats page</h1>
+  const pieOptions = {
+    responsive: true,
+    plugins: {
+      legend: { position: "right" },
+      tooltip: {
+        callbacks: {
+          label: (context) => `${context.label}: ${context.parsed.toFixed(1)} g`,
+        },
+      },
+    },
+  };
 
-      <div className="input-section" style={{ marginBottom: 20 }}>
+  const doughnutOptions = { ...pieOptions };
+
+  const getRecommendedFoods = (goal) => {
+    // Healthy food suggestions based on goal
+    if (goal === "lose") {
+      return {
+        Breakfast: ["Oatmeal with Berries", "Egg Whites", "Greek Yogurt"],
+        Lunch: ["Grilled Chicken Salad", "Quinoa & Veggies", "Tuna Wrap"],
+        Dinner: ["Baked Salmon", "Steamed Broccoli", "Brown Rice"]
+      };
+    } else {
+      // Build muscle
+      return {
+        Breakfast: ["Omelet with Veggies", "Protein Pancakes", "Greek Yogurt & Nuts"],
+        Lunch: ["Grilled Chicken Breast", "Brown Rice & Beans", "Salmon Salad"],
+        Dinner: ["Steak & Sweet Potatoes", "Quinoa Bowl with Protein", "Grilled Fish"]
+      };
+    }
+  };
+
+  return (
+    <div style={{ maxWidth: 950, margin: "auto", textAlign: "center" }}>
+      <h1>Interactive BMI & Nutrition Stats</h1>
+      <div style={{ marginBottom: 20 }}>
         <input
           type="number"
-          placeholder="Height (inches)"
-          value={inputs.height}
-          onChange={(e) => setInputs({ ...inputs, height: e.target.value })}
+          placeholder="Feet"
+          value={inputs.feet}
+          onChange={(e) => setInputs({ ...inputs, feet: e.target.value })}
+          style={{ marginRight: 10 }}
+        />
+        <input
+          type="number"
+          placeholder="Inches"
+          value={inputs.inches}
+          onChange={(e) => setInputs({ ...inputs, inches: e.target.value })}
           style={{ marginRight: 10 }}
         />
         <input
@@ -126,70 +137,92 @@ export function Stats() {
           placeholder="Weight (lb)"
           value={inputs.weight}
           onChange={(e) => setInputs({ ...inputs, weight: e.target.value })}
+          style={{ marginRight: 10 }}
         />
-        <button onClick={calculateNutrition} style={{ marginLeft: 10 }}>
-          Analyze
-        </button>
+        <select
+          value={inputs.goal}
+          onChange={(e) => setInputs({ ...inputs, goal: e.target.value })}
+          style={{ marginRight: 10 }}
+        >
+          <option value="lose">Lose Weight</option>
+          <option value="gain">Build Muscle Mass</option>
+        </select>
+        <button onClick={calculateNutrition}>Analyze</button>
         {error && <p style={{ color: "red" }}>{error}</p>}
       </div>
 
       {data && (
-        <div className="results-section">
-          <div className="metrics" style={{ marginBottom: 30 }}>
-            <h3>BMI: {data.bmi}</h3>
-            <h3>Daily Calories: {data.dailyCalories}</h3>
+        <>
+          <div style={{ marginBottom: 30 }}>
+            <h3>Current BMI: {data.bmi}</h3>
+            <h3>Recommended BMI: {data.recommendedBMI}</h3>
+            <h3>Current Calories: {data.dailyCalories}</h3>
+            <h3>Recommended Calories: {data.recommendedCalories}</h3>
           </div>
 
-          <div
-            className="charts"
-            style={{ display: "flex", justifyContent: "space-around" }}
-          >
+          <div style={{ display: "flex", justifyContent: "space-around", flexWrap: "wrap" }}>
             <div style={{ width: 300 }}>
-              <h3>Daily Macronutrient Breakdown</h3>
+              <h3>Macronutrients (Current)</h3>
               <Pie
-                data={data.pieData}
-                options={{
-                  responsive: true,
-                  plugins: {
-                    tooltip: {
-                      callbacks: {
-                        label: (context) => {
-                          const label = context.label || "";
-                          const value = context.parsed || 0;
-                          return `${label}: ${value.toFixed(1)} g`;
-                        },
-                      },
-                    },
-                  },
+                data={{
+                  labels: ["Protein", "Carbs", "Fat"],
+                  datasets: [{ data: data.pieCurrent, backgroundColor: ["#FF6384", "#36A2EB", "#FFCE56"] }],
                 }}
+                options={pieOptions}
               />
             </div>
-
             <div style={{ width: 300 }}>
-              <h3>Daily Food Group Breakdown</h3>
-              <Doughnut
-                data={data.doughnutData}
-                options={{
-                  responsive: true,
-                  plugins: {
-                    tooltip: {
-                      callbacks: {
-                        label: (context) => {
-                          const label = context.label || "";
-                          const value = context.parsed || 0;
-                          return `${label}: ${value.toFixed(1)} g`;
-                        },
-                      },
-                    },
-                    legend: {
-                      position: "bottom",
-                    },
-                  },
+              <h3>Macronutrients (Recommended)</h3>
+              <Pie
+                data={{
+                  labels: ["Protein", "Carbs", "Fat"],
+                  datasets: [{ data: data.pieRecommended, backgroundColor: ["#FF6384", "#36A2EB", "#FFCE56"] }],
                 }}
+                options={pieOptions}
               />
             </div>
           </div>
-        </div>
+
+          <div style={{ display: "flex", justifyContent: "space-around", flexWrap: "wrap", marginTop: 30 }}>
+            <div style={{ width: 300 }}>
+              <h3>Food Groups (Current)</h3>
+              <Doughnut
+                data={{
+                  labels: ["Fruits", "Vegetables", "Grains", "Protein", "Dairy"],
+                  datasets: [{ data: data.doughnutCurrent, backgroundColor: ["#4caf50", "#8bc34a", "#ff9800", "#f44336", "#2196f3"] }],
+                }}
+                options={doughnutOptions}
+              />
+            </div>
+            <div style={{ width: 300 }}>
+              <h3>Food Groups (Recommended)</h3>
+              <Doughnut
+                data={{
+                  labels: ["Fruits", "Vegetables", "Grains", "Protein", "Dairy"],
+                  datasets: [{ data: data.doughnutRecommended, backgroundColor: ["#4caf50", "#8bc34a", "#ff9800", "#f44336", "#2196f3"] }],
+                }}
+                options={doughnutOptions}
+              />
+            </div>
+          </div>
+
+          {/* Healthy Food Recommendations */}
+          <div style={{ marginTop: 40, textAlign: "center" }}>
+            <h2>Healthy Foods for Your Goal</h2>
+            {Object.entries(getRecommendedFoods(data.goal)).map(([meal, foods]) => (
+              <div key={meal} style={{ marginTop: 30 }}>
+                <h3>{meal}</h3>
+                <ul style={{ listStyle: "none", padding: 0 }}>
+                  {foods.map((food, idx) => (
+                    <li key={idx} style={{ margin: "6px 0" }}>
+                       {food}
+                    </li>
+                  ))}
+                </ul>
+              </div>
+            ))}
+          </div>
+        </>
       )}
     </div>
   );

@@ -1,7 +1,7 @@
 import './App.css'
 import { Routes, Route } from 'react-router-dom'
 import { Home } from './Pages/home/Home'
-import  FoodLogger  from  './Pages/FoodLogger'
+import { FoodLogger } from  './Pages/FoodLogger/FoodLogger'
 import { Food } from './Pages/Food'
 import { Stats } from './Pages/Stats'
 import { Login } from './Pages/Login/Login'
