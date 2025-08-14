@@ -60,12 +60,12 @@ router.get("/all", async (req, res) => {
 
 router.post("/save", async (req, res) => {
     try {
-        const { foodName, mealType } = req.body;
-        console.log("Received: ", foodName, mealType);
-        const newFood = new Food({ foodName, mealType });
+        const { name, mealType } = req.body;
+        console.log("Received: ", name, mealType);
+        const newFood = new Food({ name, mealType });
         await newFood.save();
 
-        res.json({ food: foodName, meal: mealType });
+        res.json({ food: name, meal: mealType });
     } catch (error) {
         res.status(500).json({ message: "Error saving food", error: error.message });
     }

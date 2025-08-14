@@ -135,9 +135,9 @@ router.post('/save',verifyJWT, async (req, res) => {
     try {
         console.log("Received: ", req.body);
         
-        const { foodID, foodName, date, mealType, serving, unit, calories } = req.body;
+        const { foodID, name, date, mealType, serving, unit, calories } = req.body;
         
-        const requiredFields = ['foodID', 'foodName', 'mealType', 'serving', 'unit', 'calories'];
+        const requiredFields = ['foodID', 'name', 'mealType', 'serving', 'unit', 'calories'];
         const missingFields = requiredFields.filter(field => !req.body[field]);
 
         if (missingFields.length > 0) {
@@ -161,7 +161,7 @@ router.post('/save',verifyJWT, async (req, res) => {
 
         const newFood = new Food({
             foodId: Number(foodID),
-            foodName: foodName.trim(),
+            name: name.trim(),
             username: username,
             Date: date ? new Date(date) : new Date(),
             mealType: normalizedMealType,
@@ -177,7 +177,7 @@ router.post('/save',verifyJWT, async (req, res) => {
             success: true,
             savedEntry: {
                 foodID: newFood.foodId,
-                foodName: newFood.foodName,
+                name: newFood.name,
                 username: newFood.username,
                 Date: newFood.Date,
                 mealType: newFood.mealType,
