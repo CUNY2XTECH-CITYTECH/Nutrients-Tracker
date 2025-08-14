@@ -238,7 +238,7 @@ export function Food() {
       // Prepare data for API
       const saveData = {
         foodID: extendedFoodData.food_id || selectedFood.fdcId,
-        foodName: extendedFoodData.food_name || selectedFood.description,
+        name: extendedFoodData.food_name || selectedFood.description,
         username,
         date: new Date().toISOString(),
         mealType,
@@ -261,7 +261,7 @@ export function Food() {
       );
 
       if (response.data.success) {
-        alert(`${saveData.foodName} saved successfully to ${mealType}!`);
+        alert(`${saveData.name} saved successfully to ${mealType}!`);
         setIsOpen(false);
       } else {
         throw new Error(response.data.message || "Failed to save food");

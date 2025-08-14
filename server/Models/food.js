@@ -5,7 +5,7 @@ const foodSavedSchema = new mongoose.Schema({
     type: Number,
     required: true
   },
-  foodName: {
+  name: {
     type: String,
     require: true
   },

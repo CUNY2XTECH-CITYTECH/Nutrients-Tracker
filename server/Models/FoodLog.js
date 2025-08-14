@@ -5,7 +5,7 @@ const foodLogSchema = new mongoose.Schema({
     type: Number,
     required: true
   },
-  foodName: {
+  name: {
     type: String,
     require: true
   },
