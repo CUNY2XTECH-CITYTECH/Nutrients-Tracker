@@ -1,8 +1,8 @@
 import "../Suggestions/suggestions.css";
-import { Searchbar } from "../../Componets/Searchbar";
-import { Result_card } from "../../Componets/Result_card";
-import { useState } from "react";
-import { getMealSuggestions } from "../../API/recipes";
+import { useState, useEffect } from "react";
+import axios from "axios";
+import { FaSearch } from "react-icons/fa";
+import RecipeTile from "../../Componets/RecipeTitle";
 
 export function Suggestions() {
   const [query, setquery] = useState(""); // State to store the searched text typed by the user
@@ -63,7 +63,7 @@ export function Suggestions() {
           <option value="pork-free">Pork Free</option>
           <option value="alcohol-free">Alcohol Free</option>
           <option value="dairy-free">Dairy-Free</option>
-          <option value="low-sugar">low-sugar</option>
+          <option value="low-sugar">Low-sugar</option>
         </select>
 
         <button className="search-button" type="submit">
@@ -77,57 +77,6 @@ export function Suggestions() {
           return <RecipeTile key={index} recipe={recipe} />;
         })}
       </div>
-
-      {isModalOpen && selectedResult && (
-        <div className="modal-backdrop" onClick={closeModal}>
-          <div className="modal-content" onClick={(e) => e.stopPropagation()}>
-            <h2>{selectedResult.title}</h2>
-
-            <div>
-              <strong>Ingredients:</strong>
-              {/* <ul>
-                {selectedResult.ingredients
-                  ?.split(",")
-                  .map((ingredient, i) => (
-                    <li key={i}>{ingredient.trim()}</li>
-                  ))}
-              </ul> */}
-              <ul>
-                {(Array.isArray(selectedResult.ingredients)
-                  ? selectedResult.ingredients
-                  : [selectedResult.ingredients]
-                ) // fallback if it's a single string
-                  .flatMap(
-                    (ingredient) =>
-                      ingredient
-                        ?.split("|") // Split string into separate options
-                        .map((item) => item.trim()) // Remove whitespace
-                  )
-                  .filter((item) => item !== "") // Remove empty strings
-                  .map((item, i) => (
-                    <li key={i}>{item}</li>
-                  ))}
-              </ul>
-            </div>
-
-            <div>
-              <strong>Instructions:</strong>
-              <ul>
-                {selectedResult.instructions
-                  ?.split(".")
-                  .filter((s) => s.trim() !== "")
-                  .map((s, i) => (
-                    <li key={i}>{s.trim()}.</li>
-                  ))}
-              </ul>
-            </div>
-
-            <button className="xout" onClick={closeModal}>
-              Close
-            </button>
-          </div>
-        </div>
-      )}
     </div>
   );
 }

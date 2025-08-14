@@ -54,7 +54,7 @@ export default function FoodLogger() {
     setLoadingLogs(true);
     setError(null);
 
-    fetch(`/api/food/logs/${username}`, {
+    fetch(`http://localhost:3000/api/food/logs/${username}`, { // Keep it as Absolute Path
       headers: { Authorization: `Bearer ${accessToken}` }, // Send JWT for auth
     })
       .then((res) => {
@@ -185,26 +185,22 @@ export default function FoodLogger() {
     const canvas = canvasRef.current;
     if (!canvas) return;
     const ctx = canvas.getContext("2d");
-
     const { carbs, fat, protein } = totalNutrition;
-    const labels = ["Carbs", "Fat", "Protein"];
     const values = [carbs, fat, protein];
     const colors = ["#36A2EB", "#FFCE56", "#4BC0C0"];
-
     const total = values.reduce((sum, v) => sum + v, 0);
 
     ctx.clearRect(0, 0, canvas.width, canvas.height);
     if (total === 0) return; // Nothing to draw
 
     let startAngle = 0;
-
-    values.forEach((value, index) => {
+    values.forEach((value, i) => {
       const sliceAngle = (value / total) * 2 * Math.PI;
       ctx.beginPath();
       ctx.moveTo(100, 100); // center point of circle
       ctx.arc(100, 100, 80, startAngle, startAngle + sliceAngle);
       ctx.closePath();
-      ctx.fillStyle = colors[index];
+      ctx.fillStyle = colors[i];
       ctx.fill();
       startAngle += sliceAngle;
     });
@@ -246,9 +242,10 @@ export default function FoodLogger() {
 
       {/* Summary box showing total nutrition and pie chart */}
       <div
-        style={{  
+        style={{
           display: "flex",
           justifyContent: "space-between",
+          alignItems: "center",
           background: "#f9f9f9",
           padding: "1em",
           borderRadius: "8px",
@@ -256,11 +253,12 @@ export default function FoodLogger() {
         }}
       >
         <div>
-          <h3>Total Calories: {format(totalNutrition.calories)}</h3>
-          <h3>Total Carbs: {format(totalNutrition.carbs)}g</h3>
-          <h3>Total Fat: {format(totalNutrition.fat)}g</h3>
-          <h3>Total Protein: {format(totalNutrition.protein)}g</h3>
+          <h3>Total Calories: {totalNutrition.calories.toFixed(1)}</h3>
+          <h3>Total Carbs: {totalNutrition.carbs.toFixed(1)}g</h3>
+          <h3>Total Fat: {totalNutrition.fat.toFixed(1)}g</h3>
+          <h3>Total Protein: {totalNutrition.protein.toFixed(1)}g</h3>
         </div>
+
         <div style={{ display: "flex", gap: "1em" }}>
           {/* Nutrition pie chart */}
           <canvas ref={canvasRef} width={200} height={200} />
@@ -268,9 +266,15 @@ export default function FoodLogger() {
           <div>
             <h4 style={{ margin: 0 }}>Nutritions:</h4>
             <ul style={{ listStyle: "none", padding: 0, marginTop: "0.5em" }}>
-              <li><span style={{ color: "#36A2EB" }}>⬤</span> Carbs</li>
-              <li><span style={{ color: "#FFCE56" }}>⬤</span> Fat</li>
-              <li><span style={{ color: "#4BC0C0" }}>⬤</span> Protein</li>
+              <li>
+                <span style={{ color: "#36A2EB" }}>⬤</span> Carbs
+              </li>
+              <li>
+                <span style={{ color: "#FFCE56" }}>⬤</span> Fat
+              </li>
+              <li>
+                <span style={{ color: "#4BC0C0" }}>⬤</span> Protein
+              </li>
             </ul>
           </div>
         </div>
@@ -311,7 +315,14 @@ export default function FoodLogger() {
       {/* Render grouped foods by meal type */}
       {["Breakfast", "Lunch", "Dinner"].map((mealType) => (
         <div key={mealType} style={{ marginBottom: "2em" }}>
-          <h2 style={{ borderBottom: "1px solid #ccc", paddingBottom: "4px" }}>{mealType}</h2>
+          <h2
+            style={{
+              borderBottom: "1px solid #ccc",
+              paddingBottom: "4px",
+            }}
+          >
+            {mealType}
+          </h2>
           <ul style={{ listStyle: "none", padding: 0 }}>
             {grouped[mealType].length === 0 ? (
               <li style={{ color: "#888", fontStyle: "italic" }}>No foods logged.</li>
