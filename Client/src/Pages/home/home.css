@@ -6,7 +6,7 @@
   width: 100vw;
   overflow-x: hidden;
   text-align: center;
-  font-size: 1.5rem;
+  font-size: 12xp ;
 }
 
 .home-container::before {
@@ -16,7 +16,6 @@
 .home-container > * {
   position: relative;
   z-index: 1;
-  padding: 0;
   border-radius: 0;
   display: inline-block;
   background: none; 
