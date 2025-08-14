@@ -1,47 +1,64 @@
 .home-container {
-  position: relative;
-  background-image: url("./healthycollage.jpg");
-  background-size: cover;
-  background-position: center;
-  background-repeat: no-repeat;
-  background-attachment: fixed; 
-  min-height: 100vh;
-  padding: 20px;
-  color: white; 
-  width: 97vw;
-}
+  position:absolute;
+  background: none;
+  /* background-image: url("../../../public/nutri-bkgr.jpg"); */
 
-.home-container::before {
-  content: "";
-  position: absolute;
-  top: 0;
-  left: 0;
+  min-height: 100dvh;
+  /* padding: 20px; */
+  color: #3549bd;
   width: 100%;
-  height: 100%;
-  background-color: rgba(0, 0, 0, 0.3);
-  z-index: 0;
+  overflow-x: hidden;
+  text-align: center;
+  font-size: 17px;
+  
 }
 
+p {
+  margin: 10px 50px;
+}
+
+
+
+ul {
+  list-style: none;
+}
+.home-container::before {
+display: none;
+}
+
+/* .home-container h1 {
+  margin: 40px;
+} */
 .home-container > * {
   position: relative;
-  z-index: 1;
-  background-color: rgba(0, 0, 0, 0.7); /* black background behind text */
-  padding: 5px 10px; /* space around text */
-  border-radius: 5px; /* rounded edges */
-  display: inline-block; /* makes the background wrap the text */
+ 
 }
+/* .basicinfo {
+  margin: 40px;
+  
+} */
+
+
+/* .food {
+  margin: 40px;
+} */
+ 
+
+
   
 .marquee {
   overflow: hidden;
   position: relative;
   width: 100%;
   height: 200px;
+  
 }
 
 .marquee-track {
   display: flex;
   width: max-content;
   animation: scroll 20s linear infinite;
+  /* margin: 50px; */
 }
 
 .marquee-img {
