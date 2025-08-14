@@ -7,7 +7,7 @@ import cookieParser from "cookie-parser"
 import dotenv from "dotenv";
 dotenv.config();
 import recipeRoutes from "./Routes/recipeRoutes.js";
-import logRoutes from "./Routes/logRoutes.js";
+import foodLogs from "./Routes/foodLogs.js"
 import authRoutes from "./Routes/authRoutes.js"
 import foodRoutes from "./Routes/foodRoutes.js"
 const app = express()
@@ -15,11 +15,7 @@ const app = express()
 
 import credentials from "./Middleware/Credentials.js"
 app.use(credentials)
-
-
 import corsOptions from "./config/corsOptions.js";
-
-
 app.use(cors(corsOptions))
 
 mongoose.connect(process.env.MONGODB_URI)
@@ -37,8 +33,8 @@ app.use("/api/food", foodRoutes)
 
 app.use("/recipes", recipeRoutes);
 
-app.use("/api/food/logs", logRoutes); 
 
+app.use("/logs", foodLogs )
 
 
 

@@ -1,8 +1,0 @@
-{
-  "dependencies": {
-    "@fortawesome/free-solid-svg-icons": "^7.0.0",
-    "@fortawesome/react-fontawesome": "^0.2.3",
-    "@headlessui/react": "^2.2.7",
-    "react-icons": "^5.5.0"
-  }
-}
