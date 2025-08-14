@@ -255,8 +255,7 @@ export function Food() {
           headers: {
             "Content-Type": "application/json",
             // Add authorization header if using authentication
-            header:{'Authorization': `Bearer ${auth}`}
-
+            Authorization: `Bearer ${auth?.accessToken || auth}` 
           },
         }
       );
