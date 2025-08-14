@@ -155,7 +155,7 @@ router.post('/save', async (req, res) => {
             carbs: carbs || 0,
             fats: fats || 0,
             proteins: proteins || 0
-        });
+        });5
         
         await newFood.save();
 
