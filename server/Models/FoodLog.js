@@ -1,4 +1,4 @@
-const mongoose = require('mongoose');
+import mongoose from 'mongoose'
 
 const foodLogSchema = new mongoose.Schema({
   username: String,   
@@ -6,9 +6,8 @@ const foodLogSchema = new mongoose.Schema({
   mealType: String,
   serving: Number,
   unit: String,
-  date: Date,
+  date: String,
 });
 
-const FoodLogs = mongoose.model('foodlogs', foodLogSchema);
 
-module.exports = FoodLogs;
+export default mongoose.model("foodLog", foodLogSchema)

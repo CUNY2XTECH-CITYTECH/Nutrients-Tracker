@@ -1,6 +1,12 @@
-import express, { Router } from 'express'
+import express from 'express'
 import axios  from 'axios';
 import Food from "../Models/food.js";
+
+
+import { verifyJWT } from '../Middleware/verifyJWT.js';
+import { userDetails } from '../Controllers/userDetails.js';
+import { FoodDetails}  from '../Controllers/allDetailsController.js';
+
 const router = express.Router();
 
 router.get('/test-env', (req, res) => {
@@ -69,5 +75,9 @@ function getNutrientValue(nutrients, nutrientName, unitName) {
     const nutrient = nutrients.find(n => n.nutrientName === nutrientName && n.unitName === unitName);
     return nutrient ? nutrient.value : 'N/A';
 }
+
+router.get("/user-details", verifyJWT, userDetails)
+
+router.get("/food-all-details", verifyJWT, FoodDetails)
 
 export default router;
