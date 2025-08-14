@@ -1,36 +1,28 @@
 .home-container {
   position: relative;
-  background-image: url("./healthycollage.jpg");
-  background-size: cover;
-  background-position: center;
-  background-repeat: no-repeat;
-  background-attachment: fixed; 
-  min-height: 100vh;
-  padding: 20px;
-  color: white; 
-  width: 97vw;
+  background: none;
+  min-height: 100dvh;
+  color: black;
+  width: 100vw;
+  overflow-x: hidden;
+  text-align: center;
+  font-size: 1.5rem;
 }
 
 .home-container::before {
-  content: "";
-  position: absolute;
-  top: 0;
-  left: 0;
-  width: 100%;
-  height: 100%;
-  background-color: rgba(0, 0, 0, 0.3);
-  z-index: 0;
+  display: none; 
 }
 
 .home-container > * {
   position: relative;
   z-index: 1;
-  background-color: rgba(0, 0, 0, 0.7); /* black background behind text */
-  padding: 5px 10px; /* space around text */
-  border-radius: 5px; /* rounded edges */
-  display: inline-block; /* makes the background wrap the text */
+  padding: 0;
+  border-radius: 0;
+  display: inline-block;
+  background: none; 
+  color: black; 
 }
-  
+
 .marquee {
   overflow: hidden;
   position: relative;
@@ -64,7 +56,7 @@
 .home-diagram {
   width: 100%;
   max-width: 600px;
-  margin: 20px 0;
+  margin: 20px auto;
 }
 
 .home-diagram img {
@@ -76,4 +68,5 @@
   text-align: center;
   margin-top: 10px;
   font-style: italic;
+  color: black; 
 }
