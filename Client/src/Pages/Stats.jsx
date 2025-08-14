@@ -215,7 +215,7 @@ export function Stats() {
                 <ul style={{ listStyle: "none", padding: 0 }}>
                   {foods.map((food, idx) => (
                     <li key={idx} style={{ margin: "6px 0" }}>
-                      🍽️ {food}
+                       {food}
                     </li>
                   ))}
                 </ul>

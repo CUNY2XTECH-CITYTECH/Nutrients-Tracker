@@ -1,0 +1,26 @@
+#food-item-dialog {
+  position:fixed;
+  top: 50%;
+  left: 50%;
+  transform: translate(-70%, -50%);
+  width: 400px;
+  padding: 20px;
+  border: none;
+  border-radius: 8px;
+  box-shadow: 0 0 10px rgba(0,0,0,0.1);
+}
+
+#food-item-dialog .dialog-content{
+  height:380px;
+  overflow: auto;
+  display:flex;
+  flex-direction: column;
+}
+
+#food-item-dialog .dialog-content::-webkit-scrollbar {
+  display: none;
+}
+
+#foodItemDialog::backdrop {
+  background: rgba(0, 0, 0, 0.5);
+}

@@ -3,7 +3,6 @@
     import JWT from "jsonwebtoken";
     import cookieParser from "cookie-parser";
     import dotenv from "dotenv";
-    import user from "../Models/user.js";
     dotenv.config();
 
     export async function userLogin (req, res) {

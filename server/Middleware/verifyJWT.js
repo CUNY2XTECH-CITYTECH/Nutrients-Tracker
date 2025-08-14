@@ -6,7 +6,6 @@ dotenv.config();
 export function verifyJWT (req, res, next) {
     const authHeader = req.headers['authorization'];
     if(!authHeader) return res.sendStatus(401);
-    console.log(authHeader)
 
     const token = authHeader.split(' ')[1]      //authHeader in format 'header <token>'. split by space and grab token in index 1
     JWT.verify(

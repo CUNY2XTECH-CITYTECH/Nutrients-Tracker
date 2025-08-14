@@ -1,0 +1,46 @@
+@import url('https://fonts.googleapis.com/css2?family=Nunito&display=swap');
+
+.Content-parent{
+    font-family: 'Nunito';
+}
+.food-logger-meal-time-foods{
+    padding-bottom:40px;
+    font-family: 'Nunito';
+
+}
+
+.meal-type-container {
+    display:flex;
+    flex-direction: column;
+    gap:10px
+}
+
+.meal-type-container .food-item-container {
+    display:flex;
+    align-items: center;
+    gap: 10px;
+    background-color: rgb(221, 250, 255);
+    border-radius: 5px;
+    padding: 0px 15px;
+    cursor: pointer;
+    border: rgb(119, 207, 255) solid 2px;
+        box-shadow: 0px 0px 10px 2px #cbcbcb;
+
+}
+.meal-type-container .food-item-container .serving-size{
+    margin-left: auto;
+}
+
+.no-food-item-container {
+    display:flex;
+    align-items: center;
+    background-color: rgb(207, 207, 207);
+    color:gray;
+    border-radius: 5px;
+    border: gray dashed 2px;
+}
+
+.no-food-item-container p {
+    padding: 0px 10px;
+    font-style: italic;
+}

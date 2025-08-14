@@ -54,7 +54,7 @@ export default function FoodLogger() {
     setLoadingLogs(true);
     setError(null);
 
-    fetch(`/api/food/logs/${username}`, {
+    fetch(`http://localhost:3000/api/food/logs/${username}`, { // Keep it as Absolute Path
       headers: { Authorization: `Bearer ${accessToken}` }, // Send JWT for auth
     })
       .then((res) => {

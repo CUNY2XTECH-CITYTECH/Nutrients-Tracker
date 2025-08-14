@@ -23,10 +23,9 @@ export function Home() {
       </div>
 
       {/* Content section */}
-      <div>
+      <div className="basicinfo">
         <h1>Nutrients Tracker Homepage</h1>
-        <div>
-          <div>
+
             <p>
               Hello, and welcome to your interactive Nutrients Tracker webpage! You are starting your journey
               towards better health and nutrition. Are you tired of months and years with ZERO progress? We are here
@@ -45,7 +44,7 @@ export function Home() {
             <p>Use the navigation menu to explore features.</p>
           </div>
 
-          <div>
+          <div className="food">
             <h2>Food</h2>
             <p>There are loads of delicious healthy options for you to choose from!</p>
             <ul>
@@ -125,7 +124,6 @@ export function Home() {
             <p>Remember, every small step counts. Let’s make your nutrition journey enjoyable and rewarding!</p>
           </div>
         </div>
-      </div>
-    </div>
+    
   );
 }

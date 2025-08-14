@@ -172,7 +172,7 @@ export function SignUp () {
             ):(
                 <>
             {/* sign up form*/}
-            <form onSubmit={signUpHandle} className="sign-form">
+            <form autocomplete="off" onSubmit={signUpHandle} className="sign-form">
             
                 {/*The title and input box of all the data the user going to add*/}
                 <label htmlFor="name">Full Name:</label>
@@ -259,6 +259,7 @@ export function SignUp () {
                     type="password" 
                     id="pass" 
                     name="pass"
+                    autocomplete="new-password"
                     onFocus={setFocus}
                     onChange = {handleChange}/>
 
