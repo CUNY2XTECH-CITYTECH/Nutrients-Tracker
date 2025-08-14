@@ -1,47 +1,44 @@
 import mongoose from "mongoose";
 
 const foodSavedSchema = new mongoose.Schema({
+  foodId: {
+    type: Number,
+    required: true
+  },
   foodName: {
     type: String,
-    required: true,
+    require: true
   },
-  foodID: {
-    type: Number,
-    required: true,
-  },
-  serving: {
-    type: Number,
-    required: true,
-  },
-  units: {
-    type: String, 
-    required: true,
-  },
-  mealType: {
+  username: {
     type: String,
-    enum: ['Breakfast', 'Lunch', 'Dinner', 'Not Specified'],
-    required: true,
-  },
-  calories: {
-    type: Number,
-    required: false,
-  },
-  carbs: {
-    type: Number,
-    required: false,
-  },
-  fats: {
-    type: Number,
-    required: false,
-  },
-  proteins: {
-    type: Number,
-    required: false,
+    required: true
   },
   date: {
     type: Date,
-    default: Date.now,
+    default: Date.now
   },
+  mealType: {
+    type: String,
+    enum: ["breakfast", "lunch", "dinner", "snack"],
+    required: true
+  },
+  serving: {
+    type: Number,
+    required: true
+  },
+  unit: {
+    type: String,
+    required: true
+  },
+  calories: {
+    type: Number,
+    require: true
+  },
+  createdAt: {
+    type: Date,
+    default: Date.now
+  }
 });
+
 
 export default mongoose.model("Food", foodSavedSchema);

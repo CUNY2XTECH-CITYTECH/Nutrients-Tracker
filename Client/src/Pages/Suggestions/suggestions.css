@@ -10,6 +10,9 @@
   min-width: 200px;
   max-width: 100vw;
   font-size: 16px;
+  font-family: "Nunito";
+  font-weight: bold;
+  color: #314d63;
 }
 
 .search-button {
@@ -29,61 +32,101 @@
   cursor: pointer;
 }
 
-.recipe_img {
- max-width: 100%;
-  max-height: 180px;  /* keeps images the same height */
-  object-fit: cover; 
-}
-
-.recipe_name {
-  max-width: 200px;
-  text-align: center;
-  margin: 12px 0px;
-  font-weight: bold;
-  color: #4a8ec3;
-}
 
 .recipe_container {
-  grid-template-columns: 230px 230px;
-  align-items: baseline;
-  cursor: pointer;
   display: grid;
-  grid-template-columns: repeat(4, 1fr); /* 4 columns */
+  grid-template-columns: repeat(4, 230px); /* 4 fixed columns */
   gap: 20px;
-  justify-content: center; /* centers the whole grid horizontally */
+  justify-content: center; /* center the grid on the page */
   margin-bottom: 30px;
-  
 }
 
-
 .recipeTile {
-  background-color: #d5e6f1;
+  background-color: #98c3e2;
   display: flex;
   flex-direction: column;
-  align-items: center; /* center image horizontally */
-  justify-content: space-between; /* push name to bottom */
-  height: 250px; /* adjust as needed */
+  align-items: center;
+  justify-content: flex-start; /* start content from the top */
+  width: 230px;
+  height: 300px; /* fixed height for uniformity */
   padding: 10px;
   box-sizing: border-box;
-  /* border-radius: 5px; */
-   border-radius: 12px;
+  border-radius: 12px;
   box-shadow: 0 0 8px rgba(0,0,0,0.05);
-  align-items: center;
-  scale: 1;
-  transition: 0.6s linear;
-  
+  transition: transform 0.6s linear, box-shadow 0.6s linear;
 }
 
 .recipeTile:hover {
   box-shadow: 0 16px 32px rgba(125, 38, 38, 0.25);
-  scale: 1.05;
-  transition: 0.6s linear;
+  transform: scale(1.05);
 }
 
+.recipeTile img {
+  width: 200px;
+  height: 200px;
+  object-fit: cover;
+  border-radius: 8px;
+}
+
+.recipe_name {
+  max-width: 200px;
+  height: 2.6em; /* space for exactly two lines */
+  text-align: center;
+  margin-top: 25px;
+  font-weight: bold;
+  color: #4a8ec3;
+
+  /* Vertically center text */
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+
+  /* Ellipsis after two lines */
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+}
+
+
 .healthyLabels {
-  padding: 6px 20px;
+  font-family: "Nunito";
+  font-weight: bold;
+
+  padding: 8px 12px;
   margin-left: 6px;
   border-radius: 4px;
+  /* border: none; */
   font-size: 16px;
   height: 46px;
+  background-color: #314d63;
+  color: white;
+  border: 1px solid #dddddd;
+  cursor: pointer;
+
+  /* dropdown arrow formatting */
+  appearance: none;
+  -webkit-appearance: none;
+  -moz-appearance: none;
+  background-image: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="100" height="50"><polygon points="0, 0 100,0 50, 50" style="fill:%23ffffff;" /></svg>');
+  background-position: right 10px top 50%;
+  background-repeat: no-repeat;
+  background-size: 10px;
+  padding-right: 30px;
+}
+
+.healthyLabels:focus,
+.healthyLabels:hover {
+  outline: none;
+  border: 1px solid #bbbbbb;
+}
+
+.healthyLabels:hover {
+  background-color: #9bbcd4;
+  color: #314d63;
+}
+
+.healthyLabels option {
+  background-color: #87a9c2;
 }
