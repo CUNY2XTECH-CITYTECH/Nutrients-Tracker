@@ -40,7 +40,12 @@ export async function refreshToken (req, res) {
                 process.env.ACCESS_TOKEN_SECRET,
                 {expiresIn: '15m'}
             );
-            res.json({accessToken})
+            res.json({accessToken, 
+                username:userExist.username, 
+                height:userExist.height, 
+                gender:userExist.gender,
+                weight:userExist.weight,
+                birthday: userExist.birthday })
         }
     )    
 }

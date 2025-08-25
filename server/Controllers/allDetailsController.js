@@ -104,7 +104,6 @@ async function redisCacheRequest (foodId) {
 
   try {
     const getCache = await redisClient.json.get(`foodId:${foodId}`)
-    console.log(getCache)
     return getCache
 
   }catch(error){

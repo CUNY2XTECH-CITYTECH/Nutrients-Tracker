@@ -2,9 +2,11 @@
   position:fixed;
   top: 50%;
   left: 50%;
-  transform: translate(-70%, -50%);
-  width: 400px;
-  padding: 20px;
+  transform: translate(-50%, -50%);
+  margin: 0px;
+  min-width: 400px;
+  max-width:60%;
+  padding: min(2em, 2%);
   border: none;
   border-radius: 8px;
   box-shadow: 0 0 10px rgba(0,0,0,0.1);
@@ -12,15 +14,78 @@
 
 #food-item-dialog .dialog-content{
   height:380px;
+  width:100%;
   overflow: auto;
-  display:flex;
-  flex-direction: column;
+  background-color: rgb(243, 255, 255);
+
 }
 
 #food-item-dialog .dialog-content::-webkit-scrollbar {
-  display: none;
+  display:none;
 }
 
 #foodItemDialog::backdrop {
   background: rgba(0, 0, 0, 0.5);
 }
+
+
+
+.dialog-content .food-info {
+  display: grid; 
+  grid-template-columns:minmax(200px, 1fr) minmax(200px, 1fr);
+    /* grid-template-columns: repeat(2-fit, minmax(200px, 1fr)); */
+  grid-template-rows:  auto;
+  grid-gap: 1em;
+}
+
+.macros-container{
+  background-color: rgb(228, 225, 255);
+  grid-area: 1 / 1 / 2 / 2;
+}
+
+.user-input-container {
+  background-color: rgb(224, 224, 224);
+  grid-area: 1 / 2 / 2 / 3;
+}
+
+.fat-container {
+  background-color: rgb(255, 226, 226);
+  grid-column: 1 / -1;
+  
+}
+
+.food-detail-section {
+  padding: min(5em ,5%);
+  border-radius: 40px;;
+}
+
+.vitamins-container {
+  background-color: rgb(231, 255, 231);
+}
+
+.minerals-container {
+  background-color: rgb(255, 255, 233);
+}
+
+.food-item-log-deatils {
+  display:flex;
+  flex-direction: column;
+}
+
+
+
+
+
+
+
+/*FORMATTING SERVING SIZE INPUT BOX*/
+input::-webkit-outer-spin-button,
+input::-webkit-inner-spin-button {
+  -webkit-appearance: none;
+  margin: 0;
+}
+input[type=number] {
+  -moz-appearance: textfield;
+}
+
+

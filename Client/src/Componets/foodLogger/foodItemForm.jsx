@@ -1,14 +1,23 @@
 
-export async function DialogBoxForm() {
+export function DialogBoxForm({servingSize, servingSaved, mealType}) {
+
+    function handleChangeServing (e) {
+        servingSize(e.target.value)
+    }
+
+
+
     return (
-    <div>
+    <div className="food-item-log-deatils">
         <label htmlFor="serving">Serving:</label>
         <input 
             type= "number"
             id="serving" 
             name="serving" 
             autoComplete="off"
-            onChange = {handleChangeServing}/>
+            placeholder={servingSaved}
+            onChange = {handleChangeServing}
+            />
 
         <label htmlFor="units">Units:</label>            
         <select
@@ -16,10 +25,9 @@ export async function DialogBoxForm() {
             id="units" 
             name="units" 
             autoComplete="off"
-            onChange = {handleChangeUnits}>
-                <option value=""></option>
-                <option value=""></option>
-                <option value=""></option>
+            // onChange = {handleChangeUnits}
+            >
+                <option value="g">g</option>
         </select>
 
 
@@ -29,12 +37,13 @@ export async function DialogBoxForm() {
             id="meal-type" 
             name="meal-type" 
             autoComplete="off"
-            onChange = {handleChangeMealType}>
-                <option value=""></option>
-                <option value=""></option>
-                <option value=""></option>
+            defaultValue={mealType}
+            >
+                <option value="breakfast">Breakfast</option>
+                <option value="lunch">Lunch</option>
+                <option value="dinner">Dinner</option>
         </select>
-        
+        <div className="date">Date: </div>
     </div>
     )
 }

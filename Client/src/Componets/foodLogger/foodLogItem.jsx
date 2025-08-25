@@ -1,15 +1,17 @@
-import { useState, useEffect, useContext } from "react";
+import { useState, useEffect, useContext, useRef } from "react";
 import axios from "axios"
 import AuthContext from "../../context/authProvider";
 import "./foodLoggerItem.css"
+import { DialogBoxForm } from "./foodItemForm";
 
-export function FoodLogItem({ object = [], mealType }) {
+export function FoodLogItem({ object = [], mealType, render, rerender}) {
 
     const[anyFoods, setAnyFoods] = useState(false) //stores any food user saved 
     const [toggleDialog, setToggleDialog] = useState(false) //sets the opening and closing of dialog box
     const [dialogFood, setDialogFood] = useState(null) //The food the dialog box is going to show in detail
     const {auth} = useContext(AuthContext)
     const [isLoading, setIsLoading] = useState(false)
+    const [servingAmount, setServingAmount] = useState(100)
     const [foodDetails, setFoodDetails] = useState({
         foodId: null,
         name: null,
@@ -55,6 +57,9 @@ export function FoodLogItem({ object = [], mealType }) {
         }
     })
 
+     useEffect(()=>{
+    console.log(render)
+ })
 
 
     useEffect(() => {
@@ -70,10 +75,11 @@ export function FoodLogItem({ object = [], mealType }) {
     )
 
     //When food item div gets clicked, saves foodId of clicked div, dialog box opens, fetch data with the foodId
-    function foodClick(foodId){
+    function foodClick(foodId, serving){
         setDialogFood(foodId)
         setToggleDialog(true)
         allFoodDetail(foodId)
+        setServingAmount(serving)
     }
 
 
@@ -163,15 +169,28 @@ export function FoodLogItem({ object = [], mealType }) {
             setIsLoading(false)
         }catch(error){
             console.error(error)
+        } finally {
+            rerender(); //Has callback function that updates a state in parent component that triggers useeffect that gets updated user log info
         }
+    }
+
+    let handleServingAmount = (amount) => {
+        setServingAmount(amount)
     }
 
 
 
 
+ function handleCloseDialog () {
+    setToggleDialog(false);
+    setDialogFood(null);
+    setServingAmount(100);
+ }
 
 
 
+
+  
 
 
   return (
@@ -181,7 +200,7 @@ export function FoodLogItem({ object = [], mealType }) {
             .map(({name, foodId, serving, unit, calories }, index) => (         //for each object in array, creates a food item container that user can click to see details
             <div className="food-item-container"
                  key={`${foodId}-${index}`}
-                 onClick={() => foodClick(foodId)}>
+                 onClick={() => foodClick(foodId, serving, mealType)}>
                 <h3 className="food-name">{name}</h3>
                 <p className="serving-size">{serving} {unit}</p>
                 <p className="calories">{calories} kcal</p>
@@ -194,11 +213,7 @@ export function FoodLogItem({ object = [], mealType }) {
 
 
             <div className="dialog-content">
-
-                <div className="userInput">
-                    
-                        
-                </div>
+                
                 
                 
 
@@ -209,45 +224,51 @@ export function FoodLogItem({ object = [], mealType }) {
                 ):(
                 <>
                         
-               
 
-                    <div className="macros-container">
+                    <div className="macros-container food-detail-section">
                         <h3>Macros</h3>
                         {Object.entries(foodDetails.macros).map(([key,macro]) => (
-                            <p key={key}>{`${macro.name}: ${macro.value} ${macro.unit}`}</p>
+                            <p key={key}>{`${macro.name}: ${Math.round(macro.value * servingAmount)/100 } ${macro.value === "No Data"?'':macro.unit}`}</p>
                         ) )}
                     </div>
 
+                    <div className="user-input-container food-detail-section">
+                        <h3>User Inputs</h3>
+                        <p>{servingAmount}</p>
+                        <DialogBoxForm servingSize={handleServingAmount} servingSaved={servingAmount} mealType={mealType} />
+                    </div>
 
-                    <div className="vitamins-container">
+
+                    <div className="vitamins-container food-detail-section">
                         <h3>Vitamins</h3>
                         {Object.entries(foodDetails.vitamins).map(([key, vitamin]) => (
-                            <p key={key}>{`${vitamin.name}: ${vitamin.value} ${vitamin.unit}`}</p>
+                            <p key={key}>{`${vitamin.name}: ${vitamin.value} ${vitamin.value === "No Data"?'':vitamin.unit}`}</p>
                             )
                         )}
                     </div>
 
-                    <div className="minerals-container">
+                    <div className="minerals-container food-detail-section">
                         <h3>Minerals</h3>
                         {Object.entries(foodDetails.minerals).map(([key, mineral]) => (
-                            <p key={key}>{`${mineral.name}: ${mineral.value} ${mineral.unit}`}</p>
+                            <p key={key}>{`${mineral.name}: ${mineral.value} ${mineral.value === "No Data"?'':mineral.unit}`}</p>
                             )
                         )}
                     </div>
 
-                    <div className="fat-container">
+                    <div className="fat-container food-detail-section">
                         <h3>Fat</h3>
                         {Object.entries(foodDetails.fats).map(([key, fat]) => (
-                            <p key={key}>{`${fat.name}: ${fat.value} ${fat.unit}`}</p>
+                            <p key={key}>{`${fat.name}: ${fat.value} ${fat.value === "No Data"?'':fat.unit}`}</p>
                             )
                         )}
                     </div>
                     </> )}
                 </div>
             </div>
-            <button className="delete-food-log" onClick={handleDeleteLog}>Delete</button>
-            <button className="close-dialog" onClick= {() => {setToggleDialog(false); setDialogFood(null);}}>Close</button>
-            
+            <div className="food-item-btn">
+                <button className="delete-food-log" onClick={handleDeleteLog}>Delete</button>
+                <button className="close-dialog" onClick= {handleCloseDialog}>Close</button>
+            </div>
         </dialog>
 
 
