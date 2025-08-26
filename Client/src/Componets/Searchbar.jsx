@@ -5,12 +5,12 @@ export function Searchbar() {
     <div className="search-bar-container">
       <input
         type="text"
-        placeholder="Enter an ingredient"
+        placeholder="Search ingredients..."
         className="search-input"
       />
       <button className="search-button">
-        <FaSearch />
+        <FaSearch className="search-icon" />
       </button>
     </div>
   );
-};
+}
