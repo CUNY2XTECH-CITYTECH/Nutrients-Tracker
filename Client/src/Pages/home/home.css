@@ -1,0 +1,96 @@
+.home-container {
+  position:absolute;
+  background: none;
+  /* background-image: url("../../../public/nutri-bkgr.jpg"); */
+
+  min-height: 100dvh;
+  /* padding: 20px; */
+  color: #3549bd;
+  width: 100%;
+  overflow-x: hidden;
+  text-align: center;
+  font-size: 17px;
+  
+}
+
+p {
+  margin: 10px 50px;
+}
+
+
+
+ul {
+  list-style: none;
+}
+.home-container::before {
+display: none;
+}
+
+/* .home-container h1 {
+  margin: 40px;
+} */
+.home-container > * {
+  position: relative;
+ 
+}
+/* .basicinfo {
+  margin: 40px;
+  
+} */
+
+
+/* .food {
+  margin: 40px;
+} */
+ 
+
+
+  
+.marquee {
+  overflow: hidden;
+  position: relative;
+  width: 100%;
+  height: 200px;
+  
+}
+
+.marquee-track {
+  display: flex;
+  width: max-content;
+  animation: scroll 20s linear infinite;
+  /* margin: 50px; */
+}
+
+.marquee-img {
+  width: 300px;
+  height: 200px;
+  object-fit: cover;
+  margin-right: 10px;
+  border-radius: 10px;
+}
+
+@keyframes scroll {
+  0% {
+    transform: translateX(0%);
+  }
+  100% {
+    transform: translateX(-50%);
+  }
+}
+
+.home-diagram {
+  width: 100%;
+  max-width: 600px;
+  margin: 20px 0;
+}
+
+.home-diagram img {
+  width: 100%;
+  height: auto;
+}
+
+.home-diagram figcaption {
+  text-align: center;
+  margin-top: 10px;
+  font-style: italic;
+}

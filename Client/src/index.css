@@ -1,184 +1,175 @@
-:root {
-  --primary-color: #4361ee;
-  --secondary-color: #3a0ca3;
-  --accent-color: #4cc9f0;
-  --light-gray: #f8f9fa;
-  --dark-gray: #343a40;
-  --transition: all 0.3s ease;
-}
+@import url('https://fonts.googleapis.com/css2?family=Nunito&display=swap');
 
-/* Base Styles */
 html, body {
-  margin: 0;
-  padding: 0;
-  width: 100vw;
-  height: 100vh;
-  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    margin:0;
+    padding: 0;
+    width : 100%;
+    font-family:'Nunito';
+    min-height:100vh;
 }
 
 body {
-  display: flex;
-  padding: 0;
-  margin: 0;
+    display: flex;
+    padding: 0;
+    margin:0
 }
 
 #root {
-  flex-grow: 1;
-  display: flex;
-  flex-direction: column;
+    flex-grow: 1;
+    display: flex;
+    flex-direction: column;
+} 
+
+main {
+    flex-grow: 1;
 }
 
-/* Header Styles */
-.header-container {
-  background-color: white;
-  height: 80px;
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  padding: 0 2rem;
-  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
-  position: sticky;
-  top: 0;
-  z-index: 100;
+
+.header-container{
+    height: 100px;
+    /* position: sticky;
+    top:0px; */
+    background-color: #c2e7ff;
+    display:flex;
+    align-items: center;
+    justify-content: end;
+    gap:20px;
+    box-shadow: 0px 0px 30px 10px #dadada;
+    z-index: 1;
 }
 
-.header-logo-link {
-  text-decoration: none;
+.header-container .header-logo-link {
+    margin-left: 20px;
+    margin-right: auto;
+    text-decoration: none;
 }
 
-.logo {
-  color: var(--primary-color);
-  font-size: 1.8rem;
-  font-weight: 700;
-  letter-spacing: -0.5px;
-  transition: var(--transition);
+
+
+.logo-link, .logo {
+    color:rgb(58, 58, 255);
+    font-size: 30px;
+    font-weight:bold;
+    margin-left: 20px;
+    margin-right: auto;
+    text-decoration: none;
+    margin-top: 10px;
+    margin-bottom: 10px;
 }
 
-.logo:hover {
-  color: var(--secondary-color);
+.header-container .header-signup-link {
+    margin-right: 20px;
 }
 
-.header-nav {
-  display: flex;
-  gap: 1.5rem;
+.header-container .btn {
+    text-decoration: none;
+    color: blue;
+    padding:20px;
+    font-weight: bold;
+    /* border: 1px solid black; */
+    box-shadow: 0px 0px 30px 2px rgb(216, 248, 255);
+    border-radius: 10px;
+    transition: background-color .5s ease-in-out;
 }
 
-.header-btn {
-  height: 40px;
-  padding: 0 1.5rem;
-  border-radius: 8px;
-  font-weight: 600;
-  cursor: pointer;
-  transition: var(--transition);
-  border: none;
+.header-container .btn:hover {
+    background-color: rgb(216, 248, 255);
 }
 
-.login-btn {
-  background-color: transparent;
-  color: var(--primary-color);
-  border: 2px solid var(--primary-color);
+
+.content-container {
+    display:flex;
 }
 
-.login-btn:hover {
-  background-color: var(--primary-color);
-  color: white;
-}
-
-.sign-up-btn {
-  background-color: var(--primary-color);
-  color: white;
-}
-
-.sign-up-btn:hover {
-  background-color: var(--secondary-color);
-  transform: translateY(-2px);
-}
-
-/* Search Bar Styles */
-.search-bar-container {
-  display: flex;
-  width: 90%;
-  max-width: 500px;
-  margin: 2rem auto;
-  border-radius: 25px;
-  overflow: hidden;
-  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
-}
-
-.search-input {
-  flex: 1;
-  padding: 0.8rem 1.5rem;
-  border: none;
-  outline: none;
-  font-size: 1rem;
-}
-
-.search-button {
-  background-color: var(--primary-color);
-  color: white;
-  border: none;
-  padding: 0 1.5rem;
-  cursor: pointer;
-  transition: var(--transition);
-}
-
-.search-button:hover {
-  background-color: var(--secondary-color);
-}
-
-.search-icon {
-  font-size: 1rem;
-}
-
-/* Sidebar Styles */
 .side-bar-container {
-  background: linear-gradient(135deg, var(--primary-color), var(--secondary-color));
-  height: 100vh;
-  width: 280px;
-  position: sticky;
-  top: 0;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  gap: 1.5rem;
-  padding: 2rem 0;
-  color: white;
-  box-shadow: 2px 0 10px rgba(0, 0, 0, 0.1);
+    background-color:#254e6f;
+    /* background-color:rgb(0, 0, 128,0.5); */
+    height: 100vh;
+    width: 250px;
+    position: sticky;
+    top:0;
+    display:flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 20px;
 }
 
-.side-bar-link {
-  width: 80%;
-  text-decoration: none;
-  transition: var(--transition);
+
+.side-bar-container .side-bar-link {
+    align-self:stretch;
+    display: flex;
+    margin: 0px 20px 0px 20px;
+    text-decoration: none;
+
 }
 
-.side-bar-link:hover {
-  transform: translateX(5px);
+.side-bar-container .first-link {
+    margin-top: 20px;
 }
 
-.side-bar-btn {
-  width: 100%;
-  height: 50px;
-  background: rgba(255, 255, 255, 0.1);
-  border: none;
-  border-radius: 8px;
-  color: white;
-  font-size: 1.1rem;
-  font-weight: 500;
-  cursor: pointer;
-  transition: var(--transition);
-  padding: 0 1.5rem;
-  text-align: left;
-  display: flex;
-  align-items: center;
-  gap: 1rem;
+.side-bar-container .side-bar-link .side-bar-btn {
+    height: 40px;
+    flex-grow: 1;
+    font-size:20px;
+    font-family:'Franklin Gothic Medium', 'Arial Narrow', Arial, sans-serif;
 }
 
-.side-bar-btn:hover {
-  background: rgba(255, 255, 255, 0.2);
+.home-header-container {
+    display: flex;
+    flex-direction: column;
 }
 
-.first-link {
-  margin-top: 0;
+
+.home-header-top {
+    background-color: rgb(230, 230, 230);
+    display:flex;
+    align-items: center;
+    justify-content: end;
+    gap:20px;
+    border-bottom: 5px solid white;
+}
+
+.logged-in-logo {
+    color: rgb(0, 0, 166)
+}
+
+.header-logout-btn {
+    margin-right: 20px;
+    background-color: rgb(230, 230, 230);
+    border: 5px solid rgb(0, 0, 166);
+    color: rgb(0, 0, 166);
+    border-radius: 10px;
+    font-family: 'Nunito';
+    padding: 10px;
+    font-weight:bold;
+    font-size: 15px;
+    cursor:pointer;
+}
+
+.header-logout-btn:hover {
+    background-color: rgb(205, 205, 205)
+}
+
+.home-header-bottom{
+    background-color: rgb(0, 0, 166);
+    display:flex;
+    align-items: center;
+    justify-content: center;
+    gap:20px;
+}
+
+.home-header-btn {
+    background-color: rgb(0, 0, 166);
+    font-family: 'Nunito';
+    font-size: 20px;
+    color:white;
+    font-weight: bold;
+    padding:10px 20px 10px 20px;
+    border: none;
+    cursor: pointer;
+}
+
+.home-header-btn:hover{
+    color:rgb(230, 230, 230)
 }
 
