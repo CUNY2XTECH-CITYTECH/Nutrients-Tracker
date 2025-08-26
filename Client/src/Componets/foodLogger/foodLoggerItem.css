@@ -13,7 +13,8 @@
 }
 
 #food-item-dialog .dialog-content{
-  height:380px;
+  height:65vh;
+  max-height: 1110px;
   width:100%;
   overflow: auto;
   background-color: rgb(243, 255, 255);
@@ -72,12 +73,6 @@
   flex-direction: column;
 }
 
-
-
-
-
-
-
 /*FORMATTING SERVING SIZE INPUT BOX*/
 input::-webkit-outer-spin-button,
 input::-webkit-inner-spin-button {
@@ -88,4 +83,30 @@ input[type=number] {
   -moz-appearance: textfield;
 }
 
+.food-item-btn {
+  padding-top: 20px;
+  display: flex;
+  flex-direction:row-reverse;
+  align-items: center;
+  gap: 20px;
+}
 
+.food-item-btn *{
+  cursor: pointer;
+  background-color: white;
+  border: black solid 3px;
+  border-radius: 4px;
+  color: black;
+  font-weight: bold;
+  padding: 10px;
+}
+
+.food-item-btn .delete-food-log{
+  border-color: red;
+  color: red;
+}
+
+.food-item-btn .save-food-log{
+  border-color: green;
+  color: green;
+}

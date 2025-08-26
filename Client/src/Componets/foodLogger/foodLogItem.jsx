@@ -4,7 +4,7 @@ import AuthContext from "../../context/authProvider";
 import "./foodLoggerItem.css"
 import { DialogBoxForm } from "./foodItemForm";
 
-export function FoodLogItem({ object = [], mealType, render, rerender}) {
+export function FoodLogItem({ object = [], mealType, render, rerender, rawDate}) {
 
     const[anyFoods, setAnyFoods] = useState(false) //stores any food user saved 
     const [toggleDialog, setToggleDialog] = useState(false) //sets the opening and closing of dialog box
@@ -57,9 +57,7 @@ export function FoodLogItem({ object = [], mealType, render, rerender}) {
         }
     })
 
-     useEffect(()=>{
-    console.log(render)
- })
+     
 
 
     useEffect(() => {
@@ -228,7 +226,7 @@ export function FoodLogItem({ object = [], mealType, render, rerender}) {
                     <div className="macros-container food-detail-section">
                         <h3>Macros</h3>
                         {Object.entries(foodDetails.macros).map(([key,macro]) => (
-                            <p key={key}>{`${macro.name}: ${Math.round(macro.value * servingAmount)/100 } ${macro.value === "No Data"?'':macro.unit}`}</p>
+                            <p key={key}>{`${macro.name}: ${macro.value == "No Data"?"No Data":Math.round(macro.value * servingAmount)/100} ${macro.value === "No Data"?'':macro.unit}`}</p>
                         ) )}
                     </div>
 
@@ -242,7 +240,7 @@ export function FoodLogItem({ object = [], mealType, render, rerender}) {
                     <div className="vitamins-container food-detail-section">
                         <h3>Vitamins</h3>
                         {Object.entries(foodDetails.vitamins).map(([key, vitamin]) => (
-                            <p key={key}>{`${vitamin.name}: ${vitamin.value} ${vitamin.value === "No Data"?'':vitamin.unit}`}</p>
+                            <p key={key}>{`${vitamin.name}: ${vitamin.value == "No Data"?"No Data":Math.round(vitamin.value * servingAmount)/100} ${vitamin.value === "No Data"?'':vitamin.unit}`}</p>
                             )
                         )}
                     </div>
@@ -250,7 +248,7 @@ export function FoodLogItem({ object = [], mealType, render, rerender}) {
                     <div className="minerals-container food-detail-section">
                         <h3>Minerals</h3>
                         {Object.entries(foodDetails.minerals).map(([key, mineral]) => (
-                            <p key={key}>{`${mineral.name}: ${mineral.value} ${mineral.value === "No Data"?'':mineral.unit}`}</p>
+                            <p key={key}>{`${mineral.name}: ${mineral.value == "No Data"?"No Data":Math.round(mineral.value * servingAmount)/100} ${mineral.value === "No Data"?'':mineral.unit}`}</p>
                             )
                         )}
                     </div>
@@ -258,7 +256,7 @@ export function FoodLogItem({ object = [], mealType, render, rerender}) {
                     <div className="fat-container food-detail-section">
                         <h3>Fat</h3>
                         {Object.entries(foodDetails.fats).map(([key, fat]) => (
-                            <p key={key}>{`${fat.name}: ${fat.value} ${fat.value === "No Data"?'':fat.unit}`}</p>
+                            <p key={key}>{`${fat.name}: ${fat.value == "No Data"?"No Data":Math.round(fat.value * servingAmount)/100} ${fat.value === "No Data"?'':fat.unit}`}</p>
                             )
                         )}
                     </div>
@@ -266,8 +264,9 @@ export function FoodLogItem({ object = [], mealType, render, rerender}) {
                 </div>
             </div>
             <div className="food-item-btn">
-                <button className="delete-food-log" onClick={handleDeleteLog}>Delete</button>
                 <button className="close-dialog" onClick= {handleCloseDialog}>Close</button>
+                <button className="delete-food-log" onClick={handleDeleteLog}>Delete</button>
+                <button className="save-food-log" onClick={handleCloseDialog}>Save</button>
             </div>
         </dialog>
 

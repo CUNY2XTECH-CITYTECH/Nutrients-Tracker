@@ -71,6 +71,9 @@ export function Food() {
   const [extendedFoodData, setExtendedFoodData] = useState(null);
   const [isSaving, setIsSaving] = useState(false);
 
+  const today = new Date(); //EXTRA
+  today.setHours(0, 0, 0, 0) //EXTRA
+
   // Debounce function
   const debounce = (func, delay = 100) => {
     let timer;
@@ -240,7 +243,8 @@ export function Food() {
         foodID: extendedFoodData.food_id || selectedFood.fdcId,
         name: extendedFoodData.food_name || selectedFood.description,
         username,
-        date: new Date().toISOString(),
+        // date: new Date().toISOString(),
+        date:today,
         mealType,
         serving: parseFloat(servingSize),
         unit: servingUnit,

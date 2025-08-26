@@ -22,12 +22,27 @@ export function FoodLogger() {
   const [foodLogs, setFoodLogs] = useState([]) //gets save food logs that user saved
   const [renderComponent, setRenderComponent] = useState(0) //Used to render the child  compoents
 
+  const today = new Date();
+  today.setHours(0, 0, 0, 0)
+
+  function dateFormater (date) {
+      let month = date.getMonth() + 1; // getMonth returns 0-11 so add 1 for actual month
+      let day = date.getDate();
+      let year = date.getFullYear();
+      const formattedDate = `${month}/${day}/${year}`;
+    return formattedDate
+  }
+  const [rawDate,setRawDate] = useState(today)
+  const [logsDate, setLogsDate] = useState(dateFormater(today))
+  
+  useEffect(()=>{
+    console.log(`Today: ${today}, rawDate: ${rawDate}, LogsDate: ${logsDate}`)
+  },[rawDate, logsDate, today])
+
   //Updates renderComponet state and triggers useEffect to get updated data log info
   const forceRerender = () => {
     setRenderComponent(Math.random()); // Update with a random value to ensure change
   };
-
-
 
 
   //Function that gives back userinfo by decrypting access token if valid and gives user's logged food
@@ -38,6 +53,7 @@ export function FoodLogger() {
 
       const response = await axios.get("http://localhost:3000/logs/user-details",
         {
+          params: {date:rawDate},
           headers: {'Authorization': `Bearer ${auth.accessToken}`}
         })
 
@@ -67,13 +83,38 @@ export function FoodLogger() {
       }
 }
 
-
-
-
-
+//Gets updated food logs for when a render is trigger during food item CRUD or date change
 useEffect(() =>{
   getLogs()
-},[renderComponent])
+  console.log(`useEffect rawDate: ${rawDate}`)
+},[renderComponent, rawDate.toString()])
+
+
+//Changes the date to the previous day
+function handlePrevDate (){
+  const prevDate = rawDate;
+  prevDate.setDate(prevDate.getDate() - 1);
+
+  setRawDate(prevDate)
+
+  const prevDateFormat = dateFormater(prevDate)
+  setLogsDate(prevDateFormat)
+ return
+}
+
+//Changes the date to the next day
+function handleNextDate() {
+  if(rawDate >= today) return //Can only incrument throught current and previous dates
+
+  const nextDate = rawDate;
+  nextDate.setDate(nextDate.getDate() + 1);
+  setRawDate(nextDate)
+
+  const nextDateFormat = dateFormater(nextDate)
+  setLogsDate(nextDateFormat)
+ return
+}
+
 
 
 
@@ -109,25 +150,46 @@ useEffect(() =>{
         </div>
       )}
 
-
-      <div className="food-logger-meal-time-foods">
-
-        <h1 className="title">Breakfast</h1>
-        <div className= "meal-type-container breakfast">
-            <FoodLogItem object={foodLogs} mealType="breakfast" render={renderComponent} rerender={forceRerender}/>
-        </div>
-
-        <h1 className="title">Lunch</h1>
-        <div className= "meal-type-container lunch">
-            <FoodLogItem object={foodLogs} mealType="lunch" render={renderComponent} rerender={forceRerender}/>
-        </div>
-
-        <h1 className="title">Dinner</h1>
-        <div className= "meal-type-container dinner">
-            <FoodLogItem object={foodLogs} mealType="dinner" render={renderComponent} rerender={forceRerender}/>
-        </div>
-
+      <div className="logs-date-container">
+        <div className="prev-date" onClick={handlePrevDate}>&lt;</div>
+        <div className="logs-date">{logsDate}</div>
+        <div className="next-date" onClick={handleNextDate}>&gt;</div>
       </div>
+
+        <div className="food-logger-meal-time-foods">
+
+          <h1 className="title">Breakfast</h1>
+          <div className= "meal-type-container breakfast">
+              <FoodLogItem 
+                object={foodLogs} 
+                mealType="breakfast" 
+                render={renderComponent} 
+                rerender={forceRerender} 
+                rawDate={rawDate}/>
+          </div>
+
+          <h1 className="title">Lunch</h1>
+          <div className= "meal-type-container lunch">
+              <FoodLogItem 
+                object={foodLogs} 
+                mealType="lunch" 
+                render={renderComponent} 
+                rerender={forceRerender}
+                rawDate={rawDate}/>
+          </div>
+
+          <h1 className="title">Dinner</h1>
+          <div className= "meal-type-container dinner">
+              <FoodLogItem 
+                object={foodLogs} 
+                mealType="dinner" 
+                render={renderComponent} 
+                rerender={forceRerender}
+                rawDate={rawDate}/>
+          </div>
+
+        </div>
+
 
        
     </div>
