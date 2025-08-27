@@ -15,7 +15,7 @@ const foodSavedSchema = new mongoose.Schema({
   },
   date: {
     type: Date,
-    default: Date.now
+    // default: Date.now
   },
   mealType: {
     type: String,

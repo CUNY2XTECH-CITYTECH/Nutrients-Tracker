@@ -3,6 +3,44 @@
 .Content-parent{
     font-family: 'Nunito';
 }
+
+.logs-date-container{
+    font-family: 'Nunito';
+    background-color: white;
+    border-radius: 40px;
+    border: rgb(119, 207, 255) solid 4px;
+    font-size: 30px;
+    display: grid;
+    grid-template-columns: repeat(9, 1fr);
+    justify-items: center;
+    align-items: center;
+}
+
+.prev-date{
+    font-size: 35px;
+    padding:1em;
+    background-color:white;
+    grid-column: 2 / 3;
+    cursor: pointer;
+}
+
+.logs-date{
+    /* background-color:blue; */
+    grid-column: 4 / 7;
+}
+
+.next-date{
+    font-size: 35px;
+    padding:1em;
+    background-color: white;
+    grid-column: 8 / 9;
+    cursor: pointer;
+}
+
+.prev-date:hover, .next-date:hover{
+    filter: brightness(90%); 
+}
+
 .food-logger-meal-time-foods{
     padding-bottom:40px;
     font-family: 'Nunito';
