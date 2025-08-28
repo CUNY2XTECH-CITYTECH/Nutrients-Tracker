@@ -35,9 +35,9 @@ export function FoodLogger() {
   const [rawDate,setRawDate] = useState(today)
   const [logsDate, setLogsDate] = useState(dateFormater(today))
   
-  useEffect(()=>{
-    console.log(`Today: ${today}, rawDate: ${rawDate}, LogsDate: ${logsDate}`)
-  },[rawDate, logsDate, today])
+  // useEffect(()=>{
+  //   console.log(`Today: ${today}, rawDate: ${rawDate}, LogsDate: ${logsDate}`)
+  // },[rawDate, logsDate, today])
 
   //Updates renderComponet state and triggers useEffect to get updated data log info
   const forceRerender = () => {
@@ -86,8 +86,8 @@ export function FoodLogger() {
 //Gets updated food logs for when a render is trigger during food item CRUD or date change
 useEffect(() =>{
   getLogs()
-  console.log(`useEffect rawDate: ${rawDate}`)
-},[renderComponent, rawDate.toString()])
+  // console.log(`useEffect rawDate: ${rawDate}`)
+},[renderComponent, logsDate.toString()])
 
 
 //Changes the date to the previous day
@@ -165,7 +165,7 @@ function handleNextDate() {
                 mealType="breakfast" 
                 render={renderComponent} 
                 rerender={forceRerender} 
-                rawDate={rawDate}/>
+                logsDate={logsDate}/>
           </div>
 
           <h1 className="title">Lunch</h1>
@@ -175,7 +175,7 @@ function handleNextDate() {
                 mealType="lunch" 
                 render={renderComponent} 
                 rerender={forceRerender}
-                rawDate={rawDate}/>
+                logsDate={logsDate}/>
           </div>
 
           <h1 className="title">Dinner</h1>
@@ -185,7 +185,7 @@ function handleNextDate() {
                 mealType="dinner" 
                 render={renderComponent} 
                 rerender={forceRerender}
-                rawDate={rawDate}/>
+                logsDate={logsDate}/>
           </div>
 
         </div>

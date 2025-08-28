@@ -6,6 +6,7 @@ import Food from "../Models/food.js";
 import { verifyJWT } from '../Middleware/verifyJWT.js';
 import { userDetails } from '../Controllers/userDetails.js';
 import { FoodDetails}  from '../Controllers/allDetailsController.js';
+import { updateLog } from '../Controllers/updateLogController.js';
 import { deleteLog } from '../Controllers/deleteLogController.js';
 
 const router = express.Router();
@@ -79,6 +80,10 @@ const router = express.Router();
 
 router.get("/user-details", verifyJWT, userDetails)
 router.get("/food-all-details", verifyJWT, FoodDetails)
+
+router.patch("/updateLog", verifyJWT, updateLog)
+
 router.delete("/deleteLog", verifyJWT, deleteLog)
+
 
 export default router;
