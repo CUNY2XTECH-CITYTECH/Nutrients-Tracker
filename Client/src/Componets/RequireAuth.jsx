@@ -36,12 +36,12 @@ const RequireAuth = () => {
             } catch (error) {
                 console.log("Session expired", error);
             } finally {
-                // Always set loading to false when done
+                // Sets loading to false when done
                 if (isMounted) setIsLoading(false);
             }
         };
 
-        // Execute the verification
+        // Runs the verification function
         verifyAuth();
 
         // Cleanup function to prevent state updates after unmount
