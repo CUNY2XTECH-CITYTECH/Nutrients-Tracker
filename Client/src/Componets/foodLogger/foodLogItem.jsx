@@ -4,14 +4,15 @@ import AuthContext from "../../context/authProvider";
 import "./foodLoggerItem.css"
 import { DialogBoxForm } from "./foodItemForm";
 
-export function FoodLogItem({ object = [], mealType, render, rerender, rawDate}) {
+export function FoodLogItem({ object = [], mealType, render, rerender, logsDate}) {
 
     const[anyFoods, setAnyFoods] = useState(false) //stores any food user saved 
     const [toggleDialog, setToggleDialog] = useState(false) //sets the opening and closing of dialog box
     const [dialogFood, setDialogFood] = useState(null) //The food the dialog box is going to show in detail
-    const {auth} = useContext(AuthContext)
-    const [isLoading, setIsLoading] = useState(false)
-    const [servingAmount, setServingAmount] = useState(100)
+    const [logId, setLogId] = useState(null) //The object id of the food log saved in db
+    const {auth} = useContext(AuthContext) //Global constext that saves user info
+    const [isLoading, setIsLoading] = useState(false) //If true, shows loading screen while fetching for food details
+    const [servingAmount, setServingAmount] = useState(100) 
     const [foodDetails, setFoodDetails] = useState({
         foodId: null,
         name: null,
@@ -73,11 +74,13 @@ export function FoodLogItem({ object = [], mealType, render, rerender, rawDate})
     )
 
     //When food item div gets clicked, saves foodId of clicked div, dialog box opens, fetch data with the foodId
-    function foodClick(foodId, serving){
+    function foodClick(foodId, serving, mealType, _id){
+        setLogId(_id)
         setDialogFood(foodId)
         setToggleDialog(true)
         allFoodDetail(foodId)
         setServingAmount(serving)
+
     }
 
 
@@ -183,6 +186,7 @@ export function FoodLogItem({ object = [], mealType, render, rerender, rawDate})
     setToggleDialog(false);
     setDialogFood(null);
     setServingAmount(100);
+    setLogId(null);
  }
 
 
@@ -195,10 +199,10 @@ export function FoodLogItem({ object = [], mealType, render, rerender, rawDate})
     <>
         {/*Filters the array to given meal type */}
         {object.filter(item => item.mealType == mealType) 
-            .map(({name, foodId, serving, unit, calories }, index) => (         //for each object in array, creates a food item container that user can click to see details
+            .map(({_id, name, foodId, serving, unit, calories }, index) => (         //for each object in array, creates a food item container that user can click to see details
             <div className="food-item-container"
-                 key={`${foodId}-${index}`}
-                 onClick={() => foodClick(foodId, serving, mealType)}>
+                 key={_id}
+                 onClick={() => foodClick(foodId, serving, mealType, _id)}>
                 <h3 className="food-name">{name}</h3>
                 <p className="serving-size">{serving} {unit}</p>
                 <p className="calories">{calories} kcal</p>
@@ -232,8 +236,15 @@ export function FoodLogItem({ object = [], mealType, render, rerender, rawDate})
 
                     <div className="user-input-container food-detail-section">
                         <h3>User Inputs</h3>
-                        <p>{servingAmount}</p>
-                        <DialogBoxForm servingSize={handleServingAmount} servingSaved={servingAmount} mealType={mealType} />
+                        <DialogBoxForm 
+                            servingSize={handleServingAmount} 
+                            servingSaved={servingAmount} 
+                            mealType={mealType}
+                            logsDate={logsDate}
+                            handleCloseDialog={handleCloseDialog}
+                            logId={logId}
+                            rerender={rerender}
+                             />
                     </div>
 
 
@@ -266,7 +277,7 @@ export function FoodLogItem({ object = [], mealType, render, rerender, rawDate})
             <div className="food-item-btn">
                 <button className="close-dialog" onClick= {handleCloseDialog}>Close</button>
                 <button className="delete-food-log" onClick={handleDeleteLog}>Delete</button>
-                <button className="save-food-log" onClick={handleCloseDialog}>Save</button>
+                <button className="save-food-log" type="submit" form="user-log-stats">Save</button>
             </div>
         </dialog>
 

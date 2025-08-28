@@ -7,7 +7,7 @@
   min-width: 400px;
   max-width:60%;
   padding: min(2em, 2%);
-  border: none;
+  border: black solid 1px;
   border-radius: 8px;
   box-shadow: 0 0 10px rgba(0,0,0,0.1);
 }
@@ -15,10 +15,12 @@
 #food-item-dialog .dialog-content{
   height:65vh;
   max-height: 1110px;
-  width:100%;
+  width:96%;
   overflow: auto;
-  background-color: rgb(243, 255, 255);
-
+  background-color: rgb(244, 244, 244);
+  padding:2%;
+  border-radius: 10px;
+  border: black solid 1px;
 }
 
 #food-item-dialog .dialog-content::-webkit-scrollbar {
@@ -109,4 +111,9 @@ input[type=number] {
 .food-item-btn .save-food-log{
   border-color: green;
   color: green;
+}
+
+#user-log-stats {
+  display:flex;
+  flex-direction:column
 }
