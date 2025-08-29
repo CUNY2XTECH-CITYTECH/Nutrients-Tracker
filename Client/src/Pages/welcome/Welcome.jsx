@@ -1,6 +1,7 @@
 import { Header } from "../../Componets/Header"
 import { Link } from "react-router-dom"
 import "./welcome.css"
+import Marquee from "react-fast-marquee";
 
 export function Welcome () {
     return(
@@ -105,7 +106,51 @@ export function Welcome () {
                         <p>Already have an account? <Link to="/login">Log In</Link> to continue your journey.</p>
                     </div>
                     </div>
-                    <img className="img" src="stock photo 3.jpg" alt="stock photo 3"></img>
+                    <Marquee className="comments-marquee"  
+                    // direction='down'
+                    autoFill='true'
+                    // speed='1'
+                    style ={{width:'500px'}}>
+                            <div className="comment-container">
+                                <p className="comment">So intuitive and easy to use! Logging meals takes seconds. Finally a tracking app I'll actually stick with.</p>
+                                <h3 className="comment-name">-Borys Solorzano</h3>
+
+                            </div>
+                            <div className="comment-container">
+                                <p className="comment"> The UI is clean and not cluttered like others. Makes the sometimes-daunting task of tracking my food feel simple and manageable.</p>
+                                <h3 className="comment-name">-Christopher C</h3>
+                            </div>
+                            <div className="comment-container">
+                                <p className="comment">I've tried them all, and this one has the best user experience by far. The recent foods list is smart.</p>
+                                <h3 className="comment-name">-Daniela Sanchez</h3>
+                            </div>
+                            <div className="comment-container">
+                                <p className="comment">The database is huge! I can find everything, even items from local restaurants and stores. The nutrients is incredibly accurate.</p>
+                                <h3 className="comment-name">-Doug</h3>
+                            </div>
+                            <div className="comment-container">
+                                <p className="comment">This app completely changed my relationship with food. I've lost 15 pounds in 3 months just by being aware of what I was eating. It's empowering!</p>
+                                <h3 className="comment-name">-Isaac Mbambo</h3>
+                            </div>
+                            <div className="comment-container">
+                                <p className="comment">The weekly summary reports are fantastic. They give me a great overview and keep me motivated to make better choices the following week</p>
+                                <h3 className="comment-name">-Ishua Belzine</h3>
+                            </div>
+                            <div className="comment-container">
+                                <p className="comment">Perfect for my fitness journey. Hitting my protein goals has never been easier. The macro breakdown is exactly what I needed to build muscle.</p>
+                                <h3 className="comment-name">-Zhilhua Li (Tonny)</h3>
+                            </div>
+                            <div className="comment-container">
+                                <p className="comment">I'm impressed by how extensive and accurate the nutritional information is. It feels reliable, which is crucial when you're counting macros.</p>
+                                <h3 className="comment-name">-Zohinur Miah</h3>
+                            </div>
+                            <div className="comment-container">
+                                <p className="comment">The ability to set different goals for different days (like more carbs on workout days) is a game-changer. It finally understands my lifestyle.</p>
+                                <h3 className="comment-name">-Jamel Williams</h3>
+                            </div>
+
+                    </Marquee>
+                    {/* <img className="img" src="stock photo 3.jpg" alt="stock photo 3"></img> */}
                 </div>
                 <footer>
                     <p>(Note: Nutrient Tracker does not provide medical advice. Consult a healthcare professional before making significant dietary changes.)</p>

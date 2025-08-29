@@ -121,7 +121,7 @@ function handleNextDate() {
 
   return (
     <div className="Content-parent" style={{ maxWidth: 900, margin: "auto", fontFamily: "sans-serif" }}>
-      <h2 style={{ marginBottom: "0.5em" }}>
+      {/* <h2 style={{ marginBottom: "0.5em" }}>
         Food Logs for {userInfo ? userInfo.username : "Loading..."}
       </h2>
 
@@ -148,7 +148,7 @@ function handleNextDate() {
           <p>Weight: {userInfo.weight} kg</p>
           <p>Gender: {userInfo.gender}</p>
         </div>
-      )}
+      )} */}
 
       <div className="logs-date-container">
         <div className="prev-date" onClick={handlePrevDate}>&lt;</div>

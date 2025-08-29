@@ -106,25 +106,48 @@
     display: flex;
     justify-content: space-between;
     align-items: center;
+    height: 550px
 }
 
 .welcome-section-four .content{
     display: flex;
     flex-direction: column;
+    gap: 20px;
+    justify-content:space-evenly;
+
 }
 
 .welcome-section-four .content h1, .welcome-section-four .content .sign-up{
     text-align: center;
+    /* margin: 10px 0px; */
 }
 
 
-.welcome-section-four .img {
-    transform: scale(.8);
-    border-radius: 10px;
+
+.welcome-section-four .comments-marquee .comment-container{
+    height: 200px;
+    width: 400px;
+    background-color: rgb(239, 239, 239);
+    display:flex;
+    flex-direction: column;
+    border: solid black 2px;
+    margin:0px 2px;
+    border-radius: 5px;
 }
+
+.comment-container .comment {
+    font-size: 20px;;
+    margin: 10px;
+}
+
+.comment-container .comment-name {
+    margin-left: auto;
+    margin-right:20px
+}
+
 
 .welcome-page-body footer p {
-    background-color: rgb(200, 223, 255);
+    background-color: rgb(231, 241, 255);
     color:gray;
     font-size: 12px;
     text-align: center;
