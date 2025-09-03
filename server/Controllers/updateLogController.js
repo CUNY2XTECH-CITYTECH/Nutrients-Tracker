@@ -1,9 +1,9 @@
 import FoodLog from "../Models/FoodLog.js"
 
 export async function updateLog (req, res) {
-    const {formData} = req.body
-    const {serving, mealType, logsDate, logId} = formData
+    const {serving, mealType, logsDate, logId} = req.body
 
+    console.log(serving, mealType, logsDate, logId)
     try{
         const updatedLog = await FoodLog.updateOne(
             {
