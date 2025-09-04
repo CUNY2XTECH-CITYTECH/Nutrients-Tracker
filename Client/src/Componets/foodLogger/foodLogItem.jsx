@@ -12,8 +12,8 @@ export function FoodLogItem({ object = [], mealType, render, rerender, logsDate}
     const [logId, setLogId] = useState("logIdDefault")//The object id of the food log saved in db
     const {auth} = useContext(AuthContext) //Global constext that saves user info
     const [isLoading, setIsLoading] = useState(false) //If true, shows loading screen while fetching for food details
-    const [servingAmount, setServingAmount] = useState(100)
-    const [newMealType, setNewMealType] = useState(mealType)
+    const [servingAmount, setServingAmount] = useState(100) //Stores serving user wants to update for a log
+    const [newMealType, setNewMealType] = useState(mealType) //Stores mealType user whats to update for a log 
     const [foodDetails, setFoodDetails] = useState({
         foodId: null,
         name: null,
@@ -60,7 +60,7 @@ export function FoodLogItem({ object = [], mealType, render, rerender, logsDate}
     })
 
 
-
+    //Recieves object that contains logs for given date. Checks if any logs in object match mealType prop
     useEffect(() => {
         const Foods = object.filter(item => item.mealType === mealType);   // Check if there are any foods matching the mealType
         setAnyFoods(Foods.length > 0);  //if food exist with mealtype prop given, food exists
@@ -80,8 +80,6 @@ export function FoodLogItem({ object = [], mealType, render, rerender, logsDate}
         setToggleDialog(true)
         allFoodDetail(foodId)
         setServingAmount(serving)
-        console.log(_id, mealType)
-
     }
 
 
@@ -176,14 +174,17 @@ export function FoodLogItem({ object = [], mealType, render, rerender, logsDate}
         }
     }
 
+    //Has call back funciton that updates serving size and scales nutrients
     let handleServingAmount = (amount) => {
         setServingAmount(amount)
     }
 
+    //Has call back funciton that updates mealType
     let handleMealType = (amount) => {
         setNewMealType(amount)
     }
 
+    //Resets some states when user closes dialog box
     function handleCloseDialog () {
     setToggleDialog(false);
     setDialogFood(null);
@@ -191,11 +192,11 @@ export function FoodLogItem({ object = [], mealType, render, rerender, logsDate}
     setLogId(null);
     }
 
-
+    //Runs when user clicks save button
     async function handleUpdateLog() {
         // console.log(`Hit Handle function- Serving:${servingAmount} MealType:${newMealType} Date Prop:${logsDate} LogId Prop:${logId}`)
         
-        if (servingAmount == "") return
+        if (servingAmount == "") return //Doesnt do anything if trying to save empty serving size
 
         try {
             const response = await axios.patch("http://localhost:3000/logs/updateLog",
@@ -212,7 +213,7 @@ export function FoodLogItem({ object = [], mealType, render, rerender, logsDate}
                         }
                     }
             )
-            console.log(response.data)
+            // console.log(response.data)
             return
         }catch(error) {
             console.error(error)
