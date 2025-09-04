@@ -9,10 +9,11 @@ export function FoodLogItem({ object = [], mealType, render, rerender, logsDate}
     const[anyFoods, setAnyFoods] = useState(false) //stores any food user saved 
     const [toggleDialog, setToggleDialog] = useState(false) //sets the opening and closing of dialog box
     const [dialogFood, setDialogFood] = useState(null) //The food the dialog box is going to show in detail
-    const [logId, setLogId] = useState(null) //The object id of the food log saved in db
+    const [logId, setLogId] = useState("logIdDefault")//The object id of the food log saved in db
     const {auth} = useContext(AuthContext) //Global constext that saves user info
     const [isLoading, setIsLoading] = useState(false) //If true, shows loading screen while fetching for food details
-    const [servingAmount, setServingAmount] = useState(100) 
+    const [servingAmount, setServingAmount] = useState(100) //Stores serving user wants to update for a log
+    const [newMealType, setNewMealType] = useState(mealType) //Stores mealType user whats to update for a log 
     const [foodDetails, setFoodDetails] = useState({
         foodId: null,
         name: null,
@@ -58,9 +59,8 @@ export function FoodLogItem({ object = [], mealType, render, rerender, logsDate}
         }
     })
 
-     
 
-
+    //Recieves object that contains logs for given date. Checks if any logs in object match mealType prop
     useEffect(() => {
         const Foods = object.filter(item => item.mealType === mealType);   // Check if there are any foods matching the mealType
         setAnyFoods(Foods.length > 0);  //if food exist with mealtype prop given, food exists
@@ -74,13 +74,12 @@ export function FoodLogItem({ object = [], mealType, render, rerender, logsDate}
     )
 
     //When food item div gets clicked, saves foodId of clicked div, dialog box opens, fetch data with the foodId
-    function foodClick(foodId, serving, mealType, _id){
+    function foodClick(foodId, serving, _id){
         setLogId(_id)
         setDialogFood(foodId)
         setToggleDialog(true)
         allFoodDetail(foodId)
         setServingAmount(serving)
-
     }
 
 
@@ -175,22 +174,54 @@ export function FoodLogItem({ object = [], mealType, render, rerender, logsDate}
         }
     }
 
+    //Has call back funciton that updates serving size and scales nutrients
     let handleServingAmount = (amount) => {
         setServingAmount(amount)
     }
 
+    //Has call back funciton that updates mealType
+    let handleMealType = (amount) => {
+        setNewMealType(amount)
+    }
 
-
-
- function handleCloseDialog () {
+    //Resets some states when user closes dialog box
+    function handleCloseDialog () {
     setToggleDialog(false);
     setDialogFood(null);
     setServingAmount(100);
     setLogId(null);
- }
+    }
 
+    //Runs when user clicks save button
+    async function handleUpdateLog() {
+        // console.log(`Hit Handle function- Serving:${servingAmount} MealType:${newMealType} Date Prop:${logsDate} LogId Prop:${logId}`)
+        
+        if (servingAmount == "") return //Doesnt do anything if trying to save empty serving size
 
-
+        try {
+            const response = await axios.patch("http://localhost:3000/logs/updateLog",
+                    {
+                        serving:servingAmount,
+                        mealType:newMealType,
+                        logsDate:logsDate,
+                        logId:logId
+                    },
+                    {
+                        headers: 
+                        { 
+                            'Authorization': `Bearer ${auth.accessToken}`
+                        }
+                    }
+            )
+            // console.log(response.data)
+            return
+        }catch(error) {
+            console.error(error)
+        }finally{
+            handleCloseDialog()
+            rerender()
+        }
+    }
 
   
 
@@ -202,7 +233,7 @@ export function FoodLogItem({ object = [], mealType, render, rerender, logsDate}
             .map(({_id, name, foodId, serving, unit, calories }, index) => (         //for each object in array, creates a food item container that user can click to see details
             <div className="food-item-container"
                  key={_id}
-                 onClick={() => foodClick(foodId, serving, mealType, _id)}>
+                 onClick={() => foodClick(foodId, serving, _id)}>
                 <h3 className="food-name">{name}</h3>
                 <p className="serving-size">{serving} {unit}</p>
                 <p className="calories">{calories} kcal</p>
@@ -239,11 +270,9 @@ export function FoodLogItem({ object = [], mealType, render, rerender, logsDate}
                         <DialogBoxForm 
                             servingSize={handleServingAmount} 
                             servingSaved={servingAmount} 
-                            mealType={mealType}
+                            newMealType={handleMealType}
                             logsDate={logsDate}
-                            handleCloseDialog={handleCloseDialog}
-                            logId={logId}
-                            rerender={rerender}
+                            mealType={mealType}
                              />
                     </div>
 
@@ -277,7 +306,7 @@ export function FoodLogItem({ object = [], mealType, render, rerender, logsDate}
             <div className="food-item-btn">
                 <button className="close-dialog" onClick= {handleCloseDialog}>Close</button>
                 <button className="delete-food-log" onClick={handleDeleteLog}>Delete</button>
-                <button className="save-food-log" type="submit" form="user-log-stats">Save</button>
+                <button className="save-food-log" onClick={handleUpdateLog}>Save</button>
             </div>
         </dialog>
 
