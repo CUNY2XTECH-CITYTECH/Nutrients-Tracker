@@ -5,26 +5,24 @@ import { Chart as ChartJS, ArcElement, Tooltip, Legend } from "chart.js";
 ChartJS.register(ArcElement, Tooltip, Legend);
 
 export function Stats() {
-  const [inputs, setInputs] = useState({ feet: "", inches: "", weight: "", goal: "lose" });
+  // Mock user info for demonstration
+  const [userInfo] = useState({
+    name: "Jane Doe",
+    username: "janedoe123",
+    birthday: "1995-04-15",
+    height: 170,
+    weight: 65,
+    gender: "Female"
+  });
+  // Default values for demonstration
+  const [inputs] = useState({ feet: 5, inches: 8, weight: 160, goal: "lose" });
   const [data, setData] = useState(null);
-  const [error, setError] = useState(null);
 
-  const validateInputs = () => {
-    const ft = Number(inputs.feet || 0);
-    const inch = Number(inputs.inches || 0);
-    const w = Number(inputs.weight || 0);
-    return ft >= 0 && inch >= 0 && w > 0;
-  };
+  // No input validation needed since values are fixed
 
-  const calculateNutrition = () => {
-    if (!validateInputs()) {
-      setError("Please enter valid positive numbers for height (feet & inches) and weight (lb).");
-      setData(null);
-      return;
-    }
-    setError(null);
-
-    const totalInches = Number(inputs.feet || 0) * 12 + Number(inputs.inches || 0);
+  // Calculate stats on mount with default values
+  React.useEffect(() => {
+    const totalInches = Number(inputs.feet) * 12 + Number(inputs.inches);
     const heightMeters = totalInches * 0.0254;
     const weightKg = Number(inputs.weight) * 0.453592;
 
@@ -38,8 +36,8 @@ export function Stats() {
     let recommendedBMI = inputs.goal === "gain" ? 23 : 21;
     let recommendedCalories =
       inputs.goal === "gain"
-        ? Math.round(dailyCalories * 1.1) // increase for muscle gain
-        : Math.round(dailyCalories * 0.9); // decrease for weight loss
+        ? Math.round(dailyCalories * 1.1)
+        : Math.round(dailyCalories * 0.9);
 
     // Macronutrients (protein 25%, carbs 50%, fat 25%)
     const macroRatio = { protein: 0.25, carbs: 0.5, fat: 0.25 };
@@ -80,7 +78,7 @@ export function Stats() {
       doughnutRecommended: [recommendedFruitsGrams, recommendedVegetablesGrams, recommendedGrainsGrams, recommendedProteinFoodGrams, recommendedDairyGrams],
       goal: inputs.goal
     });
-  };
+  }, [inputs]);
 
   const pieOptions = {
     responsive: true,
@@ -117,40 +115,25 @@ export function Stats() {
   return (
     <div style={{ maxWidth: 950, margin: "auto", textAlign: "center" }}>
       <h1>Interactive BMI & Nutrition Stats</h1>
-      <div style={{ marginBottom: 20 }}>
-        <input
-          type="number"
-          placeholder="Feet"
-          value={inputs.feet}
-          onChange={(e) => setInputs({ ...inputs, feet: e.target.value })}
-          style={{ marginRight: 10 }}
-        />
-        <input
-          type="number"
-          placeholder="Inches"
-          value={inputs.inches}
-          onChange={(e) => setInputs({ ...inputs, inches: e.target.value })}
-          style={{ marginRight: 10 }}
-        />
-        <input
-          type="number"
-          placeholder="Weight (lb)"
-          value={inputs.weight}
-          onChange={(e) => setInputs({ ...inputs, weight: e.target.value })}
-          style={{ marginRight: 10 }}
-        />
-        <select
-          value={inputs.goal}
-          onChange={(e) => setInputs({ ...inputs, goal: e.target.value })}
-          style={{ marginRight: 10 }}
+      {/* User profile info section */}
+      {userInfo && (
+        <div
+          style={{
+            marginBottom: "1em",
+            padding: "1em",
+            background: "#eef",
+            borderRadius: "8px",
+          }}
         >
-          <option value="lose">Lose Weight</option>
-          <option value="gain">Build Muscle Mass</option>
-        </select>
-        <button onClick={calculateNutrition}>Analyze</button>
-        {error && <p style={{ color: "red" }}>{error}</p>}
-      </div>
-
+          <h3>👤 {userInfo.name}</h3>
+          <p>Username: {userInfo.username}</p>
+          <p>Birthday: {new Date(userInfo.birthday).toLocaleDateString()}</p>
+          <p>Height: {userInfo.height} cm</p>
+          <p>Weight: {userInfo.weight} kg</p>
+          <p>Gender: {userInfo.gender}</p>
+        </div>
+      )}
+      {/* User input section removed. Using default values for demonstration. */}
       {data && (
         <>
           <div style={{ marginBottom: 30 }}>
