@@ -5,21 +5,6 @@ import { Chart as ChartJS, ArcElement, Tooltip, Legend } from "chart.js";
 ChartJS.register(ArcElement, Tooltip, Legend);
 
 export function Stats() {
-  // Mock user info for demonstration
-  const [userInfo] = useState({
-    name: "Jane Doe",
-    username: "janedoe123",
-    birthday: "1995-04-15",
-    height: 170,
-    weight: 65,
-    gender: "Female"
-  });
-  // Default values for demonstration
-  const [inputs] = useState({ feet: 5, inches: 8, weight: 160, goal: "lose" });
-  const [data, setData] = useState(null);
-
-  // No input validation needed since values are fixed
-
   // Calculate stats on mount with default values
   React.useEffect(() => {
     const totalInches = Number(inputs.feet) * 12 + Number(inputs.inches);
