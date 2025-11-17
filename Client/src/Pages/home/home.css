@@ -81,7 +81,7 @@ display: none;
 .home-diagram {
   width: 100%;
   max-width: 600px;
-  margin: 20px 0;
+  margin: 20px auto;
 }
 
 .home-diagram img {
@@ -93,4 +93,5 @@ display: none;
   text-align: center;
   margin-top: 10px;
   font-style: italic;
+  color: black; 
 }
